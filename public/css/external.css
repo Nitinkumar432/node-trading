@@ -1,0 +1,103 @@
+
+
+.external-services {
+   
+    color: white;
+    height: 100%;
+    margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.more {
+    border-radius: 10px;
+    margin-top: 5px;
+    display: grid;
+    margin-bottom: 10px;
+    /* border:1px solid white; */
+    gap: 1rem;
+    width: 50%;
+    grid-template-areas: 
+    "content1 content2"
+    "content3 content4";
+    box-shadow: 0 0 20px rgba(75, 74, 74, 0.2);
+}
+
+.more img {
+    width: 40px;
+    height: 40px;
+    display:block;
+    margin: 0px 10px;
+    margin:auto;
+
+    margin-right: 20px;
+    border-radius: 25px;
+}
+
+.profile {
+    background-color: black;
+    border :1px solid rgb(65, 63, 63);
+    border-radius: 10px;
+    display: grid;
+    width: 95%;
+    align-items: center;
+    padding: 10px;
+    transition: background-color 0.3s ease; /* Added transition for smooth hover effect */
+}
+
+#content1 {
+    grid-area: content1;
+    border:1px solid grey; 
+    box-shadow: 0 0 20px rgba(180, 7, 7, 0.2);
+}
+
+#content2 {
+    grid-area: content2;
+     /* Corrected grid area name */
+}
+
+#content3 {
+    grid-area: content3; /* Corrected grid area name */
+}
+
+#content4 {
+    grid-area: content4; /* Corrected grid area name */
+}
+
+.profile:hover {
+    background-color: rgb(6, 6, 28);
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.5); /* Added box shadow on hover */
+}
+
+/* Adding animation on hover for the profile */
+.profile:hover img {
+    animation: shake 0.5s ease infinite; /* Example animation - modify or replace as needed */
+}
+
+/* Keyframes for shake animation */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+

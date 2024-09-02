@@ -32,6 +32,10 @@ const registrationSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  userType:{
+    type:String,
+    default:"user",
   }
 });
 

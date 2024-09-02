@@ -1,0 +1,103 @@
+/* Popup container */
+.popup {
+    display: none; /* Hide the popup by default */
+    position: fixed; /* Position the popup relative to the viewport */
+    top: 50%; /* Position the popup vertically centered */
+    left: 50%; /* Position the popup horizontally centered */
+    transform: translate(-50%, -50%); /* Center the popup precisely */
+    background-color: #2c2b2b; /* Set background color */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow */
+    color:rgb(255, 255, 255);
+    padding: 20px; /* Add padding */
+    max-width: 300px; /* Set maximum width for the popup */
+    animation: fadeIn 0.5s ease-in-out forwards; /* Apply fade-in animation */
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0; /* Start from opacity 0 (invisible) */
+    }
+    to {
+      opacity: 1; /* End at opacity 1 (fully visible) */
+    }
+  }
+  
+  /* Popup content */
+  .popup-content {
+    text-align: center; /* Align content in the center */
+  }
+  
+  /* Close button */
+  .close {
+    position: absolute; /* Position the close button relative to its containing popup */
+    top: 10px; /* Set top distance from the popup */
+    right: 10px; /* Set right distance from the popup */
+    cursor: pointer; /* Change cursor to pointer on hover */
+  }
+  
+  /* Welcome text */
+  .popup h2 {
+    text-align: center; /* Align welcome text in the center */
+    margin-bottom: 20px; /* Add bottom margin */
+    color: #333; /* Set text color */
+  }
+  
+  /* Phone number input */
+  .popup input[type="tel"] {
+    width: 100%; /* Set input width to 100% */
+    padding: 10px; /* Add padding */
+    margin-bottom: 15px; /* Add bottom margin */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding and border in input width */
+  }
+  
+  /* Send OTP button */
+  .popup button {
+    width: 100%; /* Set button width to 100% */
+    padding: 10px; /* Add padding */
+    background-color: #007bff; /* Set button background color */
+    color: #fff; /* Set button text color */
+    border: none; /* Remove button border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+  }
+  
+  .popup button:hover {
+    background-color: #0056b3; /* Darken button color on hover */
+  }
+  
+  /* OTP input */
+  #otpSection input[type="text"] {
+    width: 100%; /* Set input width to 100% */
+    padding: 10px; /* Add padding */
+    margin-bottom: 15px; /* Add bottom margin */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Include padding and border in input width */
+  }
+  
+  /* Verify OTP button */
+  #otpSection button {
+    width: 100%; /* Set button width to 100% */
+    padding: 10px; /* Add padding */
+    background-color: #007bff; /* Set button background color */
+    color: #fff; /* Set button text color */
+    border: none; /* Remove button border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer on hover */
+  }
+  
+  #otpSection button:hover {
+    background-color: #0056b3; /* Darken button color on hover */
+  }
+  .k{
+     color:rgb(232, 232, 13);
+  }
+  .logo{
+    width:200px;
+    height:40px;
+    margin-left:10px;
+  }

@@ -425,3 +425,131 @@ hr {
       flex: 2 0px;
     }
   }
+  /* pop -model */
+  /* Modal Background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.6); /* Darker background for better contrast */
+  animation: fadeIn 0.3s; /* Fade-in animation */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fff; /* White background for content */
+  margin: 10% auto; /* 10% from the top and centered */
+  padding: 30px;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  width: 400px; /* Increased width for better layout */
+  max-width: 90%; /* Responsive max width */
+}
+
+/* Close Button */
+.close {
+  color: #ff4d4d; /* Red color for close button */
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  transition: color 0.3s; /* Smooth color transition */
+}
+
+.close:hover,
+.close:focus {
+  color: #c70000; /* Darker red on hover */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Input Fields */
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+  width: 100%; /* Full width */
+  padding: 12px; /* Padding for comfort */
+  margin: 10px 0; /* Space between inputs */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  box-sizing: border-box; /* Include padding in width */
+  transition: border-color 0.3s; /* Smooth border transition */
+}
+
+input[type="email"]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #007bff; /* Blue border on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Button Styles */
+button {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white; /* White text */
+  padding: 12px; /* Padding for comfort */
+  border: none; /* No border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+  transition: background-color 0.3s; /* Smooth background transition */
+  width: 100%; /* Full width */
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Error Message */
+#message.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px; /* Space above the error message */
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+      opacity: 0; /* Start transparent */
+  }
+  to {
+      opacity: 1; /* End fully visible */
+  }
+}
+/* spinner design */
+/* Add the spinner design */
+/* Add the spinner design */
+.spinner {
+  display: none;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add the blurred effect to the page */
+.blurred {
+  filter: blur(5px);
+}
+
+/* Add the error message styles */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Add the red border to the email and password fields */
+.error {
+  border: 2px solid red !important;
+}

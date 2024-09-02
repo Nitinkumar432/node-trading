@@ -2,113 +2,422 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Booking System</title>
-    <link rel="stylesheet" href="css/home.css">
-    <script src="javascripts/home.js"></script>
+    <title>TradeHub</title>
+    <link rel="icon"  href="flogo.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/popup.css">
+    <script src="/css/script.js"></script>
+    <script src="/javascripts/script.js"></script>
+    <script src="/javascripts/top10.js"></script>
+    <script src="/javascripts/popup.js"></script>
+    <link rel="stylesheet" href="/css/external.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!--GOOGLE FONTS-->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Play&display=swap" rel="stylesheet"> 
+    <script type="text/javascript" src="https://cdn.canvasjs.com/canvasjs.stock.min.js"></script>
 </head>
 <body>
-    <!-- Header Section -->
     <header>
-        <div class="logo">TicketBooking</div>
-        <nav>
-            <ul>
-                <li><a href="#">Book Tickets</a></li>
-                <li><a href="#">My Bookings</a></li>
-                <li><a href="#">Help</a></li>
-                <li><a href="#">About Us</a></li>
-            </ul>
-        </nav>
-        <div class="search-bar">
-            <input type="text" placeholder="Search events, destinations...">
+        <div class="header-container">
+            <div class="left-elements">
+                <img src="flogo.png" alt="Company Logo">
+                <div class="separator"></div>
+                <div class="options">
+                 
+                    <a href="/" class="option">Charts</a>
+                    <a href="#" class="option">Discover</a>
+                    <a href="#" class="option">Orders</a>
+                    <a href="#" class="option">Positions</a>
+                    <a href="invest.html" class="option">Holding</a>
+                </div>
+            </div>
+            <div class="box" id="nifty-box">
+                <span>Nifty:</span>
+                <span id="nifty-value" class="value">----</span>
+                <span id="nifty-percentage" class="percentage">----</span>
+           
+            </div>
+            <div class="box" id="sensex-box">
+                <span>Sensex:</span>
+                <span id="sensex-value" class="value">----</span>
+                <span id="sensex-percentage" class="percentage">----</span>
+            </div>
+            
+            
+            <div class="right-elements">
+                <nav>
+                    <ul>
+                        
+                        <%if(user.userType=='admin') {%>
+                          <li class="verify"><a href="/verify_account" alt="More">Verify Account</a>
+                            <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
+                              <div class="dropdown-content">
+                                  <a href="mutualfund.html">Mutual Funds</a>
+                                  <a href="#">IPO</a>
+                                  <a href="#">Gold Investment</a>
+                              </div>
+                              <li class="dropdown">
+                                <a href="Account.html"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
+                                <div class="dropdown-content">
+                                    <a href="#"> Investments</a>
+                                    <a href="invest.html">Portfolio</a>
+                                    <a href="#"> Transactions</a>
+                                </div>
+                            </li>
+                        
+                          <%}else{%>
+                            <li><a href="help.html"><img src="https://www.freeiconspng.com/thumbs/help-icon/help-icon-12.png" alt="Help"> Help</a></li>
+                        <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
+                            <div class="dropdown-content">
+                                <a href="mutualfund.html">Mutual Funds</a>
+                                <a href="#">IPO</a>
+                                <a href="#">Gold Investment</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="Account.html"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
+                            <div class="dropdown-content">
+                                <a href="#"> Investments</a>
+                                <a href="invest.html">Portfolio</a>
+                                <a href="#"> Transactions</a>
+                            </div>
+                        </li>
+                        <li>
+                        <%}%>
+                        <li>
+                            <a href="/profile"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image"><%=user.userType%></a>
+                           
+                        </li>
+                        
+                        
+                    </ul>
+                </nav>
+            </div>
         </div>
     </header>
+    <div class="row-containerd">
+      <div class="company-named">Axis Bank</div>
+      <div class="dataxx">
+          <div class="current-price">₹34455</div>
+          <div class="today-gain" id="today-gain"> +12.44%</div>
+          <div class="high-today">High: <span class="high">₹35420</span></div>
+          <div class="low-today">Low: <span class="low">₹34926</span></div>
+          <div class="expected">Expected: ₹36000</div>
+      </div>
+  </div>
+  <script>
+      function updateTodayGain() {
+          // Generate a random number between -20 and 20
+          var randomChange = Math.random() * 40 - 20;
+          // Round the number to 2 decimal places
+          var gain = randomChange.toFixed(2);
+          var todayGainElement = document.getElementById("today-gain");
+          
+          todayGainElement.textContent = (gain > 0 ? "+" + gain : gain) + "%";
+          if (gain > 0) {
+              todayGainElement.classList.remove("red");
+              todayGainElement.classList.add("green");
+          } else {
+              todayGainElement.classList.remove("green");
+              todayGainElement.classList.add("red");
+          }
+      }
 
-<!-- slideshoe section -->
+      // Call updateTodayGain initially
+      updateTodayGain();
 
+      // Update today's gain every 3 seconds
+      setInterval(updateTodayGain, 3000);
+  </script>
 
+   
+    <div class="container">
+      <div class="sidebar">
+          <div class="SBheader">
+              <select>
+                  <option value="option1">Motor</option>
+                  <option value="option2">Top 50</option>
+                  <option value="option3">Market</option>
+              </select>
+              <img src="List_Icon.png">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWcksmWMtBw3xyhoUMZmPJL_wVBK0CRHx3Gw&usqp=CAU">
+          </div>
+          <div class="SBcontent">
+              <div class="table-container">
+                  <table>
+                      <table>
+                          <tr>
+                            <td>POLICYBZR<br>NSE EQ</td>
+                            <td class="price-and-change2">941.25 <br>+13.30</td>
+                            
+                          </tr>
+                          <tr>
+                            <td>ZOMATO <br>NSE EQ</td>
+                            <td class="price-and-change">152.25 <br>-2.50</td>
+                            <!-- <td><button>hii</button></td> -->
+                          </tr>
+                          <tr>
+                            <td>ASIANTILES <br>NSE EQ</td>
+                            <td class="price-and-change2">64.45<br>+0.70 </td>
+                          </tr>
+                          <tr>
+                            <td>CGPOWER <br>NSE EQ</td>
+                            <td class="price-and-change">437.35 <br>-9.35</td>
+                          </tr>
+                          <tr>
+                            <td>ASHOKLEY <br>NSE EQ</td>
+                            <td class="price-and-change2">173.65 <br>+13.95</td>
+                          </tr>
+                          <tr>
+                            <td>ONGC <br>NSE EQ</td>
+                            <td class="price-and-change">268.85 <br>-2.90</td>
+                          </tr>
+                          <tr>
+                            <td>NATIONALUM</td>
+                            <td class="price-and-change2">155.50 <br>+1.10</td>
+                          </tr>
+                          <tr>
+                            <td>WIPRO <br>NSE EQ</td>
+                            <td class="price-and-change">514.50 <br>+5.60</td>
+                          </tr>
+                          <tr>
+                            <td>ICDSLTD <br>NSE EQ</td>
+                            <td class="price-and-change">57.00 <br>+0.40</td>
+                          </tr>
+                          <tr>
+                            <td>LICHSGFIN <br>NSE EQ</td>
+                            <td class="price-and-change">636.60 <br>+1.30</td>
+                          </tr>
+                          <tr>
+                            <td>POLICYBZR<br>NSE EQ</td>
+                            <td class="price-and-change2">941.25 <br>+13.30</td>
+                          </tr>
+                          <tr>
+                            <td>ZOMATO <br>NSE EQ</td>
+                            <td class="price-and-change">152.25 <br>-2.50</td>
+                          </tr>
+                          <tr>
+                            <td>ASIANTILES <br>NSE EQ</td>
+                            <td class="price-and-change2">64.45<br>+0.70 </td>
+                          </tr>
+                          <tr>
+                            <td>CGPOWER <br>NSE EQ</td>
+                            <td class="price-and-change2">437.35 <br>+9.35</td>
+                          </tr>
+                          <tr>
+                            <td>ASHOKLEY <br>NSE EQ</td>
+                            <td class="price-and-change">173.65 <br>+13.95</td>
+                          </tr>
+                          <tr>
+                            <td>ONGC <br>NSE EQ</td>
+                            <td class="price-and-change2">268.85 <br>+2.90</td>
+                          </tr>
+                          <tr>
+                            <td>NATIONALUM</td>
+                            <td class="price-and-change">155.50 <br>+1.10</td>
+                          </tr>
+                          <tr>
+                            <td>WIPRO <br>NSE EQ</td>
+                            <td class="price-and-change">514.50 <br>+5.60</td>
+                          </tr>
+                          <tr>
+                            <td>ICDSLTD <br>NSE EQ</td>
+                            <td class="price-and-change2">57.00 <br>+0.40</td>
+                          </tr>
+                          <tr>
+                            <td>LICHSGFIN <br>NSE EQ</td>
+                            <td class="price-and-change2">636.60 <br>+1.30</td>
+                          </tr>
+                  </table>
+              </div>
+          </div>
+          <div class="SBfooter">
+              <span>Related news</span>
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ68rdOGZU74wVMIqN_MmYFO2ucY3P-QtNuGw&usqp=CAU">
+          </div>
+      </div>
 
+      <div id="chartContainer"></div>
+      
+  </div>
 
-  <img class="mySlides" src="https://cdn.dribbble.com/users/1362969/screenshots/14815337/media/1d28e79b3e943513d9f26bafa3201523.gif">
-  <!-- <img class="mySlides" src="https://originserver-static1-uat.pvrcinemas.com/pvrcms/movie_v/12540_Ts4TJG2x.jpg" style="width:100%">
-  <img class="mySlides" src="img_chicago.jpg" style="width:100%"> -->
-
+  <script>
     
-    <div style="text-align:center">
-      <span class="dot" onclick="currentSlide(1)"></span> 
-      <span class="dot" onclick="currentSlide(2)"></span> 
-      <span class="dot" onclick="currentSlide(3)"></span> 
+  </script>
+<!-- pop up code -->
+<!-- <div id="popup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">&times;</span>
+    <img src="flogo.png" alt="Company Logo" class="logo">
+    <h2 style="color: yellow;">Welcome! </h2>
+    <p class="otp"> Two step Authentication:</p>
+    <input type="tel" id="phoneNumber" placeholder="Enter your phone number" inputmode="numeric" pattern="[0-9]{10}" required>
+    <button onclick="sendOTP()">Send OTP</button>
+    <div id="otpSection" style="display: none;">
+      <p class="otp">An OTP has been sent to your phone. Please enter it below:</p>
+      <input type="text" id="otpInput" placeholder="Enter OTP">
+      <button onclick="verifyOTP()">Verify OTP</button>
+      <p id="remainingTries"></p>
     </div>
-
-
-
-
-    <!-- Featured Events Section -->
-    <section class="featured-events">
-        <h2>Featured Events</h2>
-        <div class="event-grid">
-            <!-- Example event item -->
-            <div class="event-item">
-                <img src="https://images.news18.com/ibnlive/uploads/2024/06/kalki-2898-ad-movie-first-review-2024-06-74247ab144a1de861d9e034bf27aa133.jpg" alt="Event 1">
-                <div class="event-details">
-                    <h3>Event Name 1</h3>
-                    <p>Date: Jan 1, 2025</p>
-                    <p>Location: New York</p>
-                    <button onclick="bookNow()">Book Now</button>
-                </div>
-            </div>
-            <!-- Add more event items as needed -->
-            <div class="event-item">
-                <img src="https://www.hindustantimes.com/ht-img/img/2024/05/10/1600x900/planet-of-the-kingdom-of-the-apes-early-reviews-sh_1715322312019_1715322312258.jpg" alt="Event 2">
-                <div class="event-details">
-                    <h3>Event Name 2</h3>
-                    <p>Date: Feb 1, 2025</p>
-                    <p>Location: Los Angeles</p>
-                    <button onclick="bookNow()">Book Now</button>
-                </div>
-            </div>
-            <div class="event-item">
-                <img src="https://static.toiimg.com/imagenext/toiblogs/photo/blogs/wp-content/uploads/2023/07/ss_col_3c-1.jpg" alt="Event 3">
-                <div class="event-details">
-                    <h3>Event Name 3</h3>
-                    <p>Date: Mar 1, 2025</p>
-                    <p>Location: Chicago</p>
-                    <button onclick="bookNow()">Book Now</button>
-                </div>
-            </div>
-            <!-- Add more event items as needed -->
-        </div>
-    </section>
-    
-
-    <!-- Customer Testimonials Section -->
-    <section class="testimonials">
-        <h2>What Our Customers Say</h2>
-        <div class="testimonial-item">
-            <p>"Great service and easy booking process!"</p>
-            <h4>- Customer Name</h4>
-        </div>
-        <!-- Add more testimonials as needed -->
-    </section>
-
-    <!-- Footer Section -->
-    <footer>
-        <div class="footer-content">
-            <div class="company-info">
-                <p>&copy; 2024 TicketBooking. All rights reserved.</p>
-                <p>Contact us: info@ticketbooking.com</p>
-                <p>Follow us:</p>
-                <!-- Social media links -->
-                <a href="#">Facebook</a> | <a href="#">Twitter</a> | <a href="#">Instagram</a>
-            </div>
-            <div class="footer-links">
-                <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a>
-            </div>
-        </div>
-    </footer>
-    <!-- Hero Section -->
+  </div>
+</div>
+<script>
+  // Function to open the popup
+  function openPopup() {
+    var popup = document.getElementById("popup");
+    popup.style.display = "block"; // Show the popup
+  }
   
+  // Event listener to open the popup after 5 seconds
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(openPopup, 5000); // 5000 milliseconds = 5 seconds
+  });
+  </script> -->
+  <div class="company-container">
+    <h1>Top 5 Trading Companies</h1>
+    <table class="company-table">
+        <thead>
+            <tr class="company-header-row">
+                <th class="company-header">Rank</th>
+                <th class="company-header">Company</th>
+                <th class="company-header">Owner</th>
+                <th class="company-header">Market Cap</th>
+                <th class="company-header">Current Price</th>
+                <th class="company-header">Action</th>
+            </tr>
+        </thead>
+        <tbody id="companyTableBody">
+            <!-- Company rows will be inserted here dynamically -->
+        </tbody>
+    </table>
+</div>
+
+<script src="top10.js"></script>
+
+  
+<div class="containermm">
+  <div class="details">
+    <h2>Details and Annual Growth</h2>
+    <p>Here you can display more details about each investment option</p>
+      <p>along with their annual growth rates.</p>
+    <p>Invest in government securities denominated in grams of gold.</p>
+  </div>
+  <div class="boxm">
+    <img src="https://cdn.angelone.in/bbe/homepage/web/icons/icon-wealth-funds.svg" alt="Mutual Fund Logo">
+    <a style="text-decoration: none;" href="./mutualfund.html"><h2 style="color:white">Mutual Fund</h2></a>
+    <p>Invest in professionally managed portfolios of stocks, bonds, and other assets.</p>
+  </div>
+  
+  <div class="boxm">
+    <img src="https://cdn.angelone.in/bbe/homepage/web/icons/icon-wealth-ipo.svg" alt="IPO Logo">
+    <h2 style="color:white">IPO</h2>
+    <p>Participate in Initial Public Offerings and invest in newly listed companies.</p>
+  </div>
+  
+  <div class="boxm">
+    <img src="https://cdn.angelone.in/bbe/homepage/web/icons/icon-wealth-gold.svg" alt="SGB Logo">
+    <h2 style="color:white">SGB (Sovereign Gold Bond)</h2>
+    <p>Invest in government securities denominated in grams of gold.</p>
+
+  </div>
+  
+</div>
+
+<h2 style="text-align: center; color: aliceblue;">Tools -  TradeHub</h2>
+
+<div class="containerss">
+  <div class="boxss">
+    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e8/GTT_Communications_logo.svg/2560px-GTT_Communications_logo.svg.png" alt="GTT Logo">
+    <h3 class="h3">GTT</h3>
+    <p class="p">Set stop loss & target while buying a stock with GTT Do it as a Job</p>
+  </div>
+  <div class="boxss">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/SIP_logo.svg/1024px-SIP_logo.svg.png" alt="Stock SIP Logo">
+    <h3 class="h3">Stock SIP</h3>
+    <p class="p">Invest systematically in top rated stocks & build your wealth.Thanks.</p>
+  </div>
+  <div class="boxss">
+    <img src="https://png.pngtree.com/png-clipart/20230806/original/pngtree-smart-store-logo-vector-png-image_9441136.png" alt="Smart Store Logo">
+    <h3 class="h3">Smart Store</h3>
+    <p class="p">Shop smartly with our convenient Smart Store feature.</p>
+   
+  </div>
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/oUTPxD3d4Bs?si=WBRfhcp5ni3P3rbB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen aut></iframe>
+</div>
+
+
+<div class="external-services">
+  <div class="header">
+      <h1>External Services</h1>
+      <p style="color:white">Discover and integrate your favourite services with Capital Craft</p>
+  </div>
+  <div class="more">
+      <div class="profile">
+          <img src="https://png.pngtree.com/element_our/png/20181114/growth-icon-png_239826.jpg" alt="">
+          <span><h3>Small Case</h3><br>Invest in low cost diversified and long term portfolios,
+          curated by experts</span>
+      </div>
+      <div class="profile">
+          <img src="https://cdn.angelone.in/bbe/homepage/web/external/service-vested.svg" alt="">
+          <span><h3>vested</h3><br>Invest in US stocks like Amazon,Tesla and Facebook</span>
+      </div>
+      <div class="profile">
+          <img src="https://cdn.angelone.in/bbe/homepage/web/external/service-sensibull.svg" alt="">
+          <span><h3>Sensibull</h3><br>Learn options trading, create your option stratergies and access expert advice</span>
+      </div>
+      <div class="profile">
+          <img src="https://cdn.angelone.in/bbe/homepage/web/external/service-streak.svg" alt="">
+          <span><h3>Streak</h3><br>Create, deploy and back test stratergies without coding</span>
+      </div>
+
+  </div>
+</div>
+<div class="containermmtt">
+    
+  <div class="boxex box1">
+    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTfql06eMM-FEjy8ZGXAFVXvIFrLNGZigJ6LnVHA0lU_OnPaq3Y" alt="Animated Logo">
+    <a  style="text-decoration: none;" href="./referal.html"><h2>Referral Program</h2></a>
+    <p>Refer a friend and get exclusive discounts!</p>
+  </div>
+  <div class="boxex box2">
+    <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTfql06eMM-FEjy8ZGXAFVXvIFrLNGZigJ6LnVHA0lU_OnPaq3Y" alt="Animated Logo">
+    <a  style="text-decoration: none;" href="./offer.html"> <h2>Special Offers</h2></a>
+    <p>Check out our latest deals and promotions!</p>
+  </div>
+</div>
+
+  
+  <footer>
+  <div class="footer">
+  <div class="row">
+  <a href="#"><i class="fa fa-facebook"></i></a>
+  <a href="#"><i class="fa fa-instagram"></i></a>
+  <a href="#"><i class="fa fa-youtube"></i></a>
+  <a href="#"><i class="fa fa-twitter"></i></a>
+  </div>
+  
+  <div class="row">
+  <ul>
+  <li><a href="#">Contact us</a></li>
+  <li><a href="#">Our Services</a></li>
+  <li><a href="#">Privacy Policy</a></li>
+  <li><a href="#">Terms & Conditions</a></li>
+  <li><a href="#">Career</a></li>
+  </ul>
+  </div>
+  
+  <div class="row">
+  TradeHub Copyright © 2021 Inferno - All rights reserved || Designed By: Nitin 
+  </div>
+  </div>
+  </footer>
+
+
    
 </body>
 </html>

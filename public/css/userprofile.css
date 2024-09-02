@@ -1,0 +1,125 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+    margin: 0;
+}
+
+/* Container Styles */
+.container {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    margin: 20px auto;
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Heading Style */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Input Fields Styles */
+input[type="text"],
+input[type="number"],
+input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for border and shadow */
+}
+
+/* Input Focus and Active States */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus {
+    border-color: #4CAF50; /* Green border on focus */
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4); /* Subtle green shadow */
+    outline: none; /* Remove default focus outline */
+}
+
+/* Submit Button Styles */
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for background and transform */
+}
+
+/* Submit Button Hover and Active States */
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+button[type="submit"]:active {
+    transform: scale(0.98); /* Button press effect */
+}
+
+/* Popup Styles */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    text-align: center;
+    transition: all 0.3s ease; /* Smooth transition for appearance */
+}
+
+/* Hide Popup Initially */
+.popup.hidden {
+    display: none;
+}
+
+/* Popup Button Styles */
+.popup button {
+    margin-top: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for hover */
+}
+
+/* Popup Button Hover State */
+.popup button:hover {
+    background-color: #45a049;
+}
+
+/* Container Hover Effect */
+.container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+    transform: translateY(-5px); /* Lift the container on hover */
+}

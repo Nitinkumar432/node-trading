@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Form</title>
+    <link rel="stylesheet" href="css/userprofile.css"> <!-- Link to the external CSS file -->
+    <script src="javascripts/userprofile.js" defer></script> <!-- Link to the external JS file -->
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile Form</h1>
+        <form id="userProfileForm" onsubmit="submitForm(event)">
+            <label>Name: <input type="text" name="name" required></label>
+            <label>Aadhar Number: <input type="number" name="aadharNumber" required></label>
+            <label>PAN Card: <input type="number" name="pancard" required></label>
+            <label>Phone Number: <input type="text" name="phoneNumber" required></label>
+            <label>Email: <input type="email" name="email" required></label>
+            <label>Bank Name: <input type="text" name="bankName" required></label>
+            <label>Account Number: <input type="text" name="accountNumber" required></label>
+            <label>Branch: <input type="text" name="branch" required></label>
+            <label>Nominees: <input type="text" name="nominees"></label>
+            <label>KYC Copy URL: <input type="text" name="kycCopyUrl"></label>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <div id="successPopup" class="popup hidden">
+        <p>Your request has been accepted!</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+</body>
+</html>
