@@ -250,7 +250,7 @@ app.post('/verify-otp', async (req, res) => {
 app.get('/update',async (req,res)=>{
 
   
-  await Register.updateOne({email:"nitinraj844126@gmail.com"},{userType:"admin"});
+  await UserProfile.updateOne({email:"swastiomil@gmail.com"},{isVerified:"rejected"});
   res.send("request accepted");
 
 })

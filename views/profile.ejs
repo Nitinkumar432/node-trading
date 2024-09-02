@@ -94,10 +94,10 @@
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
                         <!-- Transmission content goes here -->
-                        <span>Demat Account No : <%= user.dematAccountNumber %></span><br>
-                        <span>DP ID : <%= user.dpId %></span><br>
-                        <span>Depository Participant (DP): <%= user.depositoryParticipant %></span><br>
-                        <span>Depository: <%= user.depository %></span>
+                        <span>Demat Account No : <%= userdata.dematAccountNumber %></span><br>
+                        <span>DP ID : <%= userdata.dpId %></span><br>
+                        <span>Depository Participant (DP): <%= userdata.depositoryParticipant %></span><br>
+                        <span>Depository: <%= userdata.depository %></span>
                     </div>
                 </div>
                 
@@ -108,10 +108,10 @@
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
                         <!-- Transmission content goes here -->
-                        <span>Name : <%= user.name %></span><br>
-                        <span>Phone No : <%= user.phoneNumber %></span><br>
-                        <span>Email : <%= user.email %></span><br>
-                        <span>PAN Details: <%= user.pancard %></span><br>
+                        <span>Name : <%= userdata.name %></span><br>
+                        <span>Phone No : <%= userdata.phoneNumber %></span><br>
+                        <span>Email : <%= userdata.email %></span><br>
+                        <span>PAN Details: <%= userdata.pancard %></span><br>
                     </div>
                 </div>
                 
@@ -122,9 +122,9 @@
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
                         <!-- Transmission content goes here -->
-                        <span>Bank : <%= user.bankName %></span><br>
-                        <span>Account No : <%= user.accountNumber %></span><br>
-                        <span>Branch : <%= user.branch %></span><br>
+                        <span>Bank : <%= userdata.bankName %></span><br>
+                        <span>Account No : <%= userdata.accountNumber %></span><br>
+                        <span>Branch : <%= userdata.branch %></span><br>
                     </div>
                 </div>
                 
@@ -135,8 +135,8 @@
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
                         <!-- Transmission content goes here -->
-                        <span>Nominee 1 : <%= user.nominees[0] %></span><br>
-                        <span>Nominee 2 : <%= user.nominees[1] %></span><br>
+                        <span>Nominee 1 : <%= userdata.nominees %></span><br>
+          
                     </div>
                 </div>
                 <div class="info">
