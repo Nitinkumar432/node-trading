@@ -457,7 +457,11 @@ app.get('/help-query', async (req, res) => {
   }
 });
 // user query
-
+app.get('/updatedata',(req,res)=>{
+  UserProfile.updateMany({email : "nitinraj844126@gmail.com"},{isVerified:"true"});
+  res.send("updated");
+  
+})
 
 // Route to resolve a query
 app.post('/help-query/resolve/:id', async (req, res) => {
