@@ -27,7 +27,7 @@ header {
 }
 
 .left-elements img {
-    height: 100px; /* Adjust the height of the image icon */
+    height: 40px; /* Adjust the height of the image icon */
     width: auto; /* Maintain aspect ratio */
     margin-right: 10px; /* Adjust margin as needed */
 }
