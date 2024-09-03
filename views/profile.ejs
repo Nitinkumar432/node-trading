@@ -11,7 +11,7 @@
     <header>
         <div class="header-container">
             <div class="left-elements">
-                <img src="flogo.png" alt="Company Logo">
+                <img src="/images/flogo.png" alt="Company Logo">
                 <div class="separator"></div>
                 <div class="options">
                  
@@ -56,7 +56,7 @@
                         </li>
                         <li>
                          
-                            <a href="#"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image">Omil</a>
+                            <a href="#"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image"><%= userdata.name.split(' ').map(word => word[0].toUpperCase()).join('')%></a>
                            
                         </li>
                         
@@ -181,7 +181,7 @@
             <button class="pending-button" onclick="checkStatus()">Check Pending Status</button>
       <% } %>
 
-      <a href='/logout' ><button class='logout'>Logout</button></a>
+    
     <script >
         document.querySelectorAll('.arrow').forEach(arrow => {
     arrow.addEventListener('click', () => {

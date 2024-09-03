@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/help.css">
+    <script src="javascripts/script.js"></script>
+    <title>Help - Trading Website</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="left-elements">
+                <img src="flogo.png" alt="Company Logo">
+                <div class="separator"></div>
+                <div class="options">
+                 
+                    <a href="/" class="option">Charts</a>
+                    <a href="#" class="option">Discover</a>
+                    <a href="#" class="option">Orders</a>
+                    <a href="#" class="option">Positions</a>
+                    <a href="#" class="option">Holding</a>
+                </div>
+            </div>
+            <div class="box" id="nifty-box">
+                <span>Nifty:</span>
+                <span id="nifty-value" class="value">----</span>
+                <span id="nifty-percentage" class="percentage">----</span>
+           
+            </div>
+            <div class="box" id="sensex-box">
+                <span>Sensex:</span>
+                <span id="sensex-value" class="value">----</span>
+                <span id="sensex-percentage" class="percentage">----</span>
+            </div>
+            
+            
+            <div class="right-elements">
+                <nav>
+                    <ul>
+                        <li><a href="/help"><img src="https://www.freeiconspng.com/thumbs/help-icon/help-icon-12.png" alt="Help"> Help</a></li>
+                        <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
+                            <div class="dropdown-content">
+                                <a href="#">Investments</a>
+                                <a href="#"> Portfolio</a>
+                                <a href="#"> Transactions</a>
+                            </div>
+                        </li>
+                        <li class="dropdown">
+                            <a href="Account.html"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
+                            <div class="dropdown-content">
+                                <a href="#"> Investments</a>
+                                <a href="#">Portfolio</a>
+                                <a href="#"> Transactions</a>
+                            </div>
+                        </li>
+                        <li>
+                         
+                            <a href="#"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image"><%=user.name%></a>
+                            <div class="dropdown-content">
+                                <a href="/logout">Logout</a>
+                                <a href="#"> Portfolio</a>
+                                <a href="#"> Transactions</a>
+                            </div>
+                           
+                        </li>
+                        
+                        
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Help & Support</h1>
+        
+        <!-- Display Success or Error Message -->
+        <% if (message) { %>
+            <div class="alert <%= message.includes('error') ? 'error' : '' %>">
+                <%= message %>
+            </div>
+        <% } %>
+
+        <!-- FAQ Section -->
+        <div class="faq">
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <h3>How do I create an account?</h3>
+                <p>To create an account, click on the "Sign Up" button at the top right corner of the homepage. Fill in the required details and submit the form to register.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>What are the trading fees?</h3>
+                <p>The trading fees are based on the volume of trades. You can find a detailed breakdown of the fees in the "Fees" section of our website.</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>How do I withdraw funds?</h3>
+                <p>You can withdraw funds by navigating to the "Withdraw" section in your account dashboard. Enter the withdrawal amount and your preferred payment method.</p>
+            </div>
+
+            <!-- Add more FAQ items as needed -->
+        </div>
+        <!-- <h1><%=user.email%></h1> -->
+        
+
+        
+        <!-- Query Section -->
+        <h2>Still have a question? Ask us below!</h2>
+        <form action="/submit-query" method="POST">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" value="<%= user.name %>" readOnly required>
+
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" readOnly required>
+
+            <label for="query">Your Question/Query</label>
+            <textarea id="query" name="query" rows="6" required></textarea>
+
+            <button type="submit">Submit Query</button>
+        </form>
+    </div>
+    <h1>Your Queries</h1>
+    <div class="pending-queries">
+        <h2>Pending Queries</h2>
+        <% if (pendingQueries.length === 0) { %>
+            <div class="rs">No pending queries found.</div>
+        <% } else { %>
+            <ul class="list-group">
+                <% pendingQueries.forEach(query => { %>
+                    <li class="list-group-item pending-item">
+                        <strong>Name:</strong> <%= query.name %> <br>
+                        <strong>Email:</strong> <%= query.email %> <br>
+                        <strong>Query:</strong> <%= query.query %> <br>
+                        <strong>Submitted At:</strong> <%= query.createdAt.toLocaleString() %> <br>
+                        <strong>Status:</strong> Pending
+                    </li>
+                <% }); %>
+            </ul>
+        <% } %>
+    </div>
+
+    <div class="resolved-queries">
+        <h2>Resolved Queries</h2>
+        <% if (resolvedQueries.length === 0) { %>
+            <div class="rs">No resolved queries found.</div>
+        <% } else { %>
+            <ul class="list-group">
+                <% resolvedQueries.forEach(query => { %>
+                    <li class="list-group-item resolved-item">
+                        <strong>Name:</strong> <%= query.name %> <br>
+                        <strong>Email:</strong> <%= query.email %> <br>
+                        <strong>Query:</strong> <%= query.query %> <br>
+                        <strong>Resolved Message:</strong> <%= query.resolved_message %> <br>
+                        <strong>Resolved At:</strong> <%= query.updatedAt.toLocaleString() %> <br>
+                    </li>
+                <% }); %>
+            </ul>
+        <% } %>
+    </div>
+</div>
+    <script>
+        // Toggle FAQ answer display
+        document.querySelectorAll('.faq-item h3').forEach(item => {
+            item.addEventListener('click', () => {
+                const content = item.nextElementSibling;
+                if (content.style.display === "none" || content.style.display === "") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

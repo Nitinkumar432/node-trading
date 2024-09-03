@@ -24,7 +24,7 @@
     <header>
         <div class="header-container">
             <div class="left-elements">
-                <img src="flogo.png" alt="Company Logo">
+                <img src="/images/flogo.png" alt="Company Logo">
                 <div class="separator"></div>
                 <div class="options">
                  
@@ -58,7 +58,7 @@
                               <div class="dropdown-content">
                                   <a href="mutualfund.html">Mutual Funds</a>
                                   <a href="#">IPO</a>
-                                  <a href="#">Gold Investment</a>
+                                  <a href="/help">Help</a>
                               </div>
                               <li class="dropdown">
                                 <a href="Account.html"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
@@ -90,7 +90,17 @@
                         <%}%>
                         <li>
                             <a href="/profile"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image"><%=user.userType%></a>
-                           
+                            <div class="dropdown-content">
+                              
+                              <a href="/profile"> Profile</a>
+                              <a href="/logout">Logout</a>
+                             
+                              <a href="#"> Setings</a>
+                              <%if(user.userType=='admin') {%>
+                                <a href="/help-query" alt="More">Help Query</a>
+
+                                <%}%>
+                          </div>
                         </li>
                         
                         
@@ -403,7 +413,7 @@
   
   <div class="row">
   <ul>
-  <li><a href="#">Contact us</a></li>
+  <li><a href="/contact">Contact us</a></li>
   <li><a href="#">Our Services</a></li>
   <li><a href="#">Privacy Policy</a></li>
   <li><a href="#">Terms & Conditions</a></li>

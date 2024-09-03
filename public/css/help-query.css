@@ -1,0 +1,69 @@
+body {
+    background-color: #f8f9fa; /* Light background color */
+    color: #343a40; /* Dark text color */
+    font-family: 'Arial', sans-serif; /* Font style */
+}
+
+.container {
+    background-color: #ffffff; /* White background for the container */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 30px; /* Padding inside the container */
+    margin-top: 30px; /* Top margin */
+}
+
+h1 {
+    color: #007bff; /* Primary color for the main heading */
+    text-align: center; /* Center align the heading */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+h2 {
+    color: #343a40; /* Dark color for section headings */
+    margin-top: 30px; /* Space above section headings */
+    border-bottom: 2px solid #007bff; /* Underline for section headings */
+    padding-bottom: 10px; /* Space below the underline */
+}
+
+.list-group-item {
+    border: 1px solid #ddd; /* Light border for list items */
+    border-radius: 5px; /* Rounded corners for list items */
+    margin-bottom: 10px; /* Space between list items */
+    padding: 15px; /* Padding for list items */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1; /* Light gray background on hover */
+}
+
+.btn-success {
+    background-color: #28a745; /* Green background for resolve button */
+    border: none; /* Remove border */
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+.modal-header {
+    background-color: #007bff; /* Primary color for modal header */
+    color: white; /* White text color */
+}
+
+.modal-body {
+    padding: 20px; /* Padding inside modal body */
+}
+
+.form-control {
+    border-radius: 5px; /* Rounded corners for form inputs */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Primary button color */
+    border: none; /* Remove border */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}

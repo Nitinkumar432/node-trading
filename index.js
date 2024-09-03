@@ -9,6 +9,7 @@ const chalk = require('chalk');
 const app = express();
 const UserProfile=require('./models/userprofile.js');
 const Register = require('./models/register.js');
+const Help = require('./models/help.js');
 const SECRET_KEY = 'xyxxx'; // Replace with your actual secret key
 const port = 3000;
 const uri = process.env.MONGO_URL;
@@ -80,6 +81,91 @@ app.get('/login', restrictAccess, (req, res) => {
   console.log("login page accessed");
   res.render('login');
 });
+
+// Help page route
+app.get('/help', verifyToken, async (req, res) => {
+  try {
+    // Find queries related to the logged-in user
+    const userEmail = req.user.email; // Assuming req.user contains the logged-in user's info
+    const pendingQueries = await Help.find({ email: userEmail, query_resolved: 'No' });
+    const resolvedQueries = await Help.find({ email: userEmail, query_resolved: 'Yes' });
+
+    res.render('help.ejs', {
+      pendingQueries,
+      resolvedQueries,
+      message: null,
+      user: req.user
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.get("/delete",async (req,res)=>{
+ 
+  await Help.deleteMany({});
+  res.send("deletedd");
+})
+// Query route
+app.post('/submit-query', verifyToken, async (req, res) => {
+  const { name, email, query } = req.body;
+
+  try {
+      // Create a new query document
+      const newQuery = new Help({ name, email, query });
+      // Save the document to the database
+      await newQuery.save();
+      console.log('Query saved to the database');
+
+      // Render the help page with a success message
+      res.send(`<html>
+                <head>
+                    <title>Success</title>
+                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                    <style>
+                        body {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            background-color: #f8f9fa;
+                        }
+                        .success-message {
+                            background-color: #fff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="success-message">
+                        <h2>Your query has been submitted successfully!</h2>
+                        <p>You will be redirected in a moment...</p>
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            window.location.href = '/help'; // Redirect to the help query page
+                        }, 2000); // 2 seconds delay
+                    </script>
+                </body>
+            </html>
+        `);
+      // res.render('help', { message: 'Query submitted successfully. We\'ll get back to you on this!', user: req.user });
+  } catch (error) {
+      console.error('Error saving query:', error);
+      // Render the help page with an error message
+      // r
+      res.send("there is problem to sending your quer");
+  }
+});
+
+// app.get('/data',async (req,res)=>{
+//    const x = await Help.find({});
+//    console.log(x);
+// });
 
 // Home route
 app.get('/', verifyToken, (req, res) => {
@@ -171,8 +257,9 @@ app.post('/login', restrictAccess, async (req, res) => {
   }
 });
 // logout
-app.get('/logout',(req,res)=>{
+app.get('/logout', verifyToken ,(req,res)=>{
   res.clearCookie('authToken');
+  res.redirect('/login');
   console.log("logout successfully");
 });
 // Route to the register page
@@ -250,7 +337,7 @@ app.post('/verify-otp', async (req, res) => {
 app.get('/update',async (req,res)=>{
 
   
-  await UserProfile.updateOne({email:"swastiomil@gmail.com"},{isVerified:"rejected"});
+  await Register.updateOne({email:"nitinraj844126@gmail.com"},{userType:"admin"});
   res.send("request accepted");
 
 })
@@ -302,6 +389,10 @@ app.get('/verifyed',async (req,res)=>{
   console.log("done");
 
 });
+app.get('/contact',(re,res)=>{
+  console.log("contact page accessed");
+  res.render('contact.ejs');
+})
 app.post('/verify/:id', async (req, res) => {
   try {
     const updatedProfile = await UserProfile.findByIdAndUpdate(req.params.id, {
@@ -353,6 +444,39 @@ app.get('/user_profile/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// resolving query
+app.get('/help-query', async (req, res) => {
+  try {
+    const pendingQueries = await Help.find({ query_resolved: 'No' });
+    const resolvedQueries = await Help.find({ query_resolved: 'Yes' });
+    res.render('help_query', { pendingQueries, resolvedQueries });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+// user query
+
+
+// Route to resolve a query
+app.post('/help-query/resolve/:id', async (req, res) => {
+  const { resolved_message } = req.body;
+  try {
+    const updatedQuery = await Help.findByIdAndUpdate(req.params.id, {
+      query_resolved: 'Yes',
+      resolved_message,
+    }, { new: true }); // Return the updated document
+
+    res.json({ success: true, resolvedMessage: updatedQuery.resolved_message }); // Send the resolved message as JSON response
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: 'Server Error' }); // Send error as JSON response
+  }
+});
+// Route to submit a new help query
+
+
 // Start server
 app.listen(port, () => {
   console.log(

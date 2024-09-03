@@ -1,0 +1,421 @@
+header {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px;
+    border-bottom:  1px solid rgb(62, 61, 61);
+
+    
+  
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+   
+}
+
+.left-elements {
+    display: flex;
+    align-items: center;
+}
+
+.left-elements img {
+    height: 100px; /* Adjust the height of the image icon */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Adjust margin as needed */
+}
+.separator {
+    height: 15px; /* Adjust height as needed */
+    width: 2px; /* Adjust width as needed */
+    background-color: #3a3636; /* Adjust color as needed */
+    margin: 0 10px; /* Adjust margin as needed */
+}
+
+
+
+
+.options {
+    display: flex;
+}
+
+.options .option {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 20px;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.options .option:hover {
+    color: #ffd700; /* Change color on hover */
+}
+
+.nifty-sensex {
+    display: flex;
+    align-items: center;
+    
+}
+
+.box {
+    background-color: #1d1717;
+    border:1px solid black;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.box span {
+    color: #fbf7f7;
+}
+
+.box .value {
+    font-weight: bold;
+}
+
+.percentage {
+    margin-left: 5px; /* Adjust spacing between value and percentage */
+    font-size: 14px; /* Adjust font size as needed */
+}
+
+.green {
+    color: green !important; /* Ensure that green overrides any other styles */
+}
+
+.red {
+    color: red !important; /* Ensure that red overrides any other styles */
+}
+
+.right-elements {
+    display: flex;
+    align-items: center;
+}
+.right-elements img {
+    max-height: 20px; /* Set the maximum height of the image */
+    width: auto; /* Allow the width to adjust proportionally */
+    margin-left: 7px; /* Adjust margin as needed */
+}
+
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
+
+nav ul li a img {
+    margin-right: 5px; /* Adjust spacing between icon and text */
+    vertical-align: middle;
+}
+
+nav ul li .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #0f0f0f;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    
+    z-index: 1;
+    border-radius: 5px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+nav ul li .dropdown-content a {
+    color: #fff;
+    padding: 12px 16px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    display: block;
+}
+
+nav ul li .dropdown-content a:hover {
+    background-color: #f4eeee;
+}
+
+nav ul li:hover .dropdown-content {
+    display: block;
+}
+.verify{
+background-color: rgb(201, 22, 22);
+border-radius:15px;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media only screen and (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .left-elements {
+        margin-bottom: 10px;
+    }
+
+    .right-elements {
+        margin-top: 10px;
+    }
+
+    .options .option {
+        margin-right: 10px;
+    }
+
+    .box {
+        margin-right: 10px;
+    }
+
+    .details {
+        display: none; /* Hide details section on smaller screens */
+    }
+}
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(21, 21, 21);
+    color: white;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px;
+    border-bottom:  1px solid rgb(62, 61, 61);
+
+    
+  
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+   
+}
+
+.left-elements {
+    display: flex;
+    align-items: center;
+}
+
+.left-elements img {
+    height: 60px; /* Adjust the height of the image icon */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: 10px; /* Adjust margin as needed */
+}
+.separator {
+    height: 15px; /* Adjust height as needed */
+    width: 2px; /* Adjust width as needed */
+    background-color: #3a3636; /* Adjust color as needed */
+    margin: 0 10px; /* Adjust margin as needed */
+}
+
+.right {
+    width: 50%;
+    height: 100vh;
+    margin-top: 30px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+     /* General Container Styles */
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+    border-radius: 10px; /* Rounded corners for a softer look */
+}
+
+/* Heading Styles */
+h1 {
+    color: #343a40;
+    font-family: 'Montserrat', sans-serif; /* Modern font */
+    font-size: 2.5rem; /* Larger font size for emphasis */
+    text-align: center; /* Center align the heading */
+    margin-bottom: 20px;
+}
+
+/* FAQ Section Styles */
+.faq {
+    margin-bottom: 30px;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+}
+
+.faq-item h3 {
+    cursor: pointer;
+    background-color: #cfc5c6; /* Bright red for a bold look */
+    color: rgb(94, 91, 91);
+    padding: 15px;
+    margin: 0;
+    border-radius: 8px; /* More rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.faq-item h3:hover {
+    background-color: #9c908c; /* Darker red on hover */
+}
+
+.faq-item p {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa; /* Light background for answers */
+}
+
+/* Alert Styles */
+.alert {
+    margin-bottom: 20px;
+    padding: 15px;
+    color: white;
+    background-color: #28a745; /* Green for success alerts */
+    border-radius: 5px;
+    font-weight: bold; /* Bold text for emphasis */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.alert.error {
+    background-color: #dc3545; /* Red for error alerts */
+}
+
+/* Form Styles */
+form {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif; /* Modern font for form */
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333; /* Darker text for better readability */
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 12px; /* Increased padding for comfort */
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem; /* Consistent font size */
+}
+
+/* Button Styles */
+form button {
+    background-color: #007bff; /* Bright blue for buttons */
+    color: white;
+    padding: 12px 25px; /* Increased padding for buttons */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem; /* Consistent font size */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+form button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Additional Styles */
+body {
+    font-family: 'Arial', sans-serif; /* Base font for the body */
+    background-color: #f0f4f8; /* Light background color for the page */
+    color: #343a40; /* Dark text for contrast */
+    line-height: 1.6; /* Improved line height for readability */
+}
+/* Pending Queries Section */
+.pending-queries {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    width:1525px;
+    display: block;
+    margin: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pending-item {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+}
+
+.pending-item:hover {
+    background-color: #f1f1f1;
+}
+
+/* Resolved Queries Section */
+.resolved-queries {
+    
+    background-color: #f8f9fa;
+    padding: 20px;
+    width:1525px;
+    display: block;
+    margin: auto;
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.resolved-item {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+}
+
+.resolved-item:hover {
+    background-color: #f1f1f1;
+}
+.rs{
+    padding:20px;
+    background-color: rgb(190, 221, 231);
+}

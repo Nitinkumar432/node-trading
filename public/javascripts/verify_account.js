@@ -1,4 +1,3 @@
-
 const verifyButtons = document.querySelectorAll('.verify-btn');
 const viewButtons = document.querySelectorAll('.view-btn');
 const rejectButtons = document.querySelectorAll('.reject-btn');
