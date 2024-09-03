@@ -353,6 +353,11 @@ app.get('/user_profile/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.get("/contact", (req, res) => {
+  res.render("contact");
+})
+
 // Start server
 app.listen(port, () => {
   console.log(
