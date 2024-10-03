@@ -1,5 +1,5 @@
 body{
-    background-image: url("https://user-images.githubusercontent.com/50502036/131707309-b3d1a166-309b-4579-a777-225cea8ec22d.gif");
+    background-color: rgb(186, 201, 230);
 }
 .navbar {
     display: flex;
@@ -145,6 +145,7 @@ body{
 }
 
 .container {
+  background-image: url("https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGY0ZTRkZnB2czh5bGV1d3VramQ2Z2YwbXFoYnpkaGFndmJ0em04byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rM0wxzvwsv5g4/giphy.gif");
 
   padding: 0 30px;
   min-height: 100vh;
@@ -552,4 +553,26 @@ button:hover {
 /* Add the red border to the email and password fields */
 .error {
   border: 2px solid red !important;
+}
+/*  */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: none; /* Initially hidden */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+  backdrop-filter: blur(5px); /* Blur effect */
+}
+
+.loading-spinner {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  background: url('https://i.pinimg.com/originals/c7/e1/b7/c7e1b7b5753737039e1bdbda578132b8.gif') no-repeat center center; /* Replace with your loading image */
+  background-size: contain; /* Ensure the image fits well */
+  animation: spin 1s linear infinite; /* Spinner animation */
 }

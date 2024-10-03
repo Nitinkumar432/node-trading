@@ -1,0 +1,134 @@
+body {
+    background-color: #f0f2f5;
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+h1, h2 {
+    font-weight: bold;
+    text-align: center;
+}
+
+.search-bar {
+    margin-bottom: 30px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.search-bar input {
+    padding-right: 60px;
+    padding-left: 20px;
+    height: 50px;
+    width: 60%;
+    font-size: 18px;
+    border-radius: 30px;
+    border: 2px solid #ccc;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar i {
+    position: absolute;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: #888;
+}
+
+.stock-card {
+    margin-bottom: 40px;
+}
+
+.card {
+    border-radius: 15px;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-body {
+    padding: 25px;
+}
+
+.card-title {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.card p {
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.price-change {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.price-change.positive {
+    color: #28a745;
+}
+
+.price-change.negative {
+    color: #dc3545;
+}
+
+.icon-growth {
+    font-size: 1.3rem;
+    color: #ffc107;
+    margin-right: 0.5rem;
+}
+
+.buy-button {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.buy-button:hover {
+    background-color: #0056b3;
+}
+
+/* Row styling to ensure 3 cards per row */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 40px;
+}
+
+.col-md-4 {
+    flex: 0 0 30%;
+    max-width: 30%;
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 48%;
+        max-width: 48%;
+    }
+}
+
+@media (max-width: 576px) {
+    .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}

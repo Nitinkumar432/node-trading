@@ -1,0 +1,144 @@
+body {
+    background-color: #121212;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif; /* Added font for better readability */
+}
+
+.container {
+    width: 100%; /* Full width on smaller screens */
+    max-width: 600px; /* Set max width */
+    padding: 2rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Added shadow for depth */
+    border-radius: 15px; /* Rounded corners */
+    background-color: #1f1f1f; /* Container background color */
+}
+
+.card {
+    background-color: #1f1f1f;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    border-radius: 10px; /* Rounded corners */
+}
+
+.btn-custom {
+    background-color: #6f42c1;
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 1.25rem;
+    width: 45%; /* Adjusted width */
+    margin: 0 5px; /* Margin for spacing */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 0.75rem; /* Padding for a better touch area */
+}
+
+.btn-custom:hover {
+    background-color: #5a32a1;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Shadow effect on hover */
+}
+
+.balance-display {
+    font-size: 2rem; /* Increased font size */
+    color: #ffc107;
+    text-align: center; /* Center align */
+}
+
+.modal-header {
+    background-color: #343a40;
+    color: white;
+    border-bottom: 2px solid #6f42c1; /* Bottom border for distinction */
+}
+
+.modal-content {
+    background-color: #1f1f1f;
+    border-radius: 10px; /* Rounded corners for modals */
+}
+
+.form-label {
+    color: #b0b0b0;
+}
+
+.modal-body {
+    font-size: 1.25rem; /* Increased font size in modals */
+}
+
+/* Transaction history table */
+table {
+    width: 100%;
+    margin-top: 20px;
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #343a40;
+}
+
+/* Loading spinner styles */
+.spinner-border {
+    display: none; /* Hidden by default */
+    width: 2rem; /* Size of the spinner */
+    height: 2rem; /* Size of the spinner */
+    border-width: 0.25em; /* Thickness of the spinner */
+}
+
+/* Input field styles */
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%; /* Full width */
+    padding: 0.5rem; /* Padding for input fields */
+    margin-top: 0.5rem; /* Margin for spacing */
+    border: 1px solid #6f42c1; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #2a2a2a; /* Dark background for input fields */
+    color: white; /* Text color */
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none; /* Remove outline */
+    border-color: #ffc107; /* Border color on focus */
+}
+
+/* Alert message styles */
+.alert {
+    padding: 1rem; /* Padding for alerts */
+    border-radius: 5px; /* Rounded corners */
+    margin-top: 20px; /* Margin for spacing */
+    display: none; /* Hidden by default */
+}
+
+.alert-success {
+    background-color: #28a745; /* Green background */
+    color: white; /* Text color */
+}
+
+.alert-error {
+    background-color: #dc3545; /* Red background */
+    color: white; /* Text color */
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    .btn-custom {
+        width: 100%; /* Full width buttons on small screens */
+        margin: 10px 0; /* Margin for spacing */
+    }
+
+    .container {
+        padding: 1rem; /* Less padding on smaller screens */
+    }
+}

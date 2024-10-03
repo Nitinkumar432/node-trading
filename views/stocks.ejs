@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Discovery</title>
+    <link rel="stylesheet" href="css/stocks.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        /* Search bar styling */
+        .search-bar {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+        .search-bar input {
+            width: 50%;
+            padding: 10px;
+            border: 2px solid #28a745;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Stock card container styling */
+        .stock-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .stock-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+        }
+        .card-body {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        .card-title {
+            font-weight: 600;
+            color: #28a745;
+        }
+        .price-change.positive {
+            color: #28a745;
+        }
+        .price-change.negative {
+            color: #dc3545;
+        }
+        .buy-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .buy-button:hover {
+            background-color: #218838;
+        }
+
+        /* Modal styling */
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.5s ease-out; /* Fade-in animation */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 50%;
+    max-width: 500px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    text-align: center; /* Center the content */
+    animation: slideIn 0.5s ease-out; /* Slide-in animation */
+}
+
+/* Button enhancements */
+.modal-content button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #45a049;
+}
+
+/* Typography enhancements */
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+    font-weight: bold;
+}
+
+.modal-content p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Close button */
+.modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.modal-content .close:hover {
+    color: #ff0000;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 80%;
+        margin: 20% auto;
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+    .modal-content p {
+        font-size: 14px;
+    }
+
+    .modal-content button {
+        font-size: 14px;
+    }
+}
+
+
+        /* Alert message styling */
+        .alert-message {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 101;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .alert-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .alert-error {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Discover Stocks</h1>
+    <h3>Available Funds: &#x20b9; <%= user.funds.toFixed(2) %></h3>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" id="stockSearchInput" onkeyup="searchStocks()" placeholder="Search stocks by company name...">
+    </div>
+
+    <!-- Stock Cards (Top Companies) -->
+    <h2>Top Companies</h2>
+    <div class="row" id="topCompanies">
+        <% topStocks.forEach(stock => { %>
+            <div class="col-md-4 stock-card">
+                <div class="card bg-white">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= stock.companyName %> (<%= stock.stockSymbol %>)</h5>
+                        <p><i class="bi bi-currency-dollar"></i> Current Price: &#x20b9; <%= stock.currentPrice.toFixed(2) %></p>
+                        <p><i class="bi bi-bar-chart-line"></i> Market Cap: &#x20b9; <%= stock.marketCap.toLocaleString() %></p>
+                        <% const growth = ((Math.random() * 10) - 5).toFixed(2); %>
+                        <p><i class="bi bi-graph-up-arrow icon-growth"></i> Last Growth: <%= growth %>%</p>
+                        <span class="price-change <%= growth >= 0 ? 'positive' : 'negative' %>">Today's Growth: <%= growth >= 0 ? '+' : '' %><%= growth %>%</span>
+                        <div class="mt-3 text-center">
+                            <button class="buy-button" onclick="openModal('<%= stock.companyName %>', <%= stock.currentPrice %>, '<%= stock.stockSymbol %>')">Buy Stock</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+    <h2>All Companies</h2>
+    <div class="row" id="allCompanies">
+        <% allStocks.forEach(stock => { %>
+            <div class="col-md-4 stock-card">
+                <div class="card bg-white">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= stock.companyName %> (<%= stock.stockSymbol %>)</h5>
+                        <p><i class="bi bi-currency-dollar"></i> Current Price: &#x20b9; <%= stock.currentPrice.toFixed(2) %></p>
+                        <p><i class="bi bi-bar-chart-line"></i> Market Cap: &#x20b9; <%= stock.marketCap.toLocaleString() %></p>
+                        <% const growth = ((Math.random() * 10) - 5).toFixed(2); %>
+                        <p><i class="bi bi-graph-up-arrow icon-growth"></i> Last Growth: <%= growth %>%</p>
+                        <span class="price-change <%= growth >= 0 ? 'positive' : 'negative' %>">Today's Growth: 
+                            <%= growth >= 0 ? '+' : '' %><%= growth %>%
+                        </span>
+                        <div class="mt-3 text-center">
+                            <button class="buy-button" onclick="openModal('<%= stock.companyName %>',<%= stock.currentPrice %>, '<%= stock.stockSymbol %>')">Buy Stock</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<!-- Enhanced Buy Stock Modal -->
+<div class="modal" id="buyStockModal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Buy Stock</h2>
+        <p>Stock Symbol: <span id="stockSymbol"></span></p>
+        <p>Current Price: ₹<span id="currentPrice"></span></p>
+        <p>Available Funds: ₹<%= user.funds.toFixed(2) %></p>
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" min="1" value="1" onchange="updateTotalPrice()">
+        <p>Total Price: ₹<span id="totalPrice" class="total-price"></span></p>
+        <button class="buy-button" onclick="confirmPurchase()">Confirm Purchase</button>
+    </div>
+</div>
+
+<!-- Success/Error Message Popups -->
+<div class="alert-message alert-success" id="successMessage">Purchase successful!</div>
+<div class="alert-message alert-error" id="errorMessage">Purchase failed. Please try again.</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let currentStockPrice = 0;
+
+    // Open Modal
+    function openModal(stockName, stockPrice, stockSymbol) {
+        currentStockPrice = stockPrice;
+        document.getElementById('modalTitle').innerText = `Buy ${stockName}`;
+        document.getElementById('currentPrice').innerText = stockPrice.toFixed(2);
+        document.getElementById('stockSymbol').innerText = stockSymbol;
+        document.getElementById('quantity').value = 1;
+        updateTotalPrice();
+        document.getElementById('buyStockModal').style.display = 'block';
+    }
+
+    // Close Modal
+    function closeModal() {
+        document.getElementById('buyStockModal').style.display = 'none';
+    }
+
+    // Update total price based on quantity
+    function updateTotalPrice() {
+        const quantity = document.getElementById('quantity').value;
+        const totalPrice = currentStockPrice * quantity;
+        document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+    }
+
+    // Confirm purchase function
+    function confirmPurchase() {
+        const quantity = document.getElementById('quantity').value;
+        const stockSymbol = document.getElementById('stockSymbol').innerText;
+        const totalPrice = currentStockPrice * quantity;
+
+        if (totalPrice > <%= user.funds %>) {
+            showMessage('Insufficient funds. Please reduce the quantity.', 'error');
+            return;
+        }
+
+        fetch('/buy-stock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ stockSymbol, quantity })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeModal();
+                showMessage('Purchase successful!', 'success');
+            } else {
+                showMessage('Purchase failed. Please try again.', 'error');
+            }
+        })
+        .catch(error => {
+            showMessage('An error occurred. Please try again.', 'error');
+        });
+    }
+
+    // Show message
+    function showMessage(message, type) {
+        const messageElement = type === 'success' ? document.getElementById('successMessage') : document.getElementById('errorMessage');
+        messageElement.innerText = message;
+        messageElement.style.display = 'block';
+        setTimeout(() => {
+            messageElement.style.display = 'none';
+        }, 3000);
+    }
+
+    // Search stocks
+    function searchStocks() {
+        const input = document.getElementById("stockSearchInput").value.toLowerCase();
+        const stockCards = document.querySelectorAll(".stock-card");
+        
+        stockCards.forEach((card) => {
+            const stockName = card.querySelector(".card-title").textContent.toLowerCase();
+            if (stockName.includes(input)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

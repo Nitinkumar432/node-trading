@@ -3,7 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const nodemailer=require("nodemailer");
 require('dotenv').config();
+const otpMap = new Map();
 const cookieParser = require('cookie-parser');
 const chalk = require('chalk');
 const app = express();
@@ -12,6 +14,7 @@ const Register = require('./models/register.js');
 const Help = require('./models/help.js');
 const SECRET_KEY = 'xyxxx'; // Replace with your actual secret key
 const port = 3000;
+const Stock=require('./models/stock.js');
 const uri = process.env.MONGO_URL;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // To parse JSON data
@@ -107,7 +110,20 @@ app.get("/delete",async (req,res)=>{
   await Help.deleteMany({});
   res.send("deletedd");
 })
+
 // Query route
+// app.get('/date/:email',async (req,res)=>{
+//   const x=req.params.email;
+
+//   const xt=await Register.findOne({email:x});
+//   if(!xt){
+//     res.send("not found")
+//   }
+
+//   res.send(xt);
+
+//   console.log(x);
+// });
 app.post('/submit-query', verifyToken, async (req, res) => {
   const { name, email, query } = req.body;
 
@@ -240,7 +256,7 @@ app.post('/login', restrictAccess, async (req, res) => {
     const user = await Register.findOne({ email });
 
     if (!user || password !== user.password) {
-      return res.render('login', { error: 'Email or password is incorrect.' });
+     res.send("your entered password is wrong");
     }
 
     // Generate a JWT token
@@ -304,34 +320,66 @@ app.post('/register', restrictAccess, async (req, res) => {
 });
 
 // Route to verify email
+// otp verification system
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+      user: process.env.EMAIL_USER,  // Email address stored in .env
+      pass: process.env.EMAIL_PASS   // Email password stored in .env
+  }
+});
+// updating route:
+
+// Route to verify OTP and update password
 app.post('/check-email', async (req, res) => {
+  console.log("check accessed");
   const { email } = req.body;
 
   try {
-    // Check if the email exists in the database
-    const user = await Register.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: 'Email not found!' });
-    }
-    // If email exists, send a success response
-    res.status(200).json({ message: 'Email found!' });
+      const user = await Register.findOne({ email: email });
+      if (!user) {
+          return res.status(400).json({ error: 'Email not found!' });
+      }
+
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpExpiry = Date.now() + 5 * 60 * 1000;
+
+      otpMap.set(email, { otp, otpExpiry });
+
+      const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: 'Your OTP for Password Reset',
+          text: `Your OTP for password reset is: ${otp}. This OTP is valid for 5 minutes.`,
+          html: `<p>Your OTP for password reset is: <strong>${otp}</strong>.</p><p>This OTP is valid for 5 minutes.</p>`
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'OTP sent to your email!' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Something went wrong. Please try again!' });
+      console.error(error);
+      res.status(500).json({ error: 'Something went wrong. Please try again!' });
   }
 });
 
-// Route to verify OTP and update password
 app.post('/verify-otp', async (req, res) => {
-  const { email, newPassword } = req.body;
+  console.log("verify email accessed");
+  const { email, otp, newPassword } = req.body;
+  console.log(req.body);
 
-  // Update the user's password in the database
+  const storedOtpInfo = otpMap.get(email);
+  if (!storedOtpInfo || storedOtpInfo.otp !== otp || Date.now() > storedOtpInfo.otpExpiry) {
+      return res.status(400).json({ error: 'Invalid or expired OTP!' });
+  }
+
   try {
-    await Register.updateOne({ email }, { password: newPassword });
-    res.status(200).json({ message: 'Password updated successfully!' });
+      await Register.updateOne({ email: email }, { password: newPassword });
+      console.log("Password updated successfully.");
+      otpMap.delete(email); 
+      res.status(200).json({ message: 'Password updated successfully!' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Something went wrong. Please try again!' });
+      console.error(error);
+      res.status(500).json({ error: 'Something went wrong. Please try again!' });
   }
 });
 app.get('/update',async (req,res)=>{
@@ -457,11 +505,11 @@ app.get('/help-query', async (req, res) => {
   }
 });
 // user query
-app.get('/updatedata',(req,res)=>{
-  UserProfile.updateMany({email : "nitinraj844126@gmail.com"},{isVerified:"true"});
-  res.send("updated");
+// app.get('/updatedata',(req,res)=>{
+//   UserProfile.updateMany({email : "nitinraj844126@gmail.com"},{isVerified:"true"});
+//   res.send("updated");
   
-})
+// })
 
 // Route to resolve a query
 app.post('/help-query/resolve/:id', async (req, res) => {
@@ -480,9 +528,120 @@ app.post('/help-query/resolve/:id', async (req, res) => {
 });
 // Route to submit a new help query
 
+// discover page all stock show
+app.get('/stocks', verifyToken,async (req, res) => {
+  try {
+      const allStocks = await Stock.find({});
+      const topStocks = allStocks.slice(0, 3); // Get top 3 stocks
+      res.render('stocks', { user:req.user,topStocks, allStocks });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error retrieving stocks');
+  }
+});
+// funds sectuon
 
+
+app.get('/funds', verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user is logged in and ID is available
+    const user = await Register.findById(userId);
+    if (user) {
+     
+      // Render the 'funds.ejs' template and pass user data
+      res.render('funds', { user });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+app.post('/funds/add', verifyToken,async (req, res) => {
+  const { amount } = req.body;
+
+  try {
+      const user = await Register.findById(req.user.id); // Assume userId is set via authentication middleware
+      if (!user) return res.status(404).send('User not found');
+
+      user.funds += amount;
+      await user.save();
+
+      res.send({ message: 'Funds added successfully!' });
+  } catch (error) {
+      res.status(500).send({ message: 'Server error' });
+  }
+});
+
+// Withdraw funds
+app.post('/funds/withdraw',verifyToken, async (req, res) => {
+  const { amount } = req.body;
+
+  try {
+      const user = await Register.findById(req.user.id); // Assume userId is set via authentication middleware
+      if (!user) return res.status(404).send('User not found');
+
+      if (user.funds < amount) {
+          return res.status(400).send({ message: 'Insufficient funds' });
+      }
+
+      user.funds -= amount;
+      await user.save();
+
+      res.send({ message: 'Funds withdrawn successfully!' });
+  } catch (error) {
+      res.status(500).send({ message: 'Server error' });
+  }
+});
+// stock buy
+app.post('/buy-stock', verifyToken, async (req, res) => {
+  try {
+      const userId = req.user.id; // Get user ID from token
+      const { stockSymbol, quantity } = req.body; // Get stock symbol and quantity from request body
+
+      // Find the user
+      const user = await Register.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Find the stock
+      const stock = await Stock.findOne({ stockSymbol });
+      if (!stock) {
+          return res.status(404).json({ message: 'Stock not found' });
+      }
+
+      // Calculate total price
+      const totalPrice = stock.currentPrice * quantity;
+
+      // Check if user has enough funds
+      if (user.funds < totalPrice) {
+          return res.status(400).json({ message: 'Insufficient funds' });
+      }
+
+      // Deduct funds from user
+      user.funds -= totalPrice;
+      await user.save();
+
+      // Redirect to confirmation page with purchase details
+      res.redirect(`/confirmation?email=${user.email}&stockName=${stock.companyName}&quantity=${quantity}&totalPrice=${totalPrice}`);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Confirmation route
+app.get('/confirmation', (req, res) => {
+  console.log("hello");
+  const { email, stockName, quantity, totalPrice } = req.query;
+  // Render confirmation page with purchase details
+  console.log(req.query);
+  res.render('confirmation', { email, stockName, quantity, totalPrice });
+});
 // Start server
-app.listen(port, () => {
+const PORT=process.env.PORT || 300;
+app.listen(PORT, () => {
   console.log(
     chalk.bgGreen.white(`\n\n  Server is running on port ${port}  \n`) +
     chalk.blue(`  Visit: http://localhost:${port}  \n`) +

@@ -36,6 +36,10 @@ const registrationSchema = new mongoose.Schema({
   userType:{
     type:String,
     default:"user",
+  },
+  funds:{
+    type:Number,
+    deafult:0.0
   }
 });
 

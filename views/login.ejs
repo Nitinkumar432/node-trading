@@ -4,13 +4,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>movie</title>
     <link rel="stylesheet" href="css/login.css">
     <script src="/javascripts/login.js"></script>
   </head>
   <body>
     <nav class="navbar">
-        <div class="logo">TradeHub</div>
+        <div class="logo">Movies</div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -24,7 +25,7 @@
       <div class="facebook-page flex">
         
         <div class="text">
-          <h1>TradeHub </h1>
+          <h1>TraMoviesdeHub </h1>
           <p>Worldwide movies</p>
           <p> search a movie.....</p>
         </div>
@@ -33,7 +34,7 @@
             <input type="password" name="password" placeholder="Password" required>
             <div class="link">
               <button type="submit" class="login">Login</button>
-              <a href="#" class="forgot" onclick="openModal()">Forgot password?</a>
+              <a href="#"  onclick="openModal()" class="forgot-password">Forgot Password?</a>
             </div>
             <hr>
             <div class="button">
@@ -44,39 +45,35 @@
     </div>
 <!-- Forgot Password Modal -->
 <!-- Forgot Password Modal -->
+
 <!-- Forgot Password Modal -->
-<div id="forgotPasswordModal" class="modal">
-  <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <h2>Reset Password</h2>
-      <form id="resetPasswordForm">
-          <!-- Email Section -->
-          <div id="emailSection">
-              <input type="email" id="resetEmail" placeholder="Enter your email" required>
-              <button type="button" onclick="sendOTP()">Send OTP</button>
-          </div>
-
-          <!-- OTP Verification Section -->
-          <div id="otpSection" style="display:none;">
-              <input type="text" id="otpInput" placeholder="Enter OTP (204975)" required>
-              <button type="button" onclick="verifyOTP()">Verify OTP</button>
-          </div>
-
-          <!-- New Password Section -->
-          <div id="passwordSection" style="display:none;">
-              <input type="password" id="newPassword" placeholder="New Password" required>
-              <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-              <button type="button" onclick="updatePassword()">Update Password</button>
-          </div>
-
-          <!-- Message Section -->
-          <div id="message"></div>
-      </form>
-  </div>
-</div>
+ <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Reset Password</h2>
+            <form id="resetPasswordForm">
+                <!-- Email Section -->
+                <div id="emailSection">
+                    <input type="email" id="resetEmail" placeholder="Enter your email" required>
+                    <button type="button" onclick="sendOTP()">Send OTP</button>
+                </div>
+      
+                <!-- OTP Verification Section -->
+                <div id="otpSection" style="display:none;">
+                    <input type="text" id="otpInput" placeholder="Enter OTP" required>
+                    <input type="password" id="newPassword" placeholder="New Password" required>
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                    <button type="button" onclick="verifyOTP()">Verify OTP & Update Password</button>
+                </div>
+      
+                <!-- Message Section -->
+                <div id="message"></div>
+            </form>
+        </div>
+    </div>
     <footer class="footer">
         <div class="footer__addr">
-          <h1 class="footer__logo">TradeHub</h1>
+          <h1 class="footer__logo">Movies</h1>
               
           <h2>Contact</h2>
           
@@ -159,7 +156,7 @@
           <p>&copy; 2019 Something. All rights reserved.</p>
           
           <div class="legal__links">
-            <span>Made with <span class="heart">♥</span> nitin</span>
+            <span>Made with <span class="heart">♥</span>.......</span>
           </div>
         </div>
       </footer>
