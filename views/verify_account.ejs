@@ -199,7 +199,7 @@
           <p><strong>Nominees:</strong> <%= profile.nominees %></p>
           <p><strong>KYC Copy URL:</strong> <%= profile.kycCopyUrl || 'N/A' %></p>
     
-        
+          <p><strong>Received Time:</strong> <%= profile.createdAt ? profile.createdAt.toLocaleString() : 'N/A' %></p>
           <button class="btn btn-primary verify-btn" data-id="<%= profile._id %>">Verify</button>
           <button class="btn btn-danger reject-btn" data-id="<%= profile._id %>">Reject</button>
         </div>

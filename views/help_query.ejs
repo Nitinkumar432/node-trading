@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,48 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Queries</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="css/help-query.css">
     <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
 
-        /* Your existing CSS styles */
+        .container {
+            margin-top: 50px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #343a40;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .pending-queries {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            padding: 15px;
+            border-radius: 5px;
+            color: #c2932f;
+            margin-bottom: 20px;
+        }
+
+        .resolved-queries {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            padding: 15px;
+            border-radius: 5px;
+            color: #000000;
+            margin-bottom: 20px;
+        }
+
+        .list-group-item {
+            transition: background-color 0.3s;
+            background-color: #ffffff;
+            border: none;
+            margin-bottom: 10px;
+        }
+
+        .list-group-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .resolve-btn {
+            float: right;
+        }
+
+        .alert {
+            border-radius: 5px;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Icon styles */
+        .list-group-item i {
+            margin-right: 8px;
+            color: #007bff;
+        }
+
+        /* Resolve button color */
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
     </style>
 </head>
 <body>
     <div class="container my-5">
         <h1>Help Queries</h1>
 
-        <h2>Pending Queries</h2>
-        <% if (pendingQueries.length === 0) { %>
-            <div class="alert alert-info">No pending queries found.</div>
-        <% } else { %>
-            <ul class="list-group">
-                <% pendingQueries.forEach(query => { %>
-                    <li class="list-group-item">
-                        <strong>Name:</strong> <%= query.name %> <br>
-                        <strong>Email:</strong> <%= query.email %> <br>
-                        <strong>Query:</strong> <%= query.query %> <br>
-                        <button class="btn btn-success resolve-btn" data-id="<%= query._id %>">Resolve</button>
-                    </li>
-                <% }); %>
-            </ul>
-        <% } %>
+        <div class="pending-queries">
+            <h2><i class="fas fa-question-circle"></i>Pending Queries</h2>
+            <% if (pendingQueries.length === 0) { %>
+                <div class="alert alert-info">No pending queries found.</div>
+            <% } else { %>
+                <ul class="list-group">
+                    <% pendingQueries.forEach(query => { %>
+                        <li class="list-group-item">
+                            <strong>Name:</strong> <%= query.name %> <br>
+                            <strong>Email:</strong> <%= query.email %> <br>
+                            <strong>Query:</strong> <%= query.query %> <br>
+                            <strong>Received Time:</strong> <%= query.createdAt.toLocaleString() %><br>
+                            <button class="btn btn-success resolve-btn" data-id="<%= query._id %>">
+                                <i class="fas fa-check"></i> Resolve
+                            </button>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        </div>
 
-        <h2>Resolved Queries</h2>
-        <% if (resolvedQueries.length === 0) { %>
-            <div class="alert alert-info">No resolved queries found.</div>
-        <% } else { %>
-            <ul class="list-group">
-                <% resolvedQueries.forEach(query => { %>
-                    <li class="list-group-item">
-                        <strong>Name:</strong> <%= query.name %> <br>
-                        <strong>Email:</strong> <%= query.email %> <br>
-                        <strong>Query:</strong> <%= query.query %> <br>
-                        <strong>Resolved Message:</strong> <%= query.resolved_message %> <br>
-                    </li>
-                <% }); %>
-            </ul>
-        <% } %>
+        <div class="resolved-queries">
+            <h2><i class="fas fa-check-circle"></i>Resolved Queries</h2>
+            <% if (resolvedQueries.length === 0) { %>
+                <div class="alert alert-info">No resolved queries found.</div>
+            <% } else { %>
+                <ul class="list-group">
+                    <% resolvedQueries.forEach(query => { %>
+                        <li class="list-group-item">
+                            <strong>Name:</strong> <%= query.name %> <br>
+                            <strong>Email:</strong> <%= query.email %> <br>
+                            <strong>Query:</strong> <%= query.query %> <br>
+                            <strong>Resolved Message:</strong> <%= query.resolved_message %> <br>
+                            <strong>Resolved Time:</strong> <%= new Date(query.resolved_time).toLocaleString() %> <br>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+        </div>
 
         <!-- Modal for resolving queries -->
         <div class="modal fade" id="resolveModal" tabindex="-1" role="dialog" aria-labelledby="resolveModalLabel" aria-hidden="true">

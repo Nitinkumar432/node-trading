@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Mutual Fund</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/admin.css"> <!-- Link to your custom CSS -->
+</head>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    h1 {
+        color: #343a40;
+    }
+
+    .container {
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        padding: 20px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 5px rgba(118, 133, 150, 0.5);
+    }
+</style>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Add Mutual Fund</h1>
+        
+        <% if (message) { %>
+            <div class="alert alert-<%= type %> alert-dismissible fade show" role="alert">
+                <strong><%= message %></strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <% } %>
+
+        <form id="addMutualFundForm" method="POST" action="/add-mutual-fund">
+            <div class="form-group">
+                <label for="fundName">Fund Name</label>
+                <input type="text" class="form-control" id="fundName" name="fundName" required>
+            </div>
+            <div class="form-group">
+                <label for="fundType">Fund Type</label>
+                <select class="form-control" id="fundType" name="fundType" required>
+                    <option value="">Select Fund Type</option>
+                    <option value="Equity">Equity</option>
+                    <option value="Debt">Debt</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Liquid">Liquid</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="manager">Manager</label>
+                <input type="text" class="form-control" id="manager" name="manager" required>
+            </div>
+            <div class="form-group">
+                <label for="minimumInvestment">Minimum Investment (₹)</label>
+                <input type="number" class="form-control" id="minimumInvestment" name="minimumInvestment" required>
+            </div>
+            <div class="form-group">
+                <label for="currentNAV">Current NAV (₹)</label>
+                <input type="number" class="form-control" id="currentNAV" name="currentNAV" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Add Mutual Fund</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

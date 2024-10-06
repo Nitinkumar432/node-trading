@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current IPOs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f4f9;
+            font-family: 'Arial', sans-serif;
+        }
+        h2 {
+            margin: 30px 0;
+            font-weight: bold;
+            color: #343a40;
+            text-align: center;
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 10px;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .card-img-top {
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+        .card-body {
+            background-color: #ffffff;
+            border-radius: 0 0 10px 10px;
+        }
+        .btn-primary, .btn-success {
+            width: 100%;
+            padding: 10px 0;
+        }
+        .btn-success {
+            margin-top: 10px;
+        }
+        .container {
+            padding: 30px;
+        }
+        .modal-content {
+            border-radius: 10px;
+        }
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .payment-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .payment-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .spinner-border {
+            display: none;
+        }
+        /* Styles for Payment Buttons */
+        .btn-payment {
+            width: 100%;
+            padding: 15px 0;
+            font-size: 18px;
+        }
+        /* Success Modal Styling */
+        .success-modal {
+            text-align: center;
+        }
+        /* Payment Form Styling */
+        .payment-form {
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Explore Current IPOs</h2>
+        <div class="row">
+            <% currentIpOs.forEach(ipo => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="<%= ipo.logoUrl %>" class="card-img-top" alt="<%= ipo.companyName %> Logo">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= ipo.companyName %></h5>
+                            <p><strong>Type:</strong> <%= ipo.type %></p>
+                            <p><strong>Closes On:</strong> <%= new Date(ipo.closingDate).toLocaleDateString() %></p>
+                            <p><strong>Minimum Investment:</strong> <%= ipo.minimumInvestment %> / <%= ipo.shares %> shares</p>
+                            <p><strong>Overall Subscription:</strong> <%= ipo.overallSubscription %>x</p>
+                            <button class="btn btn-success" onclick="bookIpo('<%= ipo._id %>', '<%= ipo.companyName %>', '<%= ipo.logoUrl %>', <%= ipo.minimumInvestment %>, <%= ipo.maximumInvestment || 1000 %>)">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- Custom Modal for IPO Booking -->
+    <div class="modal fade" id="ipoModal" tabindex="-1" role="dialog" aria-labelledby="ipoModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ipoModalLabel">Book IPO: <span id="ipoName"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <img id="ipoLogo" src="" alt="IPO Logo" class="img-fluid mb-3">
+            <form id="ipoForm">
+              <div class="form-group">
+                <label for="slots">Number of Slots</label>
+                <input type="number" class="form-control" id="slots" placeholder="Enter no of slots">
+              </div>
+              <div class="form-group">
+
+                <label for="bidPrice">Bidding Price range-> 121 - 2000</label>
+                <input type="number" class="form-control" id="bidPrice" placeholder="Random Price" required>
+              </div>
+              <div class="form-group">
+                <label for="userEmail">Your Email</label>
+                <input type="email" class="form-control" id="userEmail" placeholder="Enter your email"  value="<%=user.email%>"  readonly required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="proceedToPayment()">Proceed to Payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPI Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="paymentModalLabel">Complete Payment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h6>Select Payment Method</h6>
+            <div class="payment-option">
+                <i class="fas fa-money-bill-wave payment-icon"></i>
+                <input type="radio" name="paymentMethod" id="paymentMethodUPI" value="upi" onchange="showPaymentForm('upi')" required>
+                <label for="paymentMethodUPI" class="btn btn-payment btn-primary">Pay with UPI</label>
+            </div>
+            <div class="payment-option">
+                <i class="fas fa-credit-card payment-icon"></i>
+                <input type="radio" name="paymentMethod" id="paymentMethodCard" value="card" onchange="showPaymentForm('card')">
+                <label for="paymentMethodCard" class="btn btn-payment btn-secondary">Pay with Credit/Debit Card</label>
+            </div>
+            <div class="payment-option">
+                <i class="fas fa-university payment-icon"></i>
+                <input type="radio" name="paymentMethod" id="paymentMethodNetBanking" value="netbanking" onchange="showPaymentForm('netbanking')">
+                <label for="paymentMethodNetBanking" class="btn btn-payment btn-info">Pay with Net Banking</label>
+            </div>
+            <!-- UPI Form -->
+            <div id="upiForm" class="payment-form">
+                <label for="upiId">Enter UPI ID:</label>
+                <input type="text" class="form-control" id="upiId" placeholder="example@upi" required>
+            </div>
+            <!-- Card Form -->
+            <div id="cardForm" class="payment-form">
+                <label for="cardNumber">Card Number:</label>
+                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                <label for="expiryDate">Expiry Date:</label>
+                <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" required>
+                <label for="cvv">CVV:</label>
+                <input type="text" class="form-control" id="cvv" placeholder="123" required>
+            </div>
+            <!-- Net Banking Form -->
+            <div id="netBankingForm" class="payment-form">
+                <label for="bankName">Bank Name:</label>
+                <input type="text" class="form-control" id="bankName" placeholder="Enter your bank name" required>
+            </div>
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" onclick="submitPayment()">Submit Payment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function bookIpo(ipoId, companyName, logoUrl, minimumInvestment, maximumInvestment) {
+            $('#ipoName').text(companyName);
+            $('#ipoLogo').attr('src', logoUrl);
+            $('#ipoModal').modal('show');
+            document.getElementById('ipoForm').reset();
+            $('#paymentModal').data('ipoId', ipoId); // Store IPO ID for later use
+            $('#paymentModal').data('companyName', companyName); // Store company name for payment
+        }
+
+        function proceedToPayment() {
+            $('#ipoModal').modal('hide');
+            $('#paymentModal').modal('show');
+        }
+
+        function showPaymentForm(paymentType) {
+            // Hide all payment forms
+            document.querySelectorAll('.payment-form').forEach(form => form.style.display = 'none');
+            // Show the selected payment form
+            document.getElementById(paymentType + 'Form').style.display = 'block';
+        }
+
+        async function submitPayment() {
+            const ipoId = $('#paymentModal').data('ipoId');
+            const companyName = $('#paymentModal').data('companyName'); // Retrieve company name
+            const slots = document.getElementById('slots').value;
+            const bidPrice = document.getElementById('bidPrice').value;
+            const userEmail = document.getElementById('userEmail').value;
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            let paymentData;
+
+            // Depending on payment method, collect data accordingly
+            if (paymentMethod === 'upi') {
+                const upiId = document.getElementById('upiId').value;
+                paymentData = { upiId, slots, bidPrice, userEmail, paymentMethod, companyName, ipoId };
+            } else if (paymentMethod === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                paymentData = { cardNumber, expiryDate, cvv, slots, bidPrice, userEmail, paymentMethod, companyName, ipoId };
+            } else if (paymentMethod === 'netbanking') {
+                const bankName = document.getElementById('bankName').value;
+                paymentData = { bankName, slots, bidPrice, userEmail, paymentMethod, companyName, ipoId };
+            }
+
+            // Show loading spinner
+            $('.spinner-border').show();
+
+            try {
+                const response = await fetch('/book-ipo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('Payment Successful! ' + result.message);
+                    // Optionally, redirect or close modal
+                    $('#paymentModal').modal('hide');
+                } else {
+                    alert('Payment Failed! Please try again.');
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            } finally {
+                // Hide loading spinner
+                $('.spinner-border').hide();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+.btn-custom {
+    background-color: #007bff;
+    color: white;
+    border: none; /* Remove border */
+    border-radius: 0.25rem; /* Rounded corners */
+    padding: 10px 20px; /* Spacing inside button */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.btn-custom:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Spinner styles */
+.spinner-border {
+    display: none; /* Hide spinner by default */
+}
+
+.spinner-border.show {
+    display: inline-block; /* Show when active */
+}
+
+/* Enhanced Tabs Design */
+.nav-tabs {
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid #007bff;
+    color: #007bff;
+    border-radius: 0.25rem;
+    padding: 10px 15px; /* Added padding for larger click area */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #e7f1ff; /* Light background on hover */
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Transaction Table Styling */
+.table {
+    margin: 20px 0; /* Spacing above and below the table */
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #dee2e6; /* Light border */
+}
+
+.table th {
+    background-color: #007bff; /* Header background */
+    color: white; /* Header text color */
+}
+
+.table td {
+    background-color: #f8f9fa; /* Light background for table cells */
+}
+
+/* Card Styling */
+.card {
+    border: 1px solid #007bff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Spacing below each card */
+}
+
+.card-header {
+    background-color: #007bff; /* Header background */
+    color: white; /* Header text color */
+}
+
+/* Hide Funds Forms initially */
+#fundsTabContent {
+    display: none;
+}
+
+/* Additional Styling */
+h1, h5 {
+    color: #007bff;
+}
+
+h1 {
+    font-size: 2.5rem; /* Larger size for main headings */
+    margin-bottom: 20px; /* Spacing below the heading */
+}
+
+h5 {
+    font-size: 1.25rem; /* Slightly larger than normal */
+}
+
+/* Form Styling */
+.form-control {
+    border: 1px solid #007bff; /* Blue border for input fields */
+    border-radius: 0.25rem; /* Rounded corners */
+    padding: 10px; /* Padding inside input fields */
+}
+
+.form-control:focus {
+    border-color: #0056b3; /* Darker blue on focus */
+    box-shadow: 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Shadow effect on focus */
+}
+
+/* Alert Messages */
+.alert {
+    border-radius: 0.25rem; /* Rounded corners for alerts */
+    margin-bottom: 20px; /* Spacing below alerts */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .btn-custom {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    .table {
+        font-size: 0.9rem; /* Slightly smaller font size */
+    }
+
+    h1 {
+        font-size: 2rem; /* Smaller heading size on mobile */
+    }
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Coupons</title>
+    <link rel="stylesheet" href="css/offer.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Coupons</h1>
+
+        <!-- Scratch Cards -->
+        <div id="scratchCardsContainer" class="d-flex flex-wrap justify-content-center">
+            <% putokens.forEach(token => { %>
+                <div class="scratch-card" data-id="<%= token._id %>" data-discount="<%= token.discount %>" data-validTill="<%= token.validTill %>">
+                    <div class="scratch-overlay"></div>
+                    <div class="offer-text">Scratch Here!</div>
+                </div>
+            <% }) %>
+        </div>
+
+        <div class="offer-message" id="offerMessage">
+            <h2>Congratulations!</h2>
+            <p id="discountText"></p>
+            <button class="btn btn-success" id="storeCouponButton" style="display:none;">Store Coupon</button>
+        </div>
+        
+        <!-- Coupons Section -->
+        <div class="coupons-section">
+            <h2>Stored Coupons</h2>
+            <div id="couponsContainer" class="row">
+                <% coupons.forEach(coupon => { %>
+                    <div class="col-md-4">
+                        <div class="coupon">
+                            <div class="valid-until-tag">Valid Till: <%= new Date(coupon.validTill).toLocaleDateString() %></div>
+                            <h5>Discount: <%= coupon.discount %></h5>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scratchCards = document.querySelectorAll('.scratch-card');
+        const offerMessage = document.getElementById('offerMessage');
+        const discountText = document.getElementById('discountText');
+        const storeCouponButton = document.getElementById('storeCouponButton');
+        let currentCoupons = [];
+
+        scratchCards.forEach(card => {
+            card.addEventListener('click', async function () {
+                const couponId = this.getAttribute('data-id');
+                const discount = this.getAttribute('data-discount');
+                const validTill = this.getAttribute('data-validTill');
+
+                // Show offer message
+                discountText.innerText = `You have unlocked a ${discount} discount valid till ${new Date(validTill).toLocaleDateString()}`;
+                offerMessage.style.display = 'block';
+                currentCoupons.push({ discount, validTill }); // Store the current coupon data
+
+                // Hide the scratch card overlay
+                this.querySelector('.scratch-overlay').style.opacity = '0';
+                this.querySelector('.offer-text').style.display = 'none';
+                
+                // Show store coupon button if it's not already displayed
+                storeCouponButton.style.display = 'inline-block';
+
+                // Scratch the coupon on the server
+                try {
+                    const response = await fetch(`/scratch-coupon/${couponId}`, { // Updated URL
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('token'), // Assuming you are using JWT stored in localStorage
+                        },
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        console.log('Coupon marked as scratched:', result);
+                    } else {
+                        console.error('Error marking coupon as scratched:', result);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Store coupon functionality
+        storeCouponButton.addEventListener('click', async function () {
+            try {
+                const response = await fetch('/api/store-coupon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token') // Assuming you are using JWT stored in localStorage
+                    },
+                    body: JSON.stringify({
+                        coupons: currentCoupons,
+                        email: '<%= user.email %>', // Replace with the actual user's email from the backend
+                    }),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    location.reload(); // Reload the page to display the new coupons
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error storing coupons:', error);
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

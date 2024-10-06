@@ -39,7 +39,7 @@ const registrationSchema = new mongoose.Schema({
   },
   funds:{
     type:Number,
-    deafult:0.0
+    default:0
   }
 });
 

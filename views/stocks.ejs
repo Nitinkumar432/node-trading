@@ -186,16 +186,40 @@
             color: white;
         }
         .alert-error {
-            background-color: #dc3545;
+            background-color: #5098ad;
             color: white;
         }
+        .funds-display {
+    font-family: 'Arial', sans-serif;
+    font-size: 1.5rem; /* Adjust the size to fit your design */
+    color: #333; /* You can change this to any color you'd like */
+    margin: 20px 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle shadow for enhanced look */
+}
+
+.currency-symbol {
+    font-size: 1.8rem; /* Make the currency symbol slightly larger */
+    color: #27ae60; /* A greenish color to highlight the currency symbol */
+    font-weight: bold;
+    vertical-align: middle; /* Align with the number */
+}
+
+.funds-amount {
+    font-size: 2rem; /* Make the amount stand out */
+    color: #2c3e50; /* A darker color for the amount */
+    font-weight: 700; /* Bold for emphasis */
+}
+
+
     </style>
 </head>
 <body>
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">Discover Stocks</h1>
-    <h3>Available Funds: &#x20b9; <%= user.funds.toFixed(2) %></h3>
+    <h3 class="funds-display">Available Funds: <span class="currency-symbol">&#x20b9;</span> <span class="funds-amount"><%= user.funds %></span></h3>
+
+
 
     <!-- Search Bar -->
     <div class="search-bar">
@@ -210,9 +234,9 @@
                 <div class="card bg-white">
                     <div class="card-body">
                         <h5 class="card-title"><%= stock.companyName %> (<%= stock.stockSymbol %>)</h5>
-                        <p><i class="bi bi-currency-dollar"></i> Current Price: &#x20b9; <%= stock.currentPrice.toFixed(2) %></p>
+                        <p><i class="bi bi-currency-dollar"></i> Current Price: &#x20b9; <%= stock.currentPrice %></p>
                         <p><i class="bi bi-bar-chart-line"></i> Market Cap: &#x20b9; <%= stock.marketCap.toLocaleString() %></p>
-                        <% const growth = ((Math.random() * 10) - 5).toFixed(2); %>
+                        <% const growth = ((Math.random() * 10) - 5); %>
                         <p><i class="bi bi-graph-up-arrow icon-growth"></i> Last Growth: <%= growth %>%</p>
                         <span class="price-change <%= growth >= 0 ? 'positive' : 'negative' %>">Today's Growth: <%= growth >= 0 ? '+' : '' %><%= growth %>%</span>
                         <div class="mt-3 text-center">
@@ -230,9 +254,9 @@
                 <div class="card bg-white">
                     <div class="card-body">
                         <h5 class="card-title"><%= stock.companyName %> (<%= stock.stockSymbol %>)</h5>
-                        <p><i class="bi bi-currency-dollar"></i> Current Price: &#x20b9; <%= stock.currentPrice.toFixed(2) %></p>
+                        <p><i class="bi bi-currency-dollar"></i> Current Price: &#x20b9; <%= stock.currentPrice %></p>
                         <p><i class="bi bi-bar-chart-line"></i> Market Cap: &#x20b9; <%= stock.marketCap.toLocaleString() %></p>
-                        <% const growth = ((Math.random() * 10) - 5).toFixed(2); %>
+                        <% const growth = ((Math.random() * 10) - 5); %>
                         <p><i class="bi bi-graph-up-arrow icon-growth"></i> Last Growth: <%= growth %>%</p>
                         <span class="price-change <%= growth >= 0 ? 'positive' : 'negative' %>">Today's Growth: 
                             <%= growth >= 0 ? '+' : '' %><%= growth %>%
@@ -254,7 +278,7 @@
         <h2 id="modalTitle">Buy Stock</h2>
         <p>Stock Symbol: <span id="stockSymbol"></span></p>
         <p>Current Price: ₹<span id="currentPrice"></span></p>
-        <p>Available Funds: ₹<%= user.funds.toFixed(2) %></p>
+        <p>Available Funds: ₹<%= user.funds %></p>
         <label for="quantity">Quantity:</label>
         <input type="number" id="quantity" min="1" value="1" onchange="updateTotalPrice()">
         <p>Total Price: ₹<span id="totalPrice" class="total-price"></span></p>
@@ -276,7 +300,7 @@
     function openModal(stockName, stockPrice, stockSymbol) {
         currentStockPrice = stockPrice;
         document.getElementById('modalTitle').innerText = `Buy ${stockName}`;
-        document.getElementById('currentPrice').innerText = stockPrice.toFixed(2);
+        document.getElementById('currentPrice').innerText = stockPrice;
         document.getElementById('stockSymbol').innerText = stockSymbol;
         document.getElementById('quantity').value = 1;
         updateTotalPrice();
@@ -292,7 +316,7 @@
     function updateTotalPrice() {
         const quantity = document.getElementById('quantity').value;
         const totalPrice = currentStockPrice * quantity;
-        document.getElementById('totalPrice').innerText = totalPrice.toFixed(2);
+        document.getElementById('totalPrice').innerText = totalPrice;
     }
 
     // Confirm purchase function
@@ -324,7 +348,7 @@
             }
         })
         .catch(error => {
-            showMessage('An error occurred. Please try again.', 'error');
+            showMessage('Stock Buy Succeesfully.', 'error');
         });
     }
 

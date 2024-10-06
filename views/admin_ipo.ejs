@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin IPO Management</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Link your CSS here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #181818; /* Dark background */
+            color: #eaeaea; /* Light text color */
+        }
+        h1 {
+            color: #f9c74f; /* Highlighted header color */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .ipo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 5px; /* Rounded corners */
+            overflow: hidden; /* To apply border radius */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+        .ipo-table th, .ipo-table td {
+            padding: 10px;
+            border: 1px solid #444; /* Slightly darker borders */
+            text-align: left;
+        }
+        .ipo-table th {
+            background-color: #333; /* Dark header */
+        }
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+        .status-confirmed {
+            color: #70e000; /* Lighter green for confirmed */
+            font-weight: bold;
+        }
+        .status-rejected {
+            color: #ff6b6b; /* Softer red for rejected */
+            font-weight: bold;
+        }
+        .button {
+            background-color: #f9c74f; /* Highlighted button color */
+            color: #333; /* Button text color */
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* No underline */
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #f5b73b; /* Darker shade on hover */
+        }
+        .search-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            width: 48%; /* Adjust width as necessary */
+        }
+        .search-container button {
+            padding: 10px;
+            background-color: #f9c74f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-container button:hover {
+            background-color: #f5b73b; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Admin IPO Management</h1>
+
+<div class="search-container">
+    <input type="text" id="searchEmail" placeholder="Search by User Email" onkeyup="filterTable()">
+    <input type="date" id="filterDate" onchange="filterTable()">
+</div>
+
+<table class="ipo-table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Company Name</th>
+            <th>Slots</th>
+            <th>Bid Price</th>
+            <th>Total Price</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Actions</th> <!-- Actions for admin -->
+        </tr>
+    </thead>
+    <tbody id="ipoTableBody">
+        <% if (alldata.length === 0) { %>
+            <tr>
+                <td colspan="8">No IPO bookings found.</td>
+            </tr>
+        <% } else { %>
+            <% alldata.forEach(ipo => { %>
+                <tr>
+                    <td><%= ipo.userEmail %></td>
+                    <td><%= ipo.companyName %></td>
+                    <td><%= ipo.slots %></td>
+                    <td><%= ipo.bidPrice %></td>
+                    <td><%= ipo.totalPrice %></td>
+                    <td><%= ipo.paymentMethod %></td>
+                    <td class="<%= ipo.status === 'Pending' ? 'status-pending' : ipo.status === 'Confirmed' ? 'status-confirmed' : 'status-rejected' %>">
+                        <%= ipo.status %>
+                    </td>
+                    <td><%= new Date(ipo.createdAt).toLocaleString() %></td>
+                    <td>
+                        <form action="/admin/ipo/<%= ipo._id %>" method="POST">
+                            <button type="submit" name="action" value="approve" class="button">Approve</button>
+                            <button type="submit" name="action" value="reject" class="button">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>
+
+<script>
+    function filterTable() {
+        const searchInput = document.getElementById('searchEmail').value.toLowerCase();
+        const filterDate = document.getElementById('filterDate').value;
+        const tableRows = document.querySelectorAll('#ipoTableBody tr');
+
+        tableRows.forEach(row => {
+            const userEmail = row.cells[0].textContent.toLowerCase();
+            const createdAt = new Date(row.cells[7].textContent).toISOString().split('T')[0]; // Format date for comparison
+
+            const matchesEmail = userEmail.includes(searchInput);
+            const matchesDate = filterDate ? createdAt === filterDate : true;
+
+            row.style.display = matchesEmail && matchesDate ? '' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>

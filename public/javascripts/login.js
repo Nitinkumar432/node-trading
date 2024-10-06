@@ -24,7 +24,21 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     setTimeout(hideLoading, 3000); // Hide after 3 seconds for demonstration
 });
 
-
+// password
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('passwordInput');
+    const icon = document.querySelector('.toggle-password');
+    
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      icon.textContent = '👁️';  // Change icon to a closed eye
+    } else {
+      passwordInput.type = 'password';
+     // Change back to open eye
+      icon.textContent = '🙈';
+    }
+  }
+  
 
 
 

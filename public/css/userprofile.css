@@ -1,27 +1,28 @@
-/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #1c1c1c; /* Dark background */
+    color: #f0f0f0; /* Light text */
     padding: 20px;
     margin: 0;
 }
 
 /* Container Styles */
 .container {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 450px;
+    background-color: #2a2a2a; /* Darker container background */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow for depth */
+    max-width: 650px;
     margin: 20px auto;
-    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    transition: all 0.3s ease;
 }
 
 /* Heading Style */
 h1 {
     text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+    color: #f9f9f9;
+    margin-bottom: 25px;
+    font-size: 26px;
 }
 
 /* Form Styles */
@@ -31,54 +32,60 @@ form {
 }
 
 label {
-    margin-bottom: 8px;
-    color: #555;
+    margin-bottom: 12px;
+    color: #f0f0f0;
     font-weight: bold;
 }
 
-/* Input Fields Styles */
+/* Input Fields with Placeholder Styles */
 input[type="text"],
 input[type="number"],
 input[type="email"] {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #333;
+    color: #fff;
     box-sizing: border-box;
     font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for border and shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input::placeholder {
+    color: #bbb; /* Lighter placeholder text */
 }
 
 /* Input Focus and Active States */
 input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="email"]:focus {
-    border-color: #4CAF50; /* Green border on focus */
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4); /* Subtle green shadow */
-    outline: none; /* Remove default focus outline */
+    border-color: #00bfa5; /* Teal border on focus */
+    box-shadow: 0 0 8px rgba(0, 191, 165, 0.4); /* Subtle teal shadow */
+    outline: none;
 }
 
 /* Submit Button Styles */
 button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #00bfa5;
     color: white;
     padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     width: 100%;
-    font-size: 16px;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for background and transform */
+    font-size: 18px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 /* Submit Button Hover and Active States */
 button[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: #00a892;
 }
 
 button[type="submit"]:active {
-    transform: scale(0.98); /* Button press effect */
+    transform: scale(0.98);
 }
 
 /* Popup Styles */
@@ -87,13 +94,13 @@ button[type="submit"]:active {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
+    background-color: #2a2a2a;
     padding: 25px;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 1000;
     text-align: center;
-    transition: all 0.3s ease; /* Smooth transition for appearance */
+    transition: all 0.3s ease;
 }
 
 /* Hide Popup Initially */
@@ -104,22 +111,22 @@ button[type="submit"]:active {
 /* Popup Button Styles */
 .popup button {
     margin-top: 15px;
-    background-color: #4CAF50;
+    background-color: #00bfa5;
     color: white;
     border: none;
     padding: 12px 18px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Smooth transition for hover */
+    transition: background-color 0.3s ease;
 }
 
 /* Popup Button Hover State */
 .popup button:hover {
-    background-color: #45a049;
+    background-color: #00a892;
 }
 
 /* Container Hover Effect */
 .container:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
-    transform: translateY(-5px); /* Lift the container on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px);
 }

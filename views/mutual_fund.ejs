@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutual Funds</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/admin.css"> <!-- Link to your custom CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #343a40;
+        }
+
+        .card {
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Mutual Funds</h1>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search for mutual funds..." />
+        </div>
+
+        <!-- Total Investments -->
+        <div class="alert alert-info" id="totalInvestmentsAlert" style="display: none;">
+            Total Investments: ₹<span id="totalInvestments">0</span>
+        </div>
+
+        <div class="row" id="mutualFundsList">
+            <% mutualFunds.forEach(fund => { %>
+                <div class="col-md-4 mb-4 fund-card" data-fund-name="<%= fund.fundName %>">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= fund.fundName %></h5>
+                            <p class="card-text">Type: <%= fund.fundType %></p>
+                            <p class="card-text">Manager: <%= fund.manager %></p>
+                            <p class="card-text">Current NAV: ₹<%= fund.currentNAV %></p>
+                            <p class="card-text">Minimum Investment: ₹<%= fund.minimumInvestment %></p>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#investmentModal" data-fund-id="<%= fund._id %>" data-fund-name="<%= fund.fundName %>">Invest</button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Investment Modal -->
+    <div class="modal fade" id="investmentModal" tabindex="-1" role="dialog" aria-labelledby="investmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="investmentModalLabel">Invest in <span id="fundName"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="investmentForm">
+                        <div class="form-group">
+                            <label for="investmentAmount">Investment Amount (₹)</label>
+                            <input type="number" class="form-control" id="investmentAmount" name="amount" required>
+                        </div>
+                        <input type="hidden" id="fundId" name="fundId">
+                        <button type="submit" class="btn btn-primary">Invest</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#investmentModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var fundId = button.data('fund-id'); // Extract info from data-* attributes
+            var fundName = button.data('fund-name'); // Extract info from data-* attributes
+            var modal = $(this);
+            modal.find('#fundName').text(fundName);
+            modal.find('#fundId').val(fundId);
+        });
+
+        $('#investmentForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent form submission
+            var formData = $(this).serialize(); // Get form data
+
+            $.ajax({
+                type: 'POST',
+                url: '/invest',
+                data: formData,
+                success: function (response) {
+                    alert(response.message); // Show success message
+                    $('#investmentModal').modal('hide'); // Hide the modal
+                    updateTotalInvestments(); // Update total investments
+                },
+                error: function (error) {
+                    alert('Investment failed: ' + error.responseJSON.message); // Show error message
+                }
+            });
+        });
+
+        function updateTotalInvestments() {
+            $.ajax({
+                type: 'GET',
+                url: '/total-investments',
+                success: function (data) {
+                    $('#totalInvestments').text(data.totalInvestments);
+                    $('#totalInvestmentsAlert').show();
+                },
+                error: function (error) {
+                    console.error('Error fetching total investments:', error);
+                }
+            });
+        }
+
+        // Search Functionality
+        $('#searchInput').on('keyup', function () {
+            var value = $(this).val().toLowerCase();
+            $('#mutualFundsList .fund-card').filter(function () {
+                $(this).toggle($(this).data('fund-name').toLowerCase().indexOf(value) > -1);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -30,7 +30,7 @@
                  
                     <a href="/" class="option">Charts</a>
                     <a href="/stocks" class="option">Discover</a>
-                    <a href="#" class="option">Orders</a>
+                    <a href="/your_stock" class="option">Orders</a>
                     <a href="#" class="option">Positions</a>
                     <a href="invest.html" class="option">Holding</a>
                 </div>
@@ -56,15 +56,21 @@
                           <li class="verify"><a href="/verify_account" alt="More">Verify Account</a>
                             <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
                               <div class="dropdown-content">
-                                  <a href="/stocks">Mutual Funds</a>
-                                  <a href="#">IPO</a>
+                                <a href="/mutual-funds">Mutual Funds</a>
+                                  <a href="/ipo">List_IPO</a>
                                   <a href="/help">Help</a>
+                                  <%if(user.userType=='admin') {%>
+                                   
+                                    <a href="/put-coupon" alt="More">Add Coupon</a>
+                                   
+                                  
+                                    <%}%>
                               </div></li>
                               <li class="dropdown">
                                 <a href="/funds"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
                                 <div class="dropdown-content">
-                                    <a href="#"> Investments</a>
-                                    <a href="invest.html">Portfolio</a>
+                                    <a href="/admin/ipo"> Verify Ipo</a>
+                                    <a href="/user_ipo">Portfolio</a>
                                     <a href="#"> Transactions</a>
                                 </div>
                             </li>
@@ -72,16 +78,16 @@
                           <%}else{%>
                           <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
                               <div class="dropdown-content">
-                                  <a href="mutualfund.html">Mutual Funds</a>
-                                  <a href="#">IPO</a>
+                                  <a href="/mutual-funds">Mutual Funds</a>
+                                  <a href="/show_ipo">IPO</a>
                                   <a href="/help">Help</a>
                               </div></li>
   
                         <li class="dropdown">
-                            <a href="Account.html"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
+                            <a href="/funds"><img src="https://cdn-icons-png.freepik.com/512/10513/10513303.png" alt="Funds"> Funds</a>
                             <div class="dropdown-content">
                                 <a href="#"> Investments</a>
-                                <a href="invest.html">Portfolio</a>
+                                <a href="/user_ipo">Portfolio</a>
                                 <a href="#"> Transactions</a>
                             </div>
                         </li>
@@ -97,7 +103,9 @@
                               <a href="#"> Setings</a>
                               <%if(user.userType=='admin') {%>
                                 <a href="/help-query" alt="More">Help Query</a>
-
+                                <a href="/admin/add-mutual-fund" alt="More">Add Mutual fund</a>
+                               
+                              
                                 <%}%>
                           </div>
                         </li>
@@ -395,7 +403,7 @@
   </div>
   <div class="boxex box2">
     <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTfql06eMM-FEjy8ZGXAFVXvIFrLNGZigJ6LnVHA0lU_OnPaq3Y" alt="Animated Logo">
-    <a  style="text-decoration: none;" href="./offer.html"> <h2>Special Offers</h2></a>
+    <a  style="text-decoration: none;" href="/offer"> <h2>Special Offers</h2></a>
     <p>Check out our latest deals and promotions!</p>
   </div>
 </div>

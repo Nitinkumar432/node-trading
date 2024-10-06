@@ -1,134 +1,171 @@
-body{
-    background-color: rgb(186, 201, 230);
+body {
+  background-color: rgb(30, 31, 48);
+  /* background-image: url("https://i.pinimg.com/originals/9a/1b/9c/9a1b9c38a32d3867fef6192052d28359.gif"); */
 }
+
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 1rem 2rem;
+  z-index: 1;
+}
+
+.logo {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+
+.nav-links li {
+  font-weight: bold;
+  margin-left: 20px;
+  position: relative;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  padding-bottom: 5px;
+}
+
+.nav-links a::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::before {
+  width: 100%;
+}
+
+.nav-links a:hover {
+  color: #e0a72c;
+}
+
+/* Header styling */
+.header {
+  background-color: #4a90e2; /* Header background color */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden; /* For background animation overflow */
+  height: 250px; /* Set height for the header */
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(to right, #4a90e2, #5fc3e4, #4a90e2);
+  animation: slideBackground 6s infinite linear; /* Sliding background animation */
+  z-index: -1; /* Put it behind content */
+}
+
+@keyframes slideBackground {
+  0% {
+    transform: translateX(0);
   }
-  
-  .logo {
-    color: #fff;
-    font-size: 1.5rem;
+  100% {
+    transform: translateX(-50%);
   }
-  
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  padding: 30px;
+  text-align: center;
+}
+
+.company-name h1 {
+  font-size: 48px;
+  color: #fff;
+  margin: 0;
+  animation: slideInText 3s ease-in-out infinite alternate; /* Slide text animation */
+}
+
+.company-name p {
+  font-size: 20px;
+  color: #fff;
+  margin-top: 10px;
+  animation: fadeInText 5s ease-in-out infinite alternate;
+}
+
+@keyframes slideInText {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.logo {
+  font-size: 32px;
+  animation: moveLogo 2s infinite alternate;
+  color: #fff;
+}
+
+@keyframes moveLogo {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(10px);
+  }
+}
+
+.navbar {
+  background-color: rgba(51, 51, 51, 0.8);
+  padding: 10px;
+  z-index: 2; /* Ensure the navbar appears over the animated background */
+}
+
+/* Media queries */
+@media (max-width: 768px) {
   .nav-links {
-    list-style: none;
-    display: flex;
+    display: none; /* Hide links by default */
+    flex-direction: column; /* Stack links vertically */
   }
-  
-  .nav-links li {
-    font-weight: bold;
-    margin-left: 20px;
-    position: relative;
+
+  .nav-links.active {
+    display: flex; /* Show links when active */
   }
-  
-  .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    padding-bottom: 5px;
+
+  .toggle-button {
+    display: block; /* Show toggle button */
   }
-  .nav-links a::before {
-    content: "";
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 0;
-    left: 0;
-    background-color: #ffffff;
-    transition: width 0.3s ease;
-  }
-  
-  .nav-links a:hover::before {
-    width: 100%;
-  }
-  .nav-links a:hover {
-    color: #e0a72c;
-  }
-  .header {
-      background-color: #4a90e2; /* Header background color */
-      color: white;
-      display: flex;
-      flex-direction: column; /* Stack the header content and navbar */
-      position: relative; /* For the background animation */
-      overflow: hidden; /* Hide the background animation overflow */
-  }
-  
-  .header::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: linear-gradient(to right, #4a90e2, #5fc3e4);
-      opacity: 0.3;
-      animation: animateBackground 10s ease infinite;
-  }
-  
-  @keyframes animateBackground {
-      0% {
-          transform: translateX(0);
-      }
-      50% {
-          transform: translateX(-50%);
-      }
-      100% {
-          transform: translateX(0);
-      }
-  }
-  
-  .header-content {
-      display: flex;
-      justify-content: space-between; /* Space between company name and logo */
-      align-items: center;
-      padding: 20px;
-      z-index: 1; /* Bring the content on top of the background animation */
-  }
-  
-  .company-name h1 {
-      font-size: 32px;
-      margin: 0;
-  }
-  
-  .company-name p {
-      font-size: 16px;
-      margin: 5px 0 0;
-  }
-  
-  .logo {
-      font-size: 32px;
-      animation: moveLogo 2s infinite alternate;
-  }
-  
-  @keyframes moveLogo {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(10px); }
-  }
-  
-  .navbar {
-      background-color: rgba(51, 51, 51, 0.8); /* Navbar background color with transparency */
-      padding: 10px;
-      z-index: 1; /* Bring the navbar on top of the background animation */
-  }
-  
-  /* Rest of the navbar styles remain the same */
-  @media (max-width: 768px) {
-    .nav-links {
-        display: none; /* Hide links by default */
-        flex-direction: column; /* Stack links vertically */
-    }
-  
-    .nav-links.active {
-        display: flex; /* Show links when active */
-    }
-  
-    .toggle-button {
-        display: block; /* Show toggle button */
-    }
-  }
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 * {
@@ -143,32 +180,61 @@ body{
   display: flex;
   align-items: center;
 }
+/* Add an animation for the left-side company name */
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 .container {
-  background-image: url("https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExbGY0ZTRkZnB2czh5bGV1d3VramQ2Z2YwbXFoYnpkaGFndmJ0em04byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rM0wxzvwsv5g4/giphy.gif");
-
+  background-image: url("https://img.setka.io/clients/Kifcbv9nNtbMojG9DOD_02_bqSfSjTQh/post_images/what-is-a-stock-market_cover-2022082916422196.png");
   padding: 0 30px;
   min-height: 100vh;
+  display: flex;
   justify-content: center;
-  background: #f0f2f5;
+  align-items: center;
+  background-size: cover;
+  animation: backgroundMove 15s ease-in-out infinite;
+}
+
+@keyframes backgroundMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .facebook-page {
-   
-
+  display: flex;
   justify-content: space-between;
   max-width: 1000px;
   width: 100%;
+  align-items: center;
+  position: relative;
 }
 
 .facebook-page .text {
   margin-bottom: 90px;
+  animation: fadeInLeft 1s ease-in-out;
 }
 
 .facebook-page h1 {
   color: #1877f2;
   font-size: 4rem;
   margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  animation: fadeInLeft 1.5s ease;
 }
 
 .facebook-page p {
@@ -176,62 +242,141 @@ body{
   white-space: nowrap;
 }
 
+/* Form container */
 form {
   display: flex;
-  
   flex-direction: column;
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1),
-    0 8px 16px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
+  background: rgba(30, 36, 48, 0.95);
+  opacity:100%;
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 12px 28px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
   width: 100%;
+  animation: fadeInUp 1.5s ease;
+  font-family: 'Roboto', sans-serif;
+  position: relative;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Styling input fields */
 form input {
   height: 55px;
   width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 1rem;
-  padding: 0 14px;
+  border: 2px solid #ccc;
+  background-color: rgb(21, 33, 66);
+  color:white;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 1.125rem;
+  padding: 0 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 form input:focus {
   outline: none;
   border-color: #1877f2;
+  box-shadow: 0 0 8px rgba(24, 119, 242, 0.5);
 }
 
-::placeholder {
+/* Password container with eye icon */
+.password-container {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.25rem;
   color: #777;
-  font-size: 1.063rem;
 }
 
-.link {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  gap: 15px;
+.toggle-password:hover {
+  color: #1877f2;
 }
 
+/* Placeholder styles */
+::placeholder {
+  color: #999;
+  font-size: 1.125rem;
+}
+
+/* Button styles */
 .link .login {
   border: none;
   outline: none;
   cursor: pointer;
-  background: #1877f2;
+  background: linear-gradient(135deg, #1877f2, #0d65d9);
   padding: 15px 0;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #fff;
   font-size: 1.25rem;
   font-weight: 600;
-  transition: 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .link .login:hover {
-  background: #0d65d9;
+  background: linear-gradient(135deg, #0d65d9, #0547a5);
+  transform: translateY(-2px);
 }
+
+.link .forgot-password {
+  color: #1877f2;
+  text-decoration: none;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.link .forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Divider styling */
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
+/* Create account button */
+.button .create-account {
+  display: block;
+  text-align: center;
+  color: #1877f2;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.button .create-account:hover {
+  text-decoration: underline;
+}
+
+/* Form hover effects */
+form:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3), 0 16px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  form {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
 
 form a {
   text-decoration: none;
@@ -262,16 +407,17 @@ hr {
 
 .button a {
   padding: 15px 20px;
-  background: #42b72a;
-  border-radius: 6px;
+  background: linear-gradient(135deg, #42b72a, #3ba626);
+  border-radius: 8px;
   color: #fff;
   font-size: 1.063rem;
   font-weight: 600;
-  transition: 0.2s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .button a:hover {
-  background: #3ba626;
+  background: linear-gradient(135deg, #3ba626, #308d21);
+  transform: translateY(-2px);
 }
 
 @media (max-width: 900px) {
@@ -295,17 +441,58 @@ hr {
   }
 
   form {
-    padding: 15px;
+    padding: 20px;
   }
 }
+/* Styling for the main heading */
+.main-heading {
+  font-size: 3rem;
+  color: #1877f2; /* TradeHub brand color */
+  text-align: center;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: color 0.3s ease-in-out;
+}
+
+.main-heading:hover {
+  color: #0d65d9; /* Darker shade on hover */
+}
+
+/* Styling for the subtext */
+.subtext {
+  font-size: 1.5rem;
+  color: #775c5c;
+  text-align: center;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+/* Animation to emphasize key text */
+.subtext:hover {
+  color: #fcb00d; /* Highlight on hover */
+  transform: scale(1.05);
+}
+
+/* Special highlight styling */
+.highlight {
+  color: #39e916; /* Green accent for the first quote */
+  font-style: italic;
+}
+
+
 
 .footer {
     font-family: acumin-pro, system-ui, sans-serif;
     display: flex;
     flex-flow: row wrap;
     padding: 30px 30px 20px 30px;
-    color: #2f2f2f;
-    background-color: #fff;
+    color: #ffffff;
+    background-color: #1b1f30;
     border-top: 1px solid #e5e5e5;
   }
   
@@ -443,13 +630,14 @@ hr {
 
 /* Modal Content */
 .modal-content {
-  background-color: #fff; /* White background for content */
+  background-color: rgb(28, 39, 70);; /* White background for content */
   margin: 10% auto; /* 10% from the top and centered */
   padding: 30px;
   border-radius: 8px; /* Rounded corners */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
   width: 400px; /* Increased width for better layout */
   max-width: 90%; /* Responsive max width */
+  color:white;
 }
 
 /* Close Button */

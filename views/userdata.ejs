@@ -11,16 +11,16 @@
     <div class="container">
         <h1>User Profile Form</h1>
         <form id="userProfileForm" onsubmit="submitForm(event)">
-            <label>Name: <input type="text" name="name" required></label>
-            <label>Aadhar Number: <input type="number" name="aadharNumber" required></label>
-            <label>PAN Card: <input type="number" name="pancard" required></label>
-            <label>Phone Number: <input type="text" name="phoneNumber" required></label>
-            <label>Email: <input type="email" name="email" required></label>
-            <label>Bank Name: <input type="text" name="bankName" required></label>
-            <label>Account Number: <input type="text" name="accountNumber" required></label>
-            <label>Branch: <input type="text" name="branch" required></label>
-            <label>Nominees: <input type="text" name="nominees"></label>
-            <label>KYC Copy URL: <input type="text" name="kycCopyUrl"></label>
+            <label>Name: <input type="text" name="name" placeholder="Enter your full name" required></label>
+            <label>Aadhar Number: <input type="number" name="aadharNumber" placeholder="Enter your Aadhar number" required></label>
+            <label>PAN Card: <input type="text" name="pancard" placeholder="Enter your PAN card number" required></label>
+            <label>Phone Number: <input type="text" name="phoneNumber" placeholder="Enter your phone number" required></label>
+            <label>Email:<label style="color:rgb(240, 240, 17)">(Enter same email that enter at register time) </label><input type="email" name="email" placeholder="Enter your email address" required></label>
+            <label>Bank Name: <input type="text" name="bankName" placeholder="Enter your bank's name" required></label>
+            <label>Account Number: <input type="text" name="accountNumber" placeholder="Enter your account number" required></label>
+            <label>Branch: <input type="text" name="branch" placeholder="Enter your branch" required></label>
+            <label>Nominees: <input type="text" name="nominees" placeholder="Enter nominee(s) if applicable"></label>
+            <label>KYC Copy URL: <input type="text" name="kycCopyUrl" placeholder="Enter URL to KYC document (optional)"></label>
             <button type="submit">Submit</button>
         </form>
     </div>

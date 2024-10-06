@@ -14,7 +14,6 @@
                 <img src="/images/flogo.png" alt="Company Logo">
                 <div class="separator"></div>
                 <div class="options">
-                 
                     <a href="/" class="option">Charts</a>
                     <a href="Discover.html" class="option">Discover</a>
                     <a href="#" class="option">Orders</a>
@@ -26,15 +25,12 @@
                 <span>Nifty:</span>
                 <span id="nifty-value" class="value">----</span>
                 <span id="nifty-percentage" class="percentage">----</span>
-           
             </div>
             <div class="box" id="sensex-box">
                 <span>Sensex:</span>
                 <span id="sensex-value" class="value">----</span>
                 <span id="sensex-percentage" class="percentage">----</span>
             </div>
-            
-            
             <div class="right-elements">
                 <nav>
                     <ul>
@@ -42,8 +38,8 @@
                         <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
                             <div class="dropdown-content">
                                 <a href="#">Investments</a>
-                                <a href="#"> Portfolio</a>
-                                <a href="#"> Transactions</a>
+                                <a href="#">Portfolio</a>
+                                <a href="#">Transactions</a>
                             </div>
                         </li>
                         <li class="dropdown">
@@ -55,37 +51,72 @@
                             </div>
                         </li>
                         <li>
-                         
-                            <a href="#"> <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image"><%= userdata.name.split(' ').map(word => word[0].toUpperCase()).join('')%></a>
-                           
+                            <a href="#"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFi5uKNGelVmHsccHVPJEd3G81rUnBYtQRiQ&usqp=CAU" alt="Profile Image"><%= userdata ? userdata.name.split(' ').map(word => word[0].toUpperCase()).join('') : 'Guest'%></a>
                         </li>
-                        
-                        
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
+
+    <% if (!userdata) { %>
+        <!-- If no userdata, show button to fill details -->
+        <div class="complete-profile">
+            <h2>Your profile is incomplete.</h2>
+            <p>Please fill out your profile details to proceed.</p>
+            <p>add this email when register : <%=user.email%></p>
+            <a href="/userdata"><button class="complete-button">Complete Profile</button></a>
+    
+            <!-- Timeline to show 48-hour countdown -->
+            <div class="timeline">
+                Time left to complete your profile: 
+                <span id="remainingTime" class="remaining-time"></span>
+            </div>
+        </div>
+        <script>
+            // JavaScript to calculate remaining time from 48 hours since registration
+            const registrationTime = new Date('<%= userdata ? userdata.registrationDate : new Date() %>'); // Assuming registrationDate is passed in userdata
+            const currentTime = new Date();
+    
+            const timeDiff = 48 * 60 * 60 * 1000; // 48 hours in milliseconds
+            const endTime = new Date(registrationTime.getTime() + timeDiff);
+    
+            function updateRemainingTime() {
+                const now = new Date();
+                const remaining = endTime - now;
+    
+                if (remaining <= 0) {
+                    document.getElementById("remainingTime").textContent = "Time's up!";
+                } else {
+                    const hours = Math.floor(remaining / (1000 * 60 * 60));
+                    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                    document.getElementById("remainingTime").textContent = `${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+                }
+            }
+    
+            // Update every second
+            setInterval(updateRemainingTime, 1000);
+        </script>
+    <% } else { %>
     <div class="profiless">
         <div class="pro">
             <div class="left">
                 <img src="https://cdn.angelone.in/kyc/images/thankyouGuideline.svg" alt="">
                 <div class="left-text">
                     <h2>Welcome to Your Profile</h2>
-                  
-                    <% if (userdata.isVerified=='true') { %>
-                        <h2><%=userdata.email%></h2>
-                        <!-- Code to be rendered if condition is true -->
-                      <% } else { %>
+                    <% if (userdata.isVerified === 'true') { %>
+                        <h2><%= userdata.email %></h2>
+                    <% } else { %>
                         <!-- Code to be rendered if condition is false -->
-                      <% } %>
-                   
+                    <% } %>
                     <p class="sma">This is your personal dashboard where you can manage your account details and transactions.</p>
                 </div>
             </div>
-            <% if(userdata.email!=user.email) {%>
-                <h1>plese complete registraton to do that ok </h1>
-            <% } else if (userdata.isVerified=='true') { %>
+
+            <% if (userdata.email !== user.email) { %>
+                <h1>Please complete registration to proceed.</h1>
+            <% } else if (userdata.isVerified === 'true') { %>
             <div class="right">
                 <div class="info">
                     <img class="icon" src="https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png" alt="icon">
@@ -93,106 +124,61 @@
                     <span style="font-size: small;">Depository participant ID</span>
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
-                        <!-- Transmission content goes here -->
                         <span>Demat Account No : <%= userdata.dematAccountNumber %></span><br>
                         <span>DP ID : <%= userdata.dpId %></span><br>
                         <span>Depository Participant (DP): <%= userdata.depositoryParticipant %></span><br>
                         <span>Depository: <%= userdata.depository %></span>
                     </div>
                 </div>
-                
+
                 <div class="info">
                     <img class="icon" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSOk1nxyxq0vEgx5ejrleCSZZ8GqxlA37_kAoEyCHH4UAY1TjFX" alt="icon">
                     <span>Personal Details</span>
                     <span style="font-size: small;">Mobile, Email, Address</span>
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
-                        <!-- Transmission content goes here -->
                         <span>Name : <%= userdata.name %></span><br>
                         <span>Phone No : <%= userdata.phoneNumber %></span><br>
                         <span>Email : <%= userdata.email %></span><br>
                         <span>PAN Details: <%= userdata.pancard %></span><br>
                     </div>
                 </div>
-                
+
                 <div class="info">
                     <img class="icon" src="https://cdn-icons-png.flaticon.com/512/2207/2207346.png" alt="icon">
                     <span>Bank Accounts</span>
                     <span style="font-size: small;">Add, Edit or Delete Bank details</span>
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
-                        <!-- Transmission content goes here -->
                         <span>Bank : <%= userdata.bankName %></span><br>
                         <span>Account No : <%= userdata.accountNumber %></span><br>
                         <span>Branch : <%= userdata.branch %></span><br>
                     </div>
                 </div>
-                
+
                 <div class="info">
                     <img class="icon" src="https://cdn-icons-png.flaticon.com/512/3751/3751726.png" alt="icon">
                     <span>Nominee</span>
                     <span style="font-size: small;">Update Nominee details</span>
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
-                        <!-- Transmission content goes here -->
                         <span>Nominee 1 : <%= userdata.nominees %></span><br>
-          
                     </div>
                 </div>
+
                 <div class="info">
                     <img class="icon" src="https://cdn-icons-png.flaticon.com/512/2534/2534204.png" alt="icon">
                     <span>My KYC Copy</span>
                     <span style="font-size: small;">Signed document generated after successful KYC completion</span>
                     <div class="arrow">&#10148;</div>
                     <div class="transmission">
-                        <!-- Transmission content goes here -->
-                <span>Your Kyc Details Verfied</span>
-                <img height="30px" style="margin-top: 13px;" src="https://imagedelivery.net/5MYSbk45M80qAwecrlKzdQ/7e2b1f93-7d16-4bcd-9c89-66fb520ffb00/preview">
+                        <span>Your Kyc Details Verified</span>
+                        <img height="30px" style="margin-top: 13px;" src="https://imagedelivery.net/5MYSbk45M80qAwecrlKzdQ/7e2b1f93-7d16-4bcd-9c89-66fb520ffb00/preview">
                     </div>
                 </div>
-            
-                <!-- Add more info divs as needed -->
-                
             </div>
         </div>
     </div>
-    <%} else if(userdata.isVerified=='false') {%>
-        <div class="request-status hidden">
-            <h1>Your request is under processing.</h1>
-            <p>Please wait up to 24 hours for it to be processed.</p>
-            <button class="pending-button" onclick="checkStatus()">Check Pending Status</button>
-        
-
-    <%} else if(userdata.isVerified=='rejected') {%>
-        <div class="request-status">
-            <h2>Your request has been rejected.</h2>
-            <p>Please check all your details and refill the data correctly.</p>
-            <p class="reason">Reason: <%= userdata.reason %></p>
-          </div>
-          
-          
-                
-        
-          
-     <% } else { %>
-        <div class="request-status hidden">
-            <h1>Please Complete you profile to buy stocks.</h1>
-            <p>Click here to proceed.</p>
-            <button class="pending-button" onclick="checkStatus()">Check Pending Status</button>
-      <% } %>
-
-    
-    <script >
-        document.querySelectorAll('.arrow').forEach(arrow => {
-    arrow.addEventListener('click', () => {
-        arrow.classList.toggle('clicked');
-    });
-});
-
-    </script>
-
-    <script src="/javascripts/script.js"></script>
-    <% if (userdata.isisVerified=='true') { %>
     <footer>
         <div class="footer">
         <div class="row">
@@ -217,6 +203,38 @@
         </div>
         </div>
         </footer>
-        <%}%>
+    <script >
+        document.querySelectorAll('.arrow').forEach(arrow => {
+    arrow.addEventListener('click', () => {
+        arrow.classList.toggle('clicked');
+    });
+});
+
+    </script>
+    
+
+    <% } else if (userdata.isVerified === 'false') { %>
+        <div class="request-status hidden">
+            <h1>Your request is under processing.</h1>
+            <p>Please wait up to 24 hours for it to be processed.</p>
+            <button class="pending-button" onclick="checkStatus()">Check Pending Status</button>
+        </div>
+
+    <% } else if (userdata.isVerified === 'rejected') { %>
+        <div class="request-status">
+            <h2>Your request has been rejected.</h2>
+            <p>Please check all your details and refill the data correctly.</p>
+            <p class="reason">Reason: <%= userdata.reason %></p>
+        </div>
+    <% } else { %>
+        <div class="request-status hidden">
+            <h1>Please Complete your profile to buy stocks.</h1>
+            <p>Fill out the required details to proceed.</p>
+            <button class="complete-button">Complete your profile</button>
+        </div>
+    <% } %>
+
+    <% } %>
+    
 </body>
 </html>

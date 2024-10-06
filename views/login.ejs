@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>movie</title>
+    <title>Tradehub</title>
     <link rel="stylesheet" href="css/login.css">
     <script src="/javascripts/login.js"></script>
   </head>
   <body>
     <nav class="navbar">
-        <div class="logo">Movies</div>
+        <div class="logo">Tradehub</div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -25,22 +25,32 @@
       <div class="facebook-page flex">
         
         <div class="text">
-          <h1>TraMoviesdeHub </h1>
-          <p>Worldwide movies</p>
-          <p> search a movie.....</p>
+          <h1 class="main-heading">TradeHub</h1>
+          <p class="subtext highlight">Craft your success.</p>
+          <p class="subtext">Savor smart trading.</p>
+          
         </div>
         <form action="/login" method="POST">
-            <input type="email" name="email" placeholder="Email or phone number" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <div class="link">
-              <button type="submit" class="login">Login</button>
-              <a href="#"  onclick="openModal()" class="forgot-password">Forgot Password?</a>
-            </div>
-            <hr>
-            <div class="button">
-              <a href="/register">Create new account</a>
-            </div>
-          </form>
+          <input type="email" name="email" placeholder="Email or phone number" required>
+        
+          <div class="password-container">
+            <input type="password" name="password" placeholder="Password" id="passwordInput" required>
+            <i class="toggle-password" onclick="togglePasswordVisibility()">🙈</i>
+          </div>
+        
+          <div class="link">
+            <button type="submit" class="login">Login</button>
+            <a href="#" onclick="openModal()" class="forgot-password">Forgot Password?</a>
+          </div>
+          
+          <hr>
+          
+          <div class="button">
+            <a href="/register" class="create-account">Create new account</a>
+          </div>
+        </form>
+      
+        
       </div>
     </div>
 <!-- Forgot Password Modal -->
@@ -73,7 +83,7 @@
     </div>
     <footer class="footer">
         <div class="footer__addr">
-          <h1 class="footer__logo">Movies</h1>
+          <h1 class="footer__logo">TradeHub</h1>
               
           <h2>Contact</h2>
           

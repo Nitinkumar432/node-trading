@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav class="navbar">
-    <div class="logo"><h1 style="font-weight: bold;">TradeHub</h1></div>
+    <div class="logo"><h1>TradeHub</h1></div>
     <ul class="nav-links">
         <li><a href="/login">Home</a></li>
         <li><a href="#about">About</a></li>
@@ -16,41 +16,50 @@
         <li><a href="#contact">Contact</a></li>
     </ul>
 </nav>
+
 <div class="wrapper">
-  <h2>Registration</h2>
+  <h2>Register</h2>
   <form action="/register" method="POST">
-      <!-- Error or success message display -->
+      <!-- Error alert -->
       <% if (typeof error !== 'undefined') { %>
-          <div  style="color:red" class="alert alert-danger"><%= error %></div>
+          <div class="alert error-alert"><%= error %></div>
       <% } %>
+
+      <!-- Success alert -->
       <% if (typeof success !== 'undefined') { %>
-          <div style="color:green" class="alert alert-success"><%= success %></div>
+          <div class="alert success-alert"><%= success %></div>
       <% } %>
 
       <div class="input-box">
-          <input type="text" name="name" placeholder="Enter your name" required>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter your name" required>
       </div>
       <div class="input-box">
-          <input type="email" name="email" placeholder="Enter your email" required>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="Enter your email" required>
       </div>
       <div class="input-box">
-          <input type="text" name="phoneNumber" placeholder="Enter your phone number" required>
+          <label for="phoneNumber">Phone Number</label>
+          <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required>
       </div>
       <div class="input-box">
-          <input type="date" name="dob" placeholder="Enter your date of birth" required>
+          <label for="dob">Date of Birth</label>
+          <input type="date" id="dob" name="dob" required>
       </div>
       <div class="input-box">
-          <input type="password" name="password" placeholder="Create password" required>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create password" required>
       </div>
       <div class="input-box">
-          <input type="password" name="confirmPassword" placeholder="Confirm password" required>
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
       </div>
       <div class="policy">
-          <input type="checkbox" required>
-          <h3>I accept all terms & conditions</h3>
+          <input type="checkbox" id="terms" required>
+          <label for="terms">I accept all terms & conditions</label>
       </div>
       <div class="input-box button">
-          <button type="submit">Register</button>
+          <button type="submit" class="register-btn">Register</button>
       </div>
       <div class="text">
           <h3>Already have an account? <a href="/login">Login now</a></h3>

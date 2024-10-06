@@ -1,0 +1,175 @@
+body {
+    background-color: #f0f4f8; /* Light background for better contrast */
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Enhanced Scratch Card */
+.scratch-card {
+    width: 350px; /* Increased width */
+    height: 180px; /* Increased height */
+    background: linear-gradient(135deg, #b19518, #ffcc00); /* Vibrant gradient colors */
+    color: white;
+    border-radius: 15px; /* Rounded corners */
+    position: relative;
+    overflow: hidden;
+    margin: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.scratch-card:hover {
+    transform: scale(1.05) rotate(2deg); /* Slight rotation on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Scratch Overlay */
+.scratch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Offer Text */
+.offer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 1.8rem; /* Larger font size */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* Text shadow for better readability */
+}
+
+/* Offer Message */
+.offer-message {
+    display: none;
+    margin-top: 20px;
+}
+
+/* Coupons Section */
+.coupons-section {
+    margin-top: 50px;
+    text-align: left;
+    padding: 30px; /* Increased padding */
+    border-radius: 8px;
+    background-color: #ffffff; /* White background for contrast */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Coupon Card */
+.coupon {
+    width: 350px; /* Increased width */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Increased padding for better spacing */
+    margin-bottom: 20px; /* Increased margin for better separation */
+    background: linear-gradient(135deg, #ffffff, #f9f9f9); /* Light gradient background */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    animation: slide-in 0.5s ease-in; /* Animation effect */
+}
+
+/* Valid Until Tag */
+.valid-until-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #28a745; /* Green color */
+    color: white;
+    padding: 8px 12px; /* Adjusted padding */
+    border-radius: 5px;
+    font-size: 1rem; /* Slightly larger font */
+    font-weight: bold; /* Bold text */
+}
+
+/* Animation Keyframes */
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .scratch-card, .coupon {
+        width: 90%; /* Make cards responsive */
+        margin: 10px auto; /* Center align on smaller screens */
+    }
+}
+/* your coupon section
+ */
+ .coupons-section {
+    margin-top: 50px;
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for the section */
+    border-radius: 10px; /* Rounded corners for the section */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+}
+
+.coupons-section h2 {
+    font-size: 2rem; /* Larger font for heading */
+    color: #007bff; /* Primary color for heading */
+    margin-bottom: 30px; /* Space below the heading */
+}
+
+/* Individual Coupon Card */
+.coupon {
+    background: linear-gradient(135deg, #ffcc00, #ff5722); /* Gradient color for the coupon */
+    color: white;
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Padding for inner content */
+    margin: 15px; /* Margin for spacing between coupons */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effects */
+    position: relative; /* Relative positioning for absolute elements inside */
+}
+
+/* Hover Effect for Coupons */
+.coupon:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+/* Valid Until Tag */
+.valid-until-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ebf5ed; /* Green background for the tag */
+    color: rgb(151, 214, 51);
+    padding: 8px 12px; /* Padding for the tag */
+    border-radius: 5px; /* Rounded corners for the tag */
+    font-size: 1rem; /* Font size */
+    font-weight: bold; /* Bold text */
+}
+
+/* Discount Text */
+.coupon h5 {
+    margin-top: 50px; /* Space above the discount text */
+    font-size: 1.5rem; /* Larger font size for visibility */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Text shadow for readability */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .coupon {
+        width: 100%; /* Full width for smaller screens */
+    }
+}
+

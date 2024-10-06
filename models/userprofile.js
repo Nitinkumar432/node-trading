@@ -13,7 +13,7 @@ const UserProfileSchema = new mongoose.Schema({
     required: true
   },
   pancard: {
-    type: Number,
+    type: String,
     required: true
   },
   name: { type: String, required: true },

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your IPO Bookings</title>
+    <link rel="stylesheet" href="/path/to/your/styles.css"> <!-- Link your CSS here -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #181818; /* Dark background */
+            color: #eaeaea; /* Light text color */
+        }
+        h1 {
+            color: #f9c74f; /* Highlighted header color */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .ipo-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 5px; /* Rounded corners */
+            overflow: hidden; /* To apply border radius */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+        .ipo-table th, .ipo-table td {
+            padding: 10px;
+            border: 1px solid #444; /* Slightly darker borders */
+            text-align: left;
+        }
+        .ipo-table th {
+            background-color: #333; /* Dark header */
+        }
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+        .status-confirmed {
+            color: #70e000; /* Lighter green for confirmed */
+            font-weight: bold;
+        }
+        .status-rejected {
+            color: #ff6b6b; /* Softer red for rejected */
+            font-weight: bold;
+        }
+        .button {
+            background-color: #f9c74f; /* Highlighted button color */
+            color: #333; /* Button text color */
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none; /* No underline */
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #f5b73b; /* Darker shade on hover */
+        }
+        .actions {
+            text-align: center;
+            margin: 20px 0; /* Space above and below */
+        }
+    </style>
+</head>
+<body>
+
+<h1>Your IPO Bookings</h1>
+
+
+
+<table class="ipo-table">
+    <thead>
+        <tr>
+            <th>Company Name</th>
+            <th>Slots</th>
+            <th>Bid Price</th>
+            <th>Total Price</th>
+            <th>Payment Method</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Actions</th> <!-- Added Actions column -->
+        </tr>
+    </thead>
+    <tbody>
+        <% if (alldata.length === 0) { %>
+            <tr>
+                <td colspan="8">No IPO bookings found.</td>
+            </tr>
+        <% } else { %>
+            <% alldata.forEach(ipo => { %>
+                <tr>
+                    <td><%= ipo.companyName %></td>
+                    <td><%= ipo.slots %></td>
+                    <td><%= ipo.bidPrice %></td>
+                    <td><%= ipo.totalPrice %></td>
+                    <td><%= ipo.paymentMethod %></td>
+                    <td class="<%= ipo.status === 'Pending' ? 'status-pending' : ipo.status === 'Confirmed' ? 'status-confirmed' : 'status-rejected' %>">
+                        <%= ipo.status %>
+                    </td>
+                    <td><%= ipo.createdAt.toLocaleString() %></td>
+                    <td>
+                        <% if (ipo.status === 'Pending') { %>
+                            <a href="/cancel-ipo/<%= ipo._id %>" class="button" onclick="return confirm('Are you sure you want to cancel this IPO?');">Cancel</a> <!-- Cancel button -->
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>
+
+</body>
+</html>

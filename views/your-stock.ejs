@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Stocks</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            max-width: 500px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .table thead {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        .table th, .table td {
+            text-align: center;
+        }
+
+        .table .btn-danger {
+            margin: auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Your Stocks</h2>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" id="stockSearch" placeholder="Search for a stock..." class="form-control">
+    </div>
+
+    <div class="funds-section mb-3">
+        <h4>Funds: &#x20b9; <span id="funds"><%= userFunds %></span></h4>
+    </div>
+
+    <table class="table table-striped table-bordered" id="stockTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>Stock Name</th>
+                <th>Quantity</th>
+                <th>Current Price</th>
+                <th>Sell</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% yourStocks.forEach(stock => { %>
+            <tr>
+                <td><%= stock.stockName %></td>
+                <td><%= stock.quantity %></td>
+                <td>&#x20b9; <%= (stock.totalPrice) / (stock.quantity) %></td>
+                <td>
+                    <button class="btn btn-danger sell-btn" data-stock="<%= stock.stockName %>"
+                            data-quantity="<%= stock.quantity %>"
+                            data-company="<%= stock.companyName %>"
+                            data-currentprice="<%= (stock.totalPrice) / (stock.quantity) %>">
+                        Sell
+                    </button>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<!-- Sell Stock Modal -->
+<div id="sellModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 class="text-center">Sell Stock</h3>
+        <form id="sellForm">
+            <input type="hidden" name="stockSymbol" id="stockSymbol" value="">
+            <div class="mb-3">
+                <label for="companyName" class="form-label">Company Name:</label>
+                <input type="text" id="companyName" class="form-control"  readonly>
+            </div>
+            <div class="mb-3">
+                <label for="currentPrice" class="form-label">Current Price (&#x20b9;):</label>
+                <input type="text" id="currentPrice" class="form-control" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="sellQuantity" class="form-label">Quantity to Sell:</label>
+                <input type="number" name="sellQuantity" id="sellQuantity" class="form-control" min="1" max="" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Sell</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS (with Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    const modal = document.getElementById('sellModal');
+    const closeModal = document.getElementsByClassName('close')[0];
+    const sellButtons = document.querySelectorAll('.sell-btn');
+    const stockSymbolInput = document.getElementById('stockSymbol');
+    const companyNameInput = document.getElementById('companyName');
+    const currentPriceInput = document.getElementById('currentPrice');
+    const sellQuantityInput = document.getElementById('sellQuantity');
+
+    sellButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const stockSymbol = button.getAttribute('data-stock');
+            const companyName = button.getAttribute('data-company');
+            const currentPrice = button.getAttribute('data-currentprice');
+            const maxQuantity = button.getAttribute('data-quantity');
+
+            stockSymbolInput.value = stockSymbol;
+            companyNameInput.value = companyName;
+            currentPriceInput.value = currentPrice;
+            sellQuantityInput.max = maxQuantity;
+
+            modal.style.display = 'block';
+        });
+    });
+
+    closeModal.onclick = () => {
+        modal.style.display = 'none';
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Handle form submission for selling stocks
+    document.getElementById('sellForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const stockSymbol = stockSymbolInput.value;
+        const sellQuantity = sellQuantityInput.value;
+
+        const response = await fetch('/sell-stock', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                stockSymbol,
+                sellQuantity,
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.message === 'Stock sold successfully') {
+            document.getElementById('funds').textContent = data.updatedFunds;
+            alert(`Stock sold! You now have &#x20b9; ${data.updatedFunds} in funds.`);
+        } else {
+            alert(data.message);
+        }
+
+        modal.style.display = 'none';
+    });
+
+    // Search functionality
+    document.getElementById('stockSearch').addEventListener('keyup', function () {
+        const filter = this.value.toUpperCase();
+        const rows = document.querySelectorAll('#stockTable tbody tr');
+
+        rows.forEach(row => {
+            const stockName = row.cells[0].textContent.toUpperCase();
+            if (stockName.indexOf(filter) > -1) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+
+</html>
