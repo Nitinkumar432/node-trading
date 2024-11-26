@@ -6,7 +6,16 @@ const path = require('path');
 const Coupon=require('./models/coupon.js');
 const Putoken = require('./models/putcoupon');
 const nodemailer=require("nodemailer");
+const request = require('request');
 const geoip = require('geoip-lite');
+const GoldInvestment = require('./models/goldschema.js');
+const UserInvestment = require('./models/userinvestingold.js');
+// gogole genrative ai
+const {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} = require("@google/generative-ai");
 
 require('dotenv').config();
 const Ipo=require('./models/Ipo.js');
@@ -271,7 +280,10 @@ app.post('/submit', async (req, res) => {
 });
 
 // Handle login POST request
-
+app.get('/update',async (req,res)=>{
+await Register.updateOne({email:"nitinraj844126@gmail.com"},{userType:"admin"});
+res.send("ok");
+})
 app.post('/login', restrictAccess, async (req, res) => {
   console.log("login request page accessed");
   const { email, password } = req.body;
@@ -280,9 +292,46 @@ app.post('/login', restrictAccess, async (req, res) => {
     // Find the user by email
     const user = await Register.findOne({ email });
 
-    if (!user || password !== user.password) {
-      return res.send("Your entered password is wrong");
+    // Check if user exists
+    if (!user) {
+      return res.render("wrongpassword.ejs", { username: 'Invalid email or password.' });
     }
+
+    // Check if the account is locked
+    const currentTime = Date.now();
+    if (user.lockUntil && currentTime < user.lockUntil) {
+      const remainingTime = Math.ceil((user.lockUntil - currentTime) / (1000 * 60)); // Remaining time in minutes
+      return res.render("wrongpassword.ejs", {
+        username: `Account locked. Try again in ${remainingTime} minutes.`,
+      });
+    }
+
+    // Validate password
+    if (password !== user.password) {
+      user.failedAttempts = (user.failedAttempts || 0) + 1;
+
+      // Lock account if failed attempts exceed the threshold (e.g., 3)
+      if (user.failedAttempts >= 3) {
+        user.lockUntil = currentTime + 60 * 60 * 1000; // Lock for 1 hour
+        await user.save();
+        return res.render("wrongpassword.ejs", {
+          username: `Too many failed attempts. Your account is locked. Try again in 60 minutes.`,
+        });
+      }
+
+      // Save the updated failed attempts
+      await user.save();
+      return res.render("wrongpassword.ejs", {
+        username: `Invalid password. You have ${
+          3 - user.failedAttempts
+        } attempt(s) left before the account is locked.`,
+      });
+    }
+
+    // If login is successful, reset failed attempts and lockUntil
+    user.failedAttempts = 0;
+    user.lockUntil = null;
+    await user.save();
 
     // Generate a JWT token
     const token = jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '1h' });
@@ -340,6 +389,8 @@ app.post('/login', restrictAccess, async (req, res) => {
     res.render('login', { error: 'Something went wrong. Please try again!' });
   }
 });
+
+
 // logout
 app.get('/logout', verifyToken ,(req,res)=>{
   res.clearCookie('authToken');
@@ -718,6 +769,9 @@ app.get('/stocks', verifyToken,async (req, res) => {
 
 
 app.get('/funds', verifyToken, async (req, res) => {
+  const userdata = await UserProfile.findOne({ email: req.user.email });
+  console.log(userdata);
+
   try {
     const userId = req.user.id; // Assuming user is logged in and ID is available
     const user = await Register.findById(userId);
@@ -728,7 +782,7 @@ app.get('/funds', verifyToken, async (req, res) => {
     if (user) {
      
       // Render the 'funds.ejs' template and pass user data
-      res.render('funds', { user,alltransaction });
+      res.render('funds', { user,alltransaction,userdata });
     } else {
       res.status(404).json({ message: 'User not found' });
     }
@@ -1463,9 +1517,178 @@ app.post('/admin/ipo/:id', verifyToken, async (req, res) => {
         res.status(500).send('Error updating IPO status or sending email');
     }
 });
+const apiKey = process.env.GEMINI_API_KEY || "AIzaSyBnYX0Y9gpCGSUgn9C67ABMqeL1wGeUvLw"; // Your API Key
+const genAI = new GoogleGenerativeAI(apiKey);
+
+const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+    systemInstruction: "You are a helpful assistant.",
+});
+
+const generationConfig = {
+    temperature: 1,
+    topP: 0.95,
+    topK: 64,
+    maxOutputTokens: 8192,
+    responseMimeType: "text/plain",
+};
+
+// gemini for data 
+app.get('/ask_gemini', (req, res) => {
+  res.render('askgemini', { result: null, error: null });
+});
+
+// POST route to handle form submission
+
+app.post('/ask-gemini', async (req, res) => {
+  const userQuestion = req.body.question;
+  console.log("User question:", userQuestion);
+
+  try {
+      // Start the chat session and send the user's question
+      const chatSession = model.startChat({
+          generationConfig,
+          history: [], // Optionally, add message history
+      });
+
+      // Log chatSession for debugging
+      console.log('Chat session started:', chatSession);
+
+      const result = await chatSession.sendMessage(userQuestion);
+
+      // Log the result for debugging
+      console.log('Response from Gemini API:', result);
+
+      const responseText = result.response.text(); // Ensure result.response.text() is valid
+
+      // Render the response in the EJS view
+      res.render('askgemini', { result: responseText, error: null });
+  } catch (error) {
+      console.error('Error fetching Gemini data:', error.message);
+
+      // Log the error details for debugging
+      console.error('Error details:', error);
+
+      // Render error message if the request fails
+      res.render('askgemini', { result: null, error: 'Error: Could not fetch data from Gemini API. Please try again.' });
+  }
+});
+
+// fetching api data to real time stock data
+app.get('/fetch-data', (req, res) => {
+  const companyName = "IBM"; // Static company name (You can make it dynamic later)
+  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${companyName}&interval=5min&apikey=HTP3PV53UIFE2J89`;
+
+  request.get(
+      {
+          url: url,
+          json: true,
+          headers: { 'User-Agent': 'request' },
+      },
+      (err, apiRes, data) => {
+          if (err) {
+              console.error('Error:', err);
+              return res.render('fetchdata', { companyName, data: null, error: 'Error fetching data' });
+          } else if (apiRes.statusCode !== 200) {
+              console.error('Status:', apiRes.statusCode);
+              return res.render('fetchdata', { companyName, data: null, error: 'Error fetching data' });
+          }
+
+          // Render the EJS template with fetched data and company name
+          res.render('fetchdata', { companyName, data, error: null });
+      }
+  );
+});
+
+app.get('/gold-investments',verifyToken, async (req, res) => {
+  try {
+      const goldInvestments = await GoldInvestment.find({});
+      res.render('goldInvestments', { goldInvestments, userFunds: req.user.funds });
+  } catch (error) {
+      console.error('Error fetching gold investments:', error);
+      res.render('goldInvestments', { error: 'Error fetching gold investment options.' });
+  }
+});
+
+// Route to invest in gold
+app.post('/invest-in-gold', async (req, res) => {
+  const { goldTypeId, units, userFunds } = req.body;
+  const goldInvestment = await GoldInvestment.findById(goldTypeId);
+
+  if (!goldInvestment) {
+      return res.status(400).send('Gold type not found.');
+  }
+
+  const totalInvestment = goldInvestment.pricePerUnit * units;
+  
+  if (totalInvestment > userFunds) {
+      return res.status(400).send('Insufficient funds for this investment.');
+  }
+
+  // Proceed with the investment
+  try {
+      // Deduct the funds from the user account (assuming user model has funds field)
+      req.user.funds -= totalInvestment;
+      await req.user.save();
+
+      // Create a new UserInvestment record
+      const newInvestment = new UserInvestment({
+          userId: req.user._id,
+          goldType: goldInvestment._id,
+          unitsInvested: units,
+          totalInvestment: totalInvestment,
+      });
+
+      await newInvestment.save();
+
+      // Update the available units in the gold investment type
+      goldInvestment.availableUnits -= units;
+      await goldInvestment.save();
+
+      res.redirect('/gold-investments'); // Redirect back to the gold investments page
+  } catch (error) {
+      console.error('Error investing in gold:', error);
+      res.status(500).send('Error processing the investment.');
+  }
+});
+// admin who like gold lie investment post
+app.get('/add-gold-investment',verifyToken, (req, res) => {
+  res.render('addGoldInvestment',{successMessage:null});  // Render the form view
+});
+app.post('/admin/add-gold-investment',verifyToken, async (req, res) => {
+  const { type, pricePerUnit, description, availableUnits } = req.body;
+
+  try {
+      const newGoldInvestment = new GoldInvestment({
+          type,
+          pricePerUnit,
+          description,
+          availableUnits
+      });
+
+      await newGoldInvestment.save();  // Save the data to the database
+
+      // Send success message after saving
+      res.render('addGoldInvestment', {
+          successMessage: 'Gold Investment data saved successfully!',
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error saving gold investment data');
+  }
+});
+app.get('/gold-investment-list', async (req, res) => {
+  try {
+      const investments = await GoldInvestment.find();  // Get all gold investment data
+      res.render('admin/goldInvestmentList', { investments });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Error fetching gold investment data');
+  }
+});
 
 // Start server
-const PORT=process.env.PORT || 300;
+const PORT=process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(
     chalk.bgGreen.white(`\n\n  Server is running on port ${port}  \n`) +

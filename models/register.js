@@ -40,7 +40,14 @@ const registrationSchema = new mongoose.Schema({
   funds:{
     type:Number,
     default:0
-  }
+  },
+  loginAttempts: {
+    type: Number,
+    default: 0, // Track failed login attempts
+  },
+  lockUntil: {
+    type: Date, // Timestamp to indicate when login can be retried
+  },
 });
 
 // Create the model

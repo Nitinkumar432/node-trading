@@ -1,0 +1,43 @@
+<!-- views/admin/addGoldInvestment.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Gold Investment</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Link to your styles -->
+</head>
+<body>
+    <div class="container">
+        <h1>Add Gold Investment</h1>
+
+        <!-- Show Success Message if the investment is saved -->
+        <% if (successMessage) { %>
+            <div class="alert alert-success">
+                <strong><%= successMessage %></strong>
+            </div>
+        <% } %>
+
+        <!-- Gold Investment Form -->
+        <form action="/admin/add-gold-investment" method="POST">
+            <div class="form-group">
+                <label for="type">Gold Type</label>
+                <input type="text" name="type" id="type" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="pricePerUnit">Price Per Unit</label>
+                <input type="number" name="pricePerUnit" id="pricePerUnit" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" class="form-control" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="availableUnits">Available Units</label>
+                <input type="number" name="availableUnits" id="availableUnits" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Gold Investment</button>
+        </form>
+    </div>
+</body>
+</html>

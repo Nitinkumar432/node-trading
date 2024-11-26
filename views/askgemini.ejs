@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask Gemini - Trading FAQ</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #343a40;
+            color: white;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #495057;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        .alert {
+            white-space: pre-wrap; /* To handle preformatted text for API results */
+        }
+        .faq-card {
+            background-color:  #527da3;
+            cursor: pointer;
+        }
+        .faq-answer {
+            display: none;
+            margin-top: 10px;
+        }
+        .faq-card:hover {
+            background-color: #2e6ba1;
+        }
+        /* Spinner style */
+        .spinner-border {
+            display: none;
+        }
+        .result-section {
+    position: relative; /* To position spinner if needed */
+}
+
+.card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Adding shadow for depth */
+    transition: transform 0.3s; /* Smooth transform for hover effect */
+}
+
+.card:hover {
+    transform: scale(1.02); /* Slightly scale up on hover */
+}
+
+.spinner-border {
+    position: absolute; /* Center spinner in result section */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* Hide spinner initially */
+}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center mb-4">Trading FAQ</h1>
+
+    <!-- Search functionality -->
+    <div class="mb-4">
+        <input type="text" id="faqSearch" class="form-control" placeholder="Search FAQs...">
+        <button id="enhanceSearch" class="btn btn-secondary mt-2" onclick="enhanceSearch()">Enhance Search</button>
+    </div>
+
+    <!-- Display error message at the top if there's any -->
+    <% if (error) { %>
+        <div class="alert alert-danger" role="alert">
+            <strong>Error:</strong> <%= error %>
+        </div>
+    <% } %>
+
+    <!-- Form for user to ask a question -->
+    <form action="/ask-gemini" method="POST" onsubmit="showSpinner()">
+        <div class="mb-3">
+            <label for="question" class="form-label">Ask your question:</label>
+            <input type="text" class="form-control" id="question" name="question" placeholder="Type your question..." required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Ask Doubt</button>
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </form>
+
+    <!-- Display the result from the API if there's any -->
+    <% if (result) { %>
+        <div class="result-section mt-4">
+            <h2 class="text-center">Response from Ai:</h2>
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title" style="font-family: 'Arial', sans-serif; font-weight: bold;">Your Answer:</h5>
+                    <p class="card-text" style="font-size: 1.2rem; font-family: 'Arial', sans-serif; line-height: 1.5;">
+                        <%= result %>
+                    </p>
+                </div>
+            </div>
+        </div>
+    <% } %>
+    
+
+    <!-- Frequently Asked Questions Section -->
+    <h2 class="mt-4">Frequently Asked Questions</h2>
+    <div id="faqList">
+        <div class="card faq-card" onclick="toggleAnswer('faq1')">
+            <div class="card-body">
+                <h5 class="card-title">What is trading?</h5>
+                <p class="faq-answer" id="faq1">Trading is the act of buying and selling financial instruments like stocks, bonds, commodities, etc.</p>
+            </div>
+        </div>
+        <div class="card faq-card" onclick="toggleAnswer('faq2')">
+            <div class="card-body">
+                <h5 class="card-title">What is a stock?</h5>
+                <p class="faq-answer" id="faq2">A stock represents a share in the ownership of a company and constitutes a claim on part of the company’s assets and earnings.</p>
+            </div>
+        </div>
+        <div class="card faq-card" onclick="toggleAnswer('faq3')">
+            <div class="card-body">
+                <h5 class="card-title">What is forex trading?</h5>
+                <p class="faq-answer" id="faq3">Forex trading is the buying and selling of currencies in the foreign exchange market.</p>
+            </div>
+        </div>
+        <div class="card faq-card" onclick="toggleAnswer('faq4')">
+            <div class="card-body">
+                <h5 class="card-title">What is a trading strategy?</h5>
+                <p class="faq-answer" id="faq4">A trading strategy is a plan to identify a profitable trading opportunity based on predefined rules.</p>
+            </div>
+        </div>
+        <div class="card faq-card" onclick="toggleAnswer('faq5')">
+            <div class="card-body">
+                <h5 class="card-title">What are trading hours?</h5>
+                <p class="faq-answer" id="faq5">Trading hours are the hours during which a financial market is open for trading.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Function to toggle FAQ answer visibility
+    function toggleAnswer(faqId) {
+        const answer = document.getElementById(faqId);
+        answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Search functionality for FAQs
+    document.getElementById('faqSearch').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const faqs = document.querySelectorAll('.faq-card');
+        faqs.forEach(faq => {
+            const title = faq.querySelector('.card-title').textContent.toLowerCase();
+            faq.style.display = title.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+
+    // Function to show spinner
+    function showSpinner() {
+        const spinner = document.querySelector('.spinner-border');
+        spinner.style.display = 'inline-block';
+    }
+
+    // Enhance search functionality (optional)
+    function enhanceSearch() {
+        const searchTerm = document.getElementById('faqSearch').value.toLowerCase();
+        const faqs = document.querySelectorAll('.faq-card');
+        faqs.forEach(faq => {
+            const title = faq.querySelector('.card-title').textContent.toLowerCase();
+            if (title.includes(searchTerm)) {
+                faq.style.display = 'block';
+                faq.classList.add('bg-success', 'text-white');
+            } else {
+                faq.style.display = 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -175,6 +175,52 @@ h5 {
             font-size: 2rem; /* Larger font size for emphasis */
             font-weight: bold; /* Bold font */
         }
+        /* Add a red flashing animation to the alert */
+.flash-alert {
+    background-color: #f8d7da;  /* Light red background */
+    color: #721c24; /* Dark red text */
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+    animation: flash 1.5s infinite alternate; /* Flash animation */
+    font-weight: bold;
+}
+
+@keyframes flash {
+    0% {
+        background-color: #f8d7da; /* Light red */
+        color: #721c24;
+    }
+    50% {
+        background-color: #f5c6cb; /* Darker red */
+        color: #721c24;
+    }
+    100% {
+        background-color: #f8d7da; /* Light red */
+        color: #721c24;
+    }
+}
+
+/* Style for the alert text */
+.flash-alert strong {
+    font-size: 1.2em;
+}
+
+/* Style for the Complete Profile button */
+.flash-alert a {
+    margin-left: 20px;
+    padding: 10px 20px;
+    background-color: #f39c12;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.flash-alert a:hover {
+    background-color: #e67e22;
+}
+
     </style>
 </head>
 <body>
@@ -192,14 +238,21 @@ h5 {
                 </div>
             </div>
         </div>
-
-        <!-- Toggle Buttons for Add/Withdraw -->
-        <div class="text-center mb-3">
-            <button class="btn btn-custom" id="toggleAddFunds">Add Funds</button>
-            <button class="btn btn-custom" id="toggleWithdrawFunds">Withdraw Funds</button>
-        </div>
-    </div>
-
+        <% if (userdata != null) { %>
+            <!-- Display Add and Withdraw Funds buttons if user is logged in -->
+            <div class="text-center mb-3">
+                <button class="btn btn-custom" id="toggleAddFunds">Add Funds</button>
+                <button class="btn btn-custom" id="toggleWithdrawFunds">Withdraw Funds</button>
+            </div>
+        <% } else { %>
+            <!-- Display flashing red alert if profile is not completed -->
+            <div id="alertMessage" class="alert alert-danger flash-alert">
+                <strong>Complete Your Profile to Add/Withdraw Funds.</strong>
+                <a href="/userdata" class="btn btn-warning">Complete Profile</a>
+                <img src="https://media1.giphy.com/media/l378nQdVg2NK5oyqs/giphy.gif?cid=6c09b952f5z6nt22il4ml9v54ytjwhh1s4srjwqqs6iio3a1&ep=v1_gifs_search&rid=giphy.gif&ct=g" alt="">
+            </div>
+        <% } %>
+        
 
     <!-- Tabs for Add Funds & Withdraw (Initially Hidden) -->
     <div class="tab-content mt-3" id="fundsTabContent">
@@ -252,7 +305,7 @@ h5 {
             </div>
         </div>
     </div>
-    <<div class="container mt-5">
+    <div class="container mt-5">
        
         <h2>Your Transactions</h2>
 
@@ -437,6 +490,15 @@ h5 {
     $(document).ready(function() {
         $('#fundsTabContent').hide(); // Initially hide funds forms
     });
+    window.onload = function() {
+    const alertMessage = document.getElementById('alertMessage');
+    if (!userdata) {
+        alertMessage.style.display = 'block';  // Show the alert if user data is not present
+    } else {
+        alertMessage.style.display = 'none';   // Hide the alert if user data is present
+    }
+};
+
 </script>
 </body>
 </html>

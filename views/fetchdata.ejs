@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Stock Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .buy-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .buy-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Stock Data for <%= companyName %></h1>
+
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } else if (data && data['Time Series (5min)']) { %>
+        <table>
+            <tr>
+                <th>Timestamp</th>
+                <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Close</th>
+                <th>Volume</th>
+                <th>Action</th>
+            </tr>
+            <% const timeSeries = data['Time Series (5min)']; %>
+            <% for (const [timestamp, values] of Object.entries(timeSeries)) { %>
+                <tr>
+                    <td><%= timestamp %></td>
+                    <td><%= values['1. open'] %></td>
+                    <td><%= values['2. high'] %></td>
+                    <td><%= values['3. low'] %></td>
+                    <td><%= values['4. close'] %></td>
+                    <td><%= values['5. volume'] %></td>
+                    <td>
+                        <form action="/buy-stock" method="POST">
+                            <input type="hidden" name="companyName" value="<%= companyName %>">
+                            <input type="hidden" name="timestamp" value="<%= timestamp %>">
+                            <button type="submit" class="buy-button">Buy</button>
+                        </form>
+                    </td>
+                </tr>
+            <% } %>
+        </table>
+    <% } else { %>
+        <p>No data available</p>
+    <% } %>
+</body>
+</html>

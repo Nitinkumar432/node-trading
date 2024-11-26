@@ -12,6 +12,25 @@ header {
     
   
 }
+.gemini-button {
+  display: inline-block; /* Ensures the link behaves like a button */
+  padding:5px;
+ /* Adjust padding for button size */
+  background-color: #4285F4; /* Background color */
+  color: #ffffff; /* Text color */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Font weight */
+  text-decoration: none; /* Remove underline */
+  border-radius: 5px; /* Rounded corners */
+  border: none; /* No border */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.gemini-button:hover {
+  background-color: #357AE8; /* Darker color on hover */
+}
+
 
 .header-container {
     display: flex;

@@ -1,0 +1,117 @@
+<!-- views/goldInvestments.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Investment</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<style>
+    /* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #4b8d1c;
+}
+
+.gold-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.gold-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gold-card h3 {
+    color: #4b8d1c;
+    font-size: 1.5rem;
+}
+
+.gold-card p {
+    font-size: 1rem;
+    color: #333;
+}
+
+button {
+    background-color: #4b8d1c;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #3e7216;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+</style>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Gold Investment Opportunities</h1>
+            <p>Your Available Funds: <strong>$<%= userFunds %></strong></p>
+        </header>
+
+        <div class="gold-list">
+            <% if (goldInvestments && goldInvestments.length > 0) { %>
+                <% goldInvestments.forEach(function(gold) { %>
+                    <div class="gold-card">
+                        <h3><%= gold.type %></h3>
+                        <p><%= gold.description %></p>
+                        <p>Price per Unit: $<%= gold.pricePerUnit %></p>
+                        <p>Available Units: <%= gold.availableUnits %></p>
+
+                        <!-- Investment Form -->
+                        <form action="/invest-in-gold" method="POST">
+                            <input type="hidden" name="goldTypeId" value="<%= gold._id %>">
+                            <input type="number" name="units" placeholder="Units to invest" min="1" max="<%= gold.availableUnits %>" required>
+                            <button type="submit">Invest</button>
+                        </form>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No gold investment options available.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Gold Investment Portal</p>
+    </footer>
+</body>
+</html>
