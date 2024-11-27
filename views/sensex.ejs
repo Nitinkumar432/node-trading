@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensex Companies</title>
+    <link rel="stylesheet" href="css/sensex.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <h1 class="header-title">SENSEX COMPANIES</h1>
+            <div id="total-sensex">
+                <span class="sensex-label">Total Sensex:</span>
+                <span id="total-sensex-value" class="sensex-value">₹0.00</span>
+            </div>
+        </div>
+        <div class="header-description">
+            <p>Explore the top Sensex companies with real-time market data and insights. Stay updated on the latest trends in the stock market.</p>
+        </div>
+    </header>
+    
+
+    <!-- Sensex Graph (Overall Market Trend) -->
+    <div class="sensex-graph-container">
+        <canvas id="sensex-graph"></canvas>
+    </div>
+
+    <!-- Companies Display - Vertical layout -->
+    <div class="companies-container">
+        <% companies.forEach(company => { %>
+            <div class="company-card">
+                <div class="company-info">
+                    <h3><%= company.companyName %></h3>
+                    <p class="symbol">Symbol: <%= company.symbol %></p>
+                    <p class="price">Current Price: ₹<span id="price-<%= company.symbol %>"><%= company.currentPrice %></span></p>
+                    <p class="change">Change: ₹<span id="change-<%= company.symbol %>"><%= company.priceChange %></span> (<span id="percentage-<%= company.symbol %>"><%= company.percentageChange %></span>%)</p>
+                    <div class="extra-details">
+                        <p>Open: ₹<%= company.openPrice %></p>
+                        <p>High: ₹<%= company.highPrice %></p>
+                        <p>Low: ₹<%= company.lowPrice %></p>
+                        <p>Volume: <%= company.volume %> shares</p>
+                    </div>
+                    <p class="market-cap">Market Cap: ₹<%= company.marketCap %> Cr</p>
+                    <p class="sector">Sector: <%= company.sector %></p>
+                    <p class="last-updated">Last Updated: <%= new Date(company.lastUpdated).toLocaleString() %></p>
+                </div>
+                <!-- Graph for each company -->
+                <div class="graph-container">
+                    <canvas id="graph-<%= company.symbol %>"></canvas>
+                </div>
+                <button class="invest-btn" onclick="showInvestmentModal('<%= company.companyName %>', <%= company.currentPrice %>, '<%= company.symbol %>')">Invest</button>
+            </div>
+        <% }); %>
+    </div>
+    
+
+    <!-- Modal for Investing -->
+    <div id="investment-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Invest in <span id="company-name"></span></h2>
+            <p>Current Price: ₹<span id="current-price"></span></p>
+            
+            <!-- Graph Section -->
+            <div class="graph-container">
+                <canvas id="company-graph"></canvas> <!-- Graph showing stock data -->
+            </div>
+            
+            <!-- Quantity Input -->
+            <label for="quantity">Quantity: </label>
+            <input type="number" id="quantity" min="1" placeholder="Enter quantity" oninput="updateTotalPrice()">
+            
+            <!-- Price Change, High, and Low Price -->
+            <div class="price-change-container">
+                <p>Price Change: <span id="price-change" class="price-change"></span></p>
+                <p>High Price: ₹<span id="high-price"></span></p>
+                <p>Low Price: ₹<span id="low-price"></span></p>
+            </div>
+            
+            <!-- Total Price Display -->
+            <div id="total-price-container">
+                <p>Total Investment: ₹<span id="total-price">0.00</span></p> <!-- Dynamic Total Price -->
+            </div>
+            
+            <!-- Invest Button -->
+            <button id="invest-btn" onclick="confirmInvestment()">Invest</button>
+        </div>
+    </div>
+    
+    
+
+    <script>
+        $(document).ready(function () {
+            const companies = <%- JSON.stringify(companies) %>; // Pass company data dynamically from server
+            const sensexData = [];
+            let totalSensex = 0;
+
+            // Create a chart for each company
+            companies.forEach(company => {
+                const ctx = document.getElementById(`graph-${company.symbol}`).getContext('2d');
+                const initialData = [
+                    company.currentPrice,
+                    company.currentPrice * 1.02,
+                    company.currentPrice * 0.98,
+                    company.currentPrice * 1.01,
+                    company.currentPrice * 1.03
+                ];
+
+                // Create initial chart
+                const companyChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                        datasets: [{
+                            label: company.name,
+                            data: initialData,
+                            borderColor: '#f39c12',
+                            backgroundColor: 'rgba(243, 156, 18, 0.2)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: false },
+                            x: { ticks: { autoSkip: true } }
+                        },
+                        plugins: {
+                            legend: { labels: { color: '#000' } }
+                        }
+                    }
+                });
+
+                // Update total Sensex
+                sensexData.push(company.currentPrice);
+                totalSensex += company.currentPrice;
+
+                // Function to update the chart data dynamically
+                function updateCompanyData() {
+                    // Simulate new prices (replace this with actual API call)
+                    const newPrice = parseFloat(document.getElementById(`price-${company.symbol}`).innerText) + (Math.random() > 0.5 ? 1 : -1); // Randomly increase or decrease price
+                    const newChange = newPrice - company.currentPrice; // Calculate change
+                    const newPercentageChange = ((newChange / company.currentPrice) * 100).toFixed(2); // Calculate percentage change
+
+                    // Update DOM elements
+                    document.getElementById(`price-${company.symbol}`).innerText = newPrice.toFixed(2);
+                    document.getElementById(`change-${company.symbol}`).innerText = newChange.toFixed(2);
+                    document.getElementById(`percentage-${company.symbol}`).innerText = `${newPercentageChange}%`;
+
+                    // Update chart data
+                    initialData.shift(); // Remove the oldest price
+                    initialData.push(newPrice); // Add the new price at the end
+                    companyChart.data.datasets[0].data = initialData;
+                    companyChart.update(); // Refresh the chart
+
+                    // Update total Sensex value
+                    totalSensex += newChange; // Update total sensex with the change
+                    $('#total-sensex-value').text(totalSensex.toFixed(2)); // Update displayed total sensex value
+
+                    // Update current price for next iteration
+                    company.currentPrice = newPrice;
+                }
+
+                setInterval(updateCompanyData, 5000); // Update every 5 seconds
+            });
+
+            // Initialize Sensex Graph
+            const ctxSensex = document.getElementById('sensex-graph').getContext('2d');
+            new Chart(ctxSensex, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                    datasets: [{
+                        label: 'Sensex',
+                        data: sensexData,
+                        borderColor:'#3498db',
+                        backgroundColor:'rgba(52,152,219,0.2)',
+                        fill:true,
+                        tension:.4
+                    }]
+                },
+                options:{
+                    responsive:true,
+                    scales:{
+                        y:{ beginAtZero:false },
+                        x:{ ticks:{ autoSkip:true } }
+                    },
+                    plugins:{
+                        legend:{ labels:{ color:'#000' } }
+                    }
+                }
+            });
+
+            // Update total Sensex value on load
+            $('#total-sensex-value').text(totalSensex.toFixed(2));
+
+            // Modal functionality
+          
+        });
+    </script>
+    <script>
+       const modal = document.getElementById("investment-modal");
+const closeBtn = document.querySelector(".close-btn");
+const companyGraph = document.getElementById("company-graph").getContext("2d");
+
+let graphInstance = null; // Will hold the graph instance
+
+// Simulated stock data (replace with real-time data or API response)
+const sampleStockData = {
+    companyName: "Company XYZ",
+    currentPrice: 500.00,
+    priceChange: "+3.5%",
+    highPrice: 520.00,
+    lowPrice: 480.00,
+    stockHistory: [490, 495, 510, 505, 500, 515, 525, 515, 520] // Example price history
+};
+
+window.showInvestmentModal = function (companyName, currentPrice) {
+    // Update modal content with company data
+    document.getElementById("company-name").textContent = companyName;
+    document.getElementById("current-price").textContent = currentPrice.toFixed(2);
+    
+    // Update price change and high/low prices
+    document.getElementById("price-change").textContent = sampleStockData.priceChange;
+    document.getElementById("high-price").textContent = sampleStockData.highPrice.toFixed(2);
+    document.getElementById("low-price").textContent = sampleStockData.lowPrice.toFixed(2);
+
+    // Set up the graph with historical data
+    updateGraph(sampleStockData.stockHistory);
+    
+    // Show modal
+    modal.style.display = "block";
+};
+
+// Close modal when the close button is clicked
+closeBtn.onclick = function () {
+    modal.style.display = "none";
+    if (graphInstance) {
+        graphInstance.destroy(); // Destroy the existing graph instance when modal is closed
+    }
+};
+
+// Close modal when clicking outside the modal content
+window.onclick = function (event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+        if (graphInstance) {
+            graphInstance.destroy(); // Destroy the existing graph instance when modal is closed
+        }
+    }
+};
+
+// Investment confirmation logic
+window.confirmInvestment = function () {
+    const quantity = document.getElementById("quantity").value;
+    const companyName = document.getElementById("company-name").textContent;
+    const currentPrice = parseFloat(document.getElementById("current-price").textContent);
+    const totalPrice = parseFloat(document.getElementById("total-price").textContent);
+
+    // Validate if the quantity is positive
+    if (quantity > 0) {
+        // Redirect to the /payment route with the investment details as query parameters
+        const paymentUrl = `/payment?companyName=${encodeURIComponent(companyName)}&currentPrice=${encodeURIComponent(currentPrice)}&quantity=${encodeURIComponent(quantity)}&totalPrice=${encodeURIComponent(totalPrice)}`;
+        
+        // Redirect to the payment page
+        window.location.href = paymentUrl;
+    } else {
+        alert("Please enter a valid quantity.");
+    }
+};
+
+
+
+// Function to update the total price dynamically based on quantity input
+function updateTotalPrice() {
+    const quantity = document.getElementById("quantity").value;
+    const currentPrice = parseFloat(document.getElementById("current-price").textContent);
+    if (quantity > 0) {
+        const totalPrice = (currentPrice * quantity).toFixed(2);
+        document.getElementById("total-price").textContent = totalPrice;
+    } else {
+        document.getElementById("total-price").textContent = "0.00";
+    }
+}
+
+// Function to update the graph with price history
+function updateGraph(stockHistory) {
+    const labels = Array.from({ length: stockHistory.length }, (_, index) => `Day ${index + 1}`);
+
+    // Create or update the graph
+    if (graphInstance) {
+        graphInstance.destroy(); // Destroy previous instance if any
+    }
+
+    graphInstance = new Chart(companyGraph, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Stock Price History',
+                data: stockHistory,
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function (value) {
+                            return `₹${value}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+    </script>
+
+</body>
+</html>

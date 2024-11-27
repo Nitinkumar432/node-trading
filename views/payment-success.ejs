@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2C3E50;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 30px;
+            background-color: #34495E;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ecf0f1;
+            margin-bottom: 20px;
+        }
+
+        /* Confirmation message styling */
+        .confirmation-message {
+            text-align: center;
+            padding: 25px;
+            background-color: #27AE60;
+            color: white;
+            font-size: 1.2em;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.5);
+        }
+
+        /* Investment details styling */
+        #investment-details p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 15px 0;
+            color: #bdc3c7;
+        }
+
+        #investment-details strong {
+            color: #ecf0f1;
+        }
+
+        /* Buttons and interactions */
+        .cta-button {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            #investment-details p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Payment Successful!</h2>
+
+    <div class="confirmation-message">
+        <p>Your investment has been successfully processed.</p>
+    </div>
+
+    <div id="investment-details">
+        <p><strong>Company Name:</strong> <%= companyName %></p>
+        <p><strong>Current Price:</strong> ₹<%= currentPrice %></p>
+        <p><strong>Quantity:</strong> <%= quantity %></p>
+        <p><strong>Total Price:</strong> ₹<%= totalPrice %></p>
+    </div>
+
+    <!-- Optional CTA Button -->
+    <button class="cta-button" onclick="window.location.href='/home'">Go to Dashboard</button>
+</div>
+
+</body>
+</html>

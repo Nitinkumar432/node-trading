@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Payment</title>
+    <style>
+/* General enhancements for the body */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #f1f1f1;
+    transition: all 0.3s ease;
+}
+
+/* Container styling */
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* Section titles with hover effects */
+h2 {
+    text-align: center;
+    color: #4caf50;
+    font-size: 2.4rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+/* Adding a line under the section title */
+h2::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    background-color: #4caf50;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* User info styling */
+.user-info {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.user-info p {
+    margin: 8px 0;
+    font-size: 1.1rem;
+}
+
+.user-info p span {
+    color: #4caf50;
+}
+
+/* Styling for payment options */
+.payment-options {
+    margin-top: 30px;
+    color: #ddd;
+}
+
+.payment-options label {
+    font-weight: bold;
+    margin-right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+    font-size: 1.1rem;
+}
+
+/* Hover effect for labels */
+.payment-options label:hover {
+    color: #4caf50;
+    transform: scale(1.05);
+}
+
+/* Styling radio buttons */
+.payment-options input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #4caf50;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect on radio buttons */
+.payment-options input[type="radio"]:hover {
+    transform: scale(1.1);
+}
+
+/* Focus styling for the payment input fields */
+.payment-options input {
+    background-color: #2c2c2c;
+    border: 1px solid #4caf50;
+    border-radius: 4px;
+    color: #fff;
+    padding: 12px;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 1rem;
+    transition: border 0.3s ease, background-color 0.3s ease;
+}
+
+/* Focus effect for input fields */
+.payment-options input:focus {
+    border-color: #45a049;
+    background-color: #333;
+}
+
+/* Button styling */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin-top: 25px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    text-transform: uppercase;
+}
+
+/* Hover and focus effects on buttons */
+.btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* Styling for the payment summary */
+.payment-summary {
+    margin-top: 25px;
+    background-color: #2c2c2c;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.payment-summary h4 {
+    color: #4caf50;
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+}
+
+/* Text styling for the payment summary */
+.payment-summary p {
+    margin: 12px 0;
+    font-size: 1.1rem;
+    color: #bbb;
+}
+
+/* Success alert with animation */
+.alert {
+    text-align: center;
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    display: none;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+/* Fade-in animation for success alert */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Loader styling */
+.loader {
+    display: none;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4caf50;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin: 20px auto;
+}
+
+/* Spinning animation for the loader */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Disabled radio button styling */
+.payment-options input[type="radio"]:disabled {
+    background-color: #555;
+}
+
+/* Additional advanced effects for a more interactive experience */
+.payment-options input:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+}
+
+.payment-summary p strong {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+/* Shadow and hover effects for the container */
+.container:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+}
+
+/* Styling for payment methods */
+.payment-methods {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.payment-methods img {
+    width: 60px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.payment-methods img:hover {
+    transform: scale(1.1);
+}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Investment Confirmation</h2>
+
+    <!-- User Info Section -->
+    <div class="user-info">
+        <p><strong>Username:</strong> <span id="username"><%= name %></span></p>
+         <p><strong>Email:</strong> <span id="email"><%= email %></span></p>
+        <p><strong>Available Funds:</strong> ₹<span id="available-funds"><%= funds %></span></p>
+    </div>
+
+    <!-- Recommended Section -->
+    <div class="recommended">
+        <h3 style="color: #4caf50;">Recommended Investment</h3>
+        <p style="color: #ddd;">Based on your preferences and funds, we recommend investing in the selected company.</p>
+    </div>
+
+    <!-- Investment Details Section -->
+    <div id="investment-details">
+        <p><strong>Company Name:</strong> <span id="company-name"><%= companyName %></span></p>
+        <p><strong>Current Price:</strong> ₹<span id="current-price"><%= currentPrice %></span></p>
+        <p><strong>Quantity:</strong> <span id="quantity"><%= quantity %></span></p>
+        <p><strong>Total Price:</strong> ₹<span id="total-price"><%= totalPrice %></span></p>
+    </div>
+
+    <div class="payment-options">
+        <!-- Only the available funds payment method is available -->
+        <label><input type="radio" name="payment-method" value="available-funds" checked> Pay with Available Funds</label>
+    </div>
+
+    <button class="btn" onclick="proceedToPayment()">Proceed to Payment</button>
+
+    <div class="payment-summary">
+        <h4>Order Summary</h4>
+        <p><strong>Amount to Pay:</strong> ₹<span id="total-price-summary"><%= totalPrice %></span></p>
+        <p><strong>Selected Payment Method:</strong> <span id="payment-method-summary">Pay with Available Funds</span></p>
+    </div>
+
+    <div class="alert" id="payment-alert">
+        Payment Successful! Your transaction has been processed.
+    </div>
+
+    <div class="loader" id="payment-loader"></div>
+</div>
+
+<script>
+    // Function to handle the payment process
+    function proceedToPayment() {
+        const availableFunds = parseFloat(document.getElementById("available-funds").textContent);
+        const totalPrice = parseFloat(document.getElementById("total-price").textContent);
+
+        if (totalPrice > availableFunds) {
+            alert("Insufficient funds!");
+            return;
+        }
+
+        const companyName = document.getElementById("company-name").textContent;
+        const currentPrice = parseFloat(document.getElementById("current-price").textContent);
+        const quantity = parseInt(document.getElementById("quantity").textContent);
+        const email = document.getElementById("email").textContent;
+
+        const paymentDetails = { amount: totalPrice, method: 'Available Funds' };
+
+        // Display loader during payment
+        document.getElementById("payment-loader").style.display = "block";
+
+        // Simulate payment completion and redirect
+        setTimeout(function() {
+            document.getElementById("payment-loader").style.display = "none";
+            document.getElementById("payment-alert").style.display = "block";
+
+            // Redirect to success page with user and stock data as query parameters
+            window.location.href = `/payment-success?email=${email}&companyName=${companyName}&currentPrice=${currentPrice}&quantity=${quantity}&totalPrice=${totalPrice}`;
+        }, 3000);
+    }
+
+    // Pre-select 'Pay with Available Funds' if totalPrice is less than available funds
+    window.onload = function() {
+        const totalPrice = parseFloat(document.getElementById("total-price").textContent);
+        const availableFunds = parseFloat(document.getElementById("available-funds").textContent);
+
+        if (totalPrice <= availableFunds) {
+            document.querySelector('input[value="available-funds"]').checked = true;
+        }
+    }
+</script>
+
+</body>
+</html>

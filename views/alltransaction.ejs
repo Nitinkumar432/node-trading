@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Transactions</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .transaction-card {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      border: 1px solid #444;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .transaction-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    .transaction-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .transaction-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .transaction-subtitle {
+      color: #a9a9a9;
+      font-size: 0.9rem;
+    }
+    .transaction-details {
+      margin-top: 10px;
+    }
+    .transaction-details p {
+      margin: 5px 0;
+    }
+    .btn-download {
+      background-color: #4caf50;
+      color: white;
+      border-radius: 8px;
+      padding: 10px 20px;
+      text-transform: uppercase;
+    }
+    .btn-download:hover {
+      background-color: #45a049;
+      color: #fff;
+    }
+    @media (max-width: 768px) {
+      .transaction-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 class="text-center mb-4">All Transactions</h2>
+
+  <!-- Transactions List -->
+  <% userTransactions.forEach(transaction => { %>
+    <div class="transaction-card">
+      <div class="transaction-header">
+        <div>
+          <h5 class="transaction-title"><%= transaction.stockName %></h5>
+          <p class="transaction-subtitle"><%= transaction.stockSymbol %></p>
+        </div>
+        <button class="btn btn-download" onclick="downloadInvoice('<%= transaction._id %>')">Download Invoice</button>
+      </div>
+      <div class="transaction-details">
+        <p><strong>Email:</strong> <%= transaction.email %></p>
+        <p><strong>Quantity:</strong> <%= transaction.quantity %></p>
+        <p><strong>Current Price:</strong> $<%= transaction.currentPrice.toFixed(2) %></p>
+        <p><strong>Total Price:</strong> $<%= transaction.totalPrice.toFixed(2) %></p>
+        <p><strong>Date:</strong> <%= new Date(transaction.createdAt).toLocaleString() %></p>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+ function downloadInvoice(transactionId) {
+    window.open(`/download-invoice/${transactionId}`, '_blank');
+  }
+</script>
+</body>
+</html>

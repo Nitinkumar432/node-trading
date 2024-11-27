@@ -42,12 +42,14 @@
                 <span id="nifty-percentage" class="percentage">----</span>
            
             </div>
-            <div class="box" id="sensex-box">
-                <span>Sensex:</span>
-                <span id="sensex-value" class="value">----</span>
-                <span id="sensex-percentage" class="percentage">----</span>
-            </div>
-            
+            <a href="/sensex" class="sensex-link">
+              <div class="box" id="sensex-box">
+                  <span>Sensex:</span>
+                  <span id="sensex-value" class="value">----</span>
+                  <span id="sensex-percentage" class="percentage">----</span>
+              </div>
+          </a>
+          
             
             <div class="right-elements">
                 <nav>
@@ -58,9 +60,10 @@
                             <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
                               <div class="dropdown-content">
                                 <a href="/mutual-funds">Mutual Funds</a>
-                                  <a href="/ipo">List_IPO</a>
+                                 
                                   <a href="/help">Help</a>
                                   <%if(user.userType=='admin') {%>
+                                    <a href="/ipo">List_IPO</a>
                                    
                                     <a href="/put-coupon" alt="More">Add Coupon</a>
                                    
@@ -72,7 +75,7 @@
                                 <div class="dropdown-content">
                                     <a href="/admin/ipo"> Verify Ipo</a>
                                     <a href="/user_ipo">Portfolio</a>
-                                    <a href="#"> Transactions</a>
+                                    <a href="/alltransaction"> Transactions</a>
                                 </div>
                             </li>
                         
@@ -80,6 +83,7 @@
                           <li><a href="#"><img src="https://icons.veryicon.com/png/o/miscellaneous/common-icons-6/more-106.png" alt="More"> More</a>
                               <div class="dropdown-content">
                                   <a href="/mutual-funds">Mutual Funds</a>
+                                  <a href="gold-investments">Invest in Gold</a>
                                   <a href="/show_ipo">IPO</a>
                                   <a href="/help">Help</a>
                               </div></li>
@@ -326,7 +330,7 @@
   </div>
   <div class="boxm">
     <img src="https://cdn.angelone.in/bbe/homepage/web/icons/icon-wealth-funds.svg" alt="Mutual Fund Logo">
-    <a style="text-decoration: none;" href="./mutualfund.html"><h2 style="color:white">Mutual Fund</h2></a>
+    <a style="text-decoration: none;" href="./mutual-funds"><h2 style="color:white">Mutual Fund</h2></a>
     <p>Invest in professionally managed portfolios of stocks, bonds, and other assets.</p>
   </div>
   

@@ -1,0 +1,530 @@
+body {
+    background-color: #4f5255; /* Dark background for contrast */
+    color: white; /* Text color */
+    font-family: 'Arial', sans-serif; /* Font family */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+/* Header Container */
+.header {
+    background-color: #1c1c1c; /* Dark background for header */
+    color: #ecf0f1; /* Light text color */
+    padding: 20px 40px;
+    border-bottom: 2px solid #2c3e50;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Header Title */
+.header-title {
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #f39c12; /* Golden color to make the title stand out */
+    margin-bottom: 10px;
+}
+
+/* Total Sensex */
+#total-sensex {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    color: #bdc3c7; /* Light gray for text */
+}
+
+.sensex-label {
+    font-weight: bold;
+    color: #f39c12; /* Golden color for the label */
+}
+
+.sensex-value {
+    font-size: 22px;
+    color: #27ae60; /* Green for the value to indicate positive growth */
+    font-weight: bold;
+}
+
+/* Header Description */
+.header-description {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #ecf0f1;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+/* Responsive Design for Header */
+@media (max-width: 768px) {
+    .header {
+        padding: 20px 30px;
+    }
+
+    .header-title {
+        font-size: 28px;
+    }
+
+    #total-sensex {
+        font-size: 18px;
+    }
+
+    .header-description {
+        font-size: 14px;
+        margin-top: 10px;
+    }
+}
+
+
+#total-sensex {
+    font-size: 24px; /* Increased font size for better visibility */
+    margin-bottom: 20px; /* Space below total sensex */
+}.companies-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Company Card Styling */
+.company-card {
+    display: flex;
+    width: 100%;
+    max-width: 300px;
+    background: linear-gradient(135deg, #3a3b3b, #626363);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    flex-direction: column;
+    margin: 0 10px;
+    opacity: 1;
+    transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+.company-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    background-color: #1e8449;
+    opacity: 1;
+}
+
+/* Company Information Styling */
+.company-info {
+    color: #ecf0f1;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+.company-info h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    font-weight: bold;
+    color: #f1f1f1;
+}
+
+.company-info p {
+    font-size: 16px;
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.symbol {
+    font-style: italic;
+    color: #bdc3c7;
+}
+
+/* Extra details (Open, High, Low, Volume) */
+.extra-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #ecf0f1;
+    transition: background 0.3s ease;
+}
+
+.extra-details:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.extra-details p {
+    margin: 0;
+}
+
+/* Styling for price and change details */
+.price,
+.change {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    color: #f39c12;
+}
+
+.price {
+    font-size: 20px;
+}
+
+.change {
+    color: #e74c3c;
+}
+
+/* Graph Container Styling */
+.graph-container {
+    flex: 1;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.graph-container canvas {
+    width: 100%;
+    height: 100%;
+}
+
+/* Button Styling */
+.invest-btn {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #f39c12;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+}
+
+.invest-btn:hover {
+    background-color: #e67e22;
+    transform: scale(1.05);
+}
+
+.invest-btn:active {
+    transform: scale(0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .company-card {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        width: 100%;
+    }
+
+    .companies-container {
+        justify-content: center;
+    }
+
+    .graph-container {
+        width: 100%;
+        height: 200px;
+        margin-top: 20px;
+    }
+
+    .extra-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .company-info p {
+        font-size: 14px;
+    }
+
+    .invest-btn {
+        width: 80%;
+    }
+}
+
+/* Animation for loading company data */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.company-card {
+    animation: fadeIn 0.8s ease-out;
+}
+
+
+/* Responsive Design */
+.sensex-graph-container {
+    width: 80%;
+    margin: 20px auto; /* Centers the graph container horizontally */
+    border-radius: 15px; /* Rounded corners for a more modern, smooth look */
+    overflow: hidden; /* Ensures content stays within the rounded corners */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2); /* Softer and deeper shadow for better depth */
+    background-color: #1e1e1e; /* Dark background to match the dark theme */
+    padding: 15px; /* Adds padding inside the container for better spacing */
+    position: relative; /* For positioning elements inside the container */
+    transition: all 0.3s ease-in-out; /* Smooth transition for any hover effects */
+}
+
+/* Add a subtle hover effect for the graph container */
+.sensex-graph-container:hover {
+    transform: translateY(-10px); /* Moves the container slightly up for interactive feedback */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); /* Increases shadow size on hover */
+}
+
+/* Add a gradient background to make the graph container look more stylish */
+.sensex-graph-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(73, 75, 75, 0.3), rgba(83, 83, 81, 0.3)); /* Gradient background for visual appeal */
+    z-index: 0; /* Ensures the gradient stays behind the graph content */
+}
+
+/* Styling for the canvas (graph) inside the container */
+.sensex-graph-container canvas {
+    width: 100%;
+    height: 300px; /* Set a fixed height for the graph */
+    border-radius: 10px; /* Smooth corners for the graph */
+    z-index: 1; /* Ensures the graph stays on top of the gradient background */
+    transition: transform 0.3s ease; /* Smooth transformation */
+}
+
+/* Add interactive hover effect to the canvas (graph) */
+.sensex-graph-container canvas:hover {
+    transform: scale(1.02); /* Slightly enlarges the graph on hover for a dynamic feel */
+}
+
+/* Styling for the graph label or title */
+.sensex-graph-container .graph-title {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #f39c12; /* Golden color for the title */
+    z-index: 2; /* Ensures the title is above the background */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sensex-graph-container {
+        width: 95%; /* Adjusts container width for smaller screens */
+        padding: 10px; /* Reduces padding for better space on mobile */
+    }
+
+    .sensex-graph-container canvas {
+        height: 200px; /* Adjusts graph height for mobile devices */
+    }
+
+    .sensex-graph-container .graph-title {
+        font-size: 16px; /* Smaller font size for the title on mobile */
+        top: 10px; /* Adjusts the position for mobile screens */
+    }
+}
+/* Modal Container */
+#investment-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Dimmed background for focus */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden; /* Prevents overflow if content is larger than the viewport */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #2b2929; /* Dark background for modal */
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    width: 500px; /* Slightly wider modal */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* Deeper shadow for a more elevated look */
+    position: relative;
+    overflow: hidden;
+    max-height: 90vh; /* Ensures the modal doesn't overflow vertically */
+    margin: auto;
+    animation: slideIn 0.3s ease-out; /* Optional: Add animation for smoother opening */
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #ff3b3b; /* Change color on hover */
+}
+
+/* Add animation for smooth appearance */
+@keyframes slideIn {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 80%; /* Reduce width on small screens */
+        padding: 20px;
+    }
+}
+
+/* Company Name */
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Current Price Styling */
+#current-price {
+    font-size: 18px;
+    color: #16a085; /* Green color for positive prices */
+}
+
+/* Graph Container */
+.graph-container {
+    margin-top: 20px;
+    width: 100%;
+    height: 200px;
+    background-color: #474c4e; /* Light gray background */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+/* Price Change Container */
+.price-change-container {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #e74c3c;
+}
+
+.price-change {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+/* Quantity Input */
+#quantity {
+    margin-top: 15px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Invest Button Styling */
+#invest-btn {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: #2ecc71;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+}
+
+#invest-btn:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modal-content {
+        width: calc(100% - 40px);
+        padding: 15px;
+    }
+
+    #invest-btn {
+        padding: 10px 15px;
+    }
+
+    #quantity {
+        font-size: 14px;
+    }
+
+    .graph-container {
+        height: 150px;
+    }
+}
+
+
+/* Responsive Design Enhancements for small screens (below 768px) */
+@media (max-width: 768px) {
+    .company-card {
+        width: calc(100% - 40px); /* Adjust width for small screens */
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .graph-container {
+        display: none; /* Hide graphs on small screens */
+    }
+
+    .sensex-graph-container {
+        width: 100%;
+        margin: 10px auto; /* Adjust margins for smaller screens */
+    }
+
+    #investment-modal .modal-content {
+        width: calc(100% - 30px); /* Full width modal on small screens */
+    }
+
+    button {
+        font-size: 14px; /* Adjust font size for buttons */
+        padding: 8px 12px; /* Adjust padding for smaller buttons */
+    }
+}

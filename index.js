@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const PDFDocument = require('pdfkit');
+
 const Coupon=require('./models/coupon.js');
 const Putoken = require('./models/putcoupon');
 const nodemailer=require("nodemailer");
@@ -10,6 +12,7 @@ const request = require('request');
 const geoip = require('geoip-lite');
 const GoldInvestment = require('./models/goldschema.js');
 const UserInvestment = require('./models/userinvestingold.js');
+const SensexSchema =require('./models/sensexschema.js');
 // gogole genrative ai
 const {
   GoogleGenerativeAI,
@@ -1003,44 +1006,89 @@ app.post('/sell-stock', verifyToken, async (req, res) => {
     const userId = req.user.id;
     const { stockSymbol, sellQuantity } = req.body;
 
-    // Find the user and their stock
+    // Find the user
     const user = await Register.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the user has the stock in their portfolio (basic stock database)
     const userStock = await userstock.findOne({ email: user.email, stockName: stockSymbol });
 
-    // Validate stock ownership and quantity
-    if (!userStock || userStock.quantity < sellQuantity) {
-      return res.status(400).json({ message: 'Invalid quantity or stock not found' });
+    // Find the current stock price in the market or Sensex
+    const stock = await Stock.findOne({ stockName: stockSymbol });
+    const sensexschema = await SensexSchema.findOne({ symbol: stockSymbol });
+
+    if (!stock && !sensexschema) {
+      return res.status(404).json({ message: 'Stock not found in the market or Sensex database' });
     }
 
-    // Find the current stock price
-    const stock = await Stock.findOne({ stockName:stockSymbol });
-    if (!stock) {
-      return res.status(404).json({ message: 'Stock not found' });
+    // Calculate the total sell price based on where the stock is found
+    let totalSellPrice;
+    if (stock) {
+      totalSellPrice = stock.currentPrice * sellQuantity;
+    } else if (sensexschema) {
+      totalSellPrice = sensexschema.currentPrice * sellQuantity;
     }
 
-    // Calculate total sell price
-    const totalSellPrice = stock.currentPrice * sellQuantity;
+    // If stock is in the user's portfolio (basic stock database)
+    if (userStock) {
+      // Validate stock ownership and quantity
+      if (userStock.quantity < sellQuantity) {
+        return res.status(400).json({ message: 'Insufficient stock in user portfolio' });
+      }
 
-    // Update user's stock quantity
-    userStock.quantity -= sellQuantity;
-    await userStock.save();
+      // Update the user's stock portfolio (selling from userStock)
+      userStock.quantity -= sellQuantity;
+      await userStock.save();
 
-    // Update user's funds
-    user.funds += totalSellPrice;
-    await user.save();
+      // Update the user's funds
+      user.funds += totalSellPrice;
+      await user.save();
 
-    // Send response with updated funds and remaining stock quantity
-    res.json({
-      message: 'Stock sold successfully',
-      updatedFunds: user.funds,
-      remainingQuantity: userStock.quantity,
-    });
+      // Send response with updated funds and remaining stock quantity
+      return res.json({
+        message: 'Stock sold successfully from user portfolio',
+        updatedFunds: user.funds,
+        remainingQuantity: userStock.quantity,
+      });
+    } 
+
+    // If stock is not in the user's portfolio, try to sell from the Sensex database
+    if (sensexschema) {
+      const availableStockInMarket = sensexschema.availableQuantity;
+
+      // Check if there are enough stocks available in the Sensex market
+      if (availableStockInMarket < sellQuantity) {
+        return res.status(400).json({ message: 'Not enough stock available in the Sensex market' });
+      }
+
+      // Update the market stock quantity in the Sensex database
+      sensexschema.availableQuantity -= sellQuantity;
+      await sensexschema.save();
+
+      // Update user's funds
+      user.funds += totalSellPrice;
+      await user.save();
+
+      // Send response with updated funds and remaining stock in the Sensex market
+      return res.json({
+        message: 'Stock sold successfully from the Sensex market',
+        updatedFunds: user.funds,
+        remainingStockInMarket: sensexschema.availableQuantity,
+      });
+    } 
+
+    // If no stock found in either portfolio or Sensex
+    return res.status(400).json({ message: 'Stock not found in either user portfolio or Sensex market' });
 
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
 app.post('/transactions', verifyToken, async (req, res) => {
     try {
         const { type, amount, method } = req.body; // Removed date from destructuring
@@ -1686,6 +1734,229 @@ app.get('/gold-investment-list', async (req, res) => {
       res.status(500).send('Error fetching gold investment data');
   }
 });
+
+
+
+
+
+// rendering sensex data to page;
+app.get("/sensex",async (req,res)=>{
+  const companies=await SensexSchema.find({});
+  
+  res.render("sensex",{ companies: companies });
+
+})
+const verifyTokenfree = async (req, res, next) => {
+  // Skip token verification for the /login route
+  if (req.path === '/login') {
+    return next();
+  }
+
+  const token = req.cookies.authToken; // Assuming token is stored in cookies
+
+  if (!token) {
+    // If there's no token and the user is not logged in, send the next middleware
+    req.user = null;  // Mark user as null when no token is available
+    return next();
+  }
+
+  // If there is a token, verify it
+  jwt.verify(token, SECRET_KEY, async (err, decoded) => {
+    if (err) {
+      // If the token is invalid, treat as not logged in
+      req.user = null; // Mark user as null if token verification fails
+      return next();
+    }
+
+    try {
+      // Fetch the user data from the database
+      const user = await Register.findById(decoded.id);
+      if (!user) {
+        // If no user is found, treat as not logged in
+        req.user = null;
+        return next();
+      }
+
+      // If the user exists, attach the user data to the request object
+      req.user = user;
+      next();  // Continue to the next middleware/route handler
+    } catch (error) {
+      console.error(error);
+      req.user = null;  // In case of error, mark user as null
+      return next();
+    }
+  });
+};
+// nifty paymrnt system to that
+app.get('/payment', verifyTokenfree, (req, res) => {
+  // Check if the user is logged in
+  if (req.user === null) {
+    // If no user data, prompt to login
+    return res.json({ message: "You need to log in first to buy any stocks." });
+  }
+
+  const { name, funds, email } = req.user;
+
+  // Extract payment details from query params
+  const { companyName, currentPrice, quantity, totalPrice } = req.query;
+
+  // Check if the user has enough funds for the payment
+  if (funds < totalPrice) {
+    // If funds are insufficient, show an error or redirect
+    return res.render('paymentPage', {
+      companyName,
+      currentPrice,
+      quantity,
+      totalPrice,
+      name,
+      funds,
+      email,
+      errorMessage: "Insufficient funds. Please add more funds to proceed."
+    });
+  }
+
+  // If the user is logged in and has enough funds, render the payment page
+  res.render('paymentPage', {
+    companyName,
+    currentPrice,
+    quantity,
+    totalPrice,
+    name,
+    funds,
+    email
+  });
+});
+
+
+
+
+// // Payment success route
+app.get('/payment-success', async (req, res) => {
+  console.log(req.query);
+  const { email, companyName, currentPrice, quantity, totalPrice } = req.query;
+
+  if (!companyName || !currentPrice || !quantity || !totalPrice || !email) {
+      return res.status(400).send('Missing query parameters');
+  }
+
+  try {
+    // Fetch the user by email
+    const user = await Register.findOne({ email });
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    // Save the payment data to the database
+    const newPayment = new userstock({
+      email,
+      stockName: companyName,
+      stockSymbol: companyName,  // You might want to adjust the stock symbol logic
+      currentPrice: parseFloat(currentPrice),
+      quantity: parseInt(quantity),
+      totalPrice: parseFloat(totalPrice),
+    });
+
+    // Save payment to the database
+    await newPayment.save();
+
+    // Deduct the total price from the user's funds
+    user.funds -= totalPrice;
+
+    // Save the updated user funds
+    await user.save();
+
+    // Render the success page with the payment details
+    res.render('payment-success', {
+      companyName,
+      currentPrice,
+      quantity,
+      totalPrice,
+    });
+    
+  } catch (err) {
+    console.error('Error processing payment:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+app.get('/alltransaction', verifyToken, async (req, res) => {
+  const email = req.user.email;
+  try {
+    const userTransactions = await userstock.find({ email });
+    res.render("alltransaction", { userTransactions });
+  } catch (err) {
+    console.error('Error fetching transactions:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+app.get('/alltransaction', verifyToken, async (req, res) => {
+  const email = req.user.email;
+  const searchQuery = req.query.search || '';
+
+  try {
+    // Query for user transactions, filtered by stock name or date
+    const userTransactions = await userstock.find({
+      email,
+      $or: [
+        { stockName: { $regex: searchQuery, $options: 'i' } },
+        { createdAt: { $gte: new Date(searchQuery) } } // Filter by date (if date format is valid)
+      ]
+    });
+
+    res.render("alltransaction", { userTransactions });
+  } catch (err) {
+    console.error('Error fetching transactions:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// doenload invoic
+app.get('/download-invoice/:transactionId', (req, res) => {
+  const { transactionId } = req.params;
+
+  // Example data for the transaction (replace with DB query)
+  const transaction = {
+    id: transactionId,
+    stockName: 'Sample Stock',
+    stockSymbol: 'SMP',
+    email: 'user@example.com',
+    quantity: 10,
+    currentPrice: 50.75,
+    totalPrice: 507.5,
+    createdAt: new Date(),
+  };
+
+  // Create a PDF document
+  const doc = new PDFDocument();
+  const filename = `Invoice_${transactionId}.pdf`;
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+
+  doc.pipe(res);
+
+  // Add content to the PDF
+  doc.fontSize(20).text('Transaction Invoice', { align: 'center' });
+  doc.moveDown();
+  doc.fontSize(12).text(`Transaction ID: ${transaction.id}`);
+  doc.text(`Stock Name: ${transaction.stockName}`);
+  doc.text(`Stock Symbol: ${transaction.stockSymbol}`);
+  doc.text(`Email: ${transaction.email}`);
+  doc.text(`Quantity: ${transaction.quantity}`);
+  doc.text(`Current Price: Rs${transaction.currentPrice.toFixed(2)}`);
+  doc.text(`Total Price: Rs${transaction.totalPrice.toFixed(2)}`);
+  doc.text(`Date: ${transaction.createdAt.toLocaleString()}`);
+  doc.moveDown();
+  doc.text('Terms and Conditions:', { underline: true });
+  doc.text('1. This invoice is a receipt for your transaction.');
+  doc.text('2. No refunds or cancellations after the transaction is completed.');
+  doc.text('3. Ensure you verify the details in case of discrepancies.');
+
+  // Finalize the PDF and end the stream
+  doc.end();
+});
+
+// Star
 
 // Start server
 const PORT=process.env.PORT || 3000;
