@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Investment System</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Dark Theme Styles */
+        body.dark-theme {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #f0f0f0;
+        }
+
+        .banner {
+            background-color: #ffcc00; /* Gold color */
+            color: #121212;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 40px;
+            animation: slideIn 1s ease-in-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .investment-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .investment-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(30px); /* Initial position for animation */
+        }
+
+        .investment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .investment-card h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .investment-card .description {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .investment-card .price {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1; /* Make visible */
+                transform: translateY(0); /* Reset position */
+            }
+        }
+
+        .investment-card:nth-child(even) {
+            animation-delay: 0.5s; /* Delay for even cards */
+        }
+
+        .investment-card:nth-child(odd) {
+            animation-delay: 0.7s; /* Delay for odd cards */
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="container">
+        <h1 class="header">Gold Investment Funds</h1>
+        
+        <!-- Banner Section -->
+        <div class="banner">
+           Invest in Gold Funds - Secure Your Future! 
+           <br> 
+           Explore various types of gold investments available soon!
+       </div>
+
+       <div class="investment-list">
+           <% investments.forEach(function(investment) { %>
+               <div class="investment-card" style="animation-name: fadeInUp;">
+                   <h2><%= investment.name %></h2>
+                   <p class="description"><%= investment.description %></p>
+                   <p class="price">Price per Unit: ₹<%= investment.pricePerUnit %></p>
+                   <p>Units Invested: <%= investment.unitsInvested %></p>
+                   <p>Total Investment: ₹<%= investment.totalInvestment %></p>
+                   <p>Date of Investment: <%= investment.date %></p>
+               </div>
+           <% }); %>
+       </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+           const cards = document.querySelectorAll('.investment-card');
+           cards.forEach((card, index) => {
+               card.style.animationDelay = `${index * 0.2}s`; // Staggered animation
+               card.style.opacity = '1'; // Make cards visible after animation delay
+               card.style.transform = 'translateY(0)'; // Reset transformation
+           });
+       };
+    </script>
+</body>
+</html>

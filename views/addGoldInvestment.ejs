@@ -1,4 +1,3 @@
-<!-- views/admin/addGoldInvestment.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Gold Investment</title>
     <link rel="stylesheet" href="/styles.css"> <!-- Link to your styles -->
+    <style>
+        /* Dark Theme Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%; /* Increased width for larger container */
+            max-width: 800px; /* Maximum width */
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #ffcc00; /* Gold color */
+            animation: fadeIn 1s ease-in-out; /* Animation for header */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert {
+            background-color: #28a745; /* Green background for success message */
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px; /* Increased padding for better touch targets */
+            border-radius: 5px;
+            border: 1px solid #ddd; /* Light border */
+            background-color: #1e1e1e; /* Dark background for inputs */
+            color: #f4f4f4; /* Light text color */
+            transition: border-color 0.3s ease; /* Transition for focus effect */
+        }
+
+        .form-control:focus {
+            border-color: #ffcc00; /* Gold border on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        button {
+            width: 100%; /* Full-width button */
+            background-color: #ffcc00; /* Gold button */
+            color: #121212; /* Dark text on button */
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Button hover effect */
+        }
+
+        button:hover {
+            background-color: #e6b800; /* Darker gold on hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -13,7 +103,7 @@
 
         <!-- Show Success Message if the investment is saved -->
         <% if (successMessage) { %>
-            <div class="alert alert-success">
+            <div class="alert">
                 <strong><%= successMessage %></strong>
             </div>
         <% } %>
@@ -24,20 +114,32 @@
                 <label for="type">Gold Type</label>
                 <input type="text" name="type" id="type" class="form-control" required>
             </div>
+            
             <div class="form-group">
-                <label for="pricePerUnit">Price Per Unit</label>
+                <label for="pricePerUnit">Price Per Unit (₹)</label>
                 <input type="number" name="pricePerUnit" id="pricePerUnit" class="form-control" required>
             </div>
+
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea name="description" id="description" class="form-control" required></textarea>
             </div>
+
             <div class="form-group">
                 <label for="availableUnits">Available Units</label>
                 <input type="number" name="availableUnits" id="availableUnits" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary">Add Gold Investment</button>
+
+            <button type="submit">Add Gold Investment</button>
         </form>
     </div>
+
+    <footer>
+        <p>&copy; 2024 Gold Investment Portal</p>
+    </footer>
+
+    <script>
+        // Optional JavaScript can be added here for further interactivity
+    </script>
 </body>
 </html>

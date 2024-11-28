@@ -1,4 +1,3 @@
-<!-- views/goldInvestments.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,94 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold Investment</title>
     <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Dark Theme Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%; /* Increased width for larger container */
+            max-width: 1200px; /* Maximum width */
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ffcc00; /* Gold color */
+            animation: fadeIn 1s ease-in-out; /* Animation for header */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gold-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .gold-card {
+            background-color: #1e1e1e; /* Dark card background */
+            border-radius: 8px;
+            padding: 30px; /* Increased padding for larger cards */
+            width: 300px; /* Increased width for cards */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition effects */
+            opacity: 0; /* Initially hidden for animation */
+            transform: translateY(30px); /* Initial position for animation */
+        }
+
+        .gold-card:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
+        }
+
+        .gold-card h3 {
+            color: #ffcc00; /* Gold color for headings */
+            font-size: 1.5rem;
+        }
+
+        .gold-card p {
+            font-size: 1rem;
+            color: #ddd; /* Lighter text color */
+        }
+
+        button {
+            background-color: #ffcc00; /* Gold button */
+            color: #121212; /* Dark text on button */
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Button hover effect */
+        }
+
+        button:hover {
+            background-color: #e6b800; /* Darker gold on hover */
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+    </style>
 </head>
-<style>
-    /* styles.css */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    width: 80%;
-    margin: 0 auto;
-    padding-top: 20px;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-h1 {
-    font-size: 2.5rem;
-    color: #4b8d1c;
-}
-
-.gold-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-.gold-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 20px;
-    width: 250px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.gold-card h3 {
-    color: #4b8d1c;
-    font-size: 1.5rem;
-}
-
-.gold-card p {
-    font-size: 1rem;
-    color: #333;
-}
-
-button {
-    background-color: #4b8d1c;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #3e7216;
-}
-
-footer {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 0.9rem;
-    color: #888;
-}
-
-</style>
-
 <body>
     <div class="container">
         <header>
             <h1>Gold Investment Opportunities</h1>
-            <p>Your Available Funds: <strong>$<%= userFunds %></strong></p>
+            <p>Your Available Funds: <strong>₹<%= userFunds %></strong></p> <!-- Changed to Indian Rupees -->
         </header>
 
         <div class="gold-list">
             <% if (goldInvestments && goldInvestments.length > 0) { %>
-                <% goldInvestments.forEach(function(gold) { %>
-                    <div class="gold-card">
+                <% goldInvestments.forEach(function(gold, loopIndex) { %> <!-- Added loopIndex here -->
+                    <div class="gold-card" style="animation-name: fadeIn; animation-delay:<%= loopIndex * 0.2 %>s;">
                         <h3><%= gold.type %></h3>
                         <p><%= gold.description %></p>
-                        <p>Price per Unit: $<%= gold.pricePerUnit %></p>
+                        <p>Price per Unit: ₹<%= gold.pricePerUnit %></p> <!-- Changed to Indian Rupees -->
                         <p>Available Units: <%= gold.availableUnits %></p>
 
                         <!-- Investment Form -->
@@ -104,14 +123,25 @@ footer {
                         </form>
                     </div>
                 <% }) %>
-            <% } else { %>
-                <p>No gold investment options available.</p>
-            <% } %>
+                <% } else { %>
+                    <p>No gold investment options available.</p>
+                <% } %>
         </div>
     </div>
 
     <footer>
         <p>&copy; 2024 Gold Investment Portal</p>
     </footer>
+
+    <script>
+        window.onload = function() {
+           const cards = document.querySelectorAll('.gold-card');
+           cards.forEach((card, index) => {
+               card.style.animationDelay = `${index * 0.2}s`; // Staggered animation for cards
+               card.style.opacity = '1'; // Make cards visible after animation delay
+               card.style.transform = 'translateY(0)'; // Reset transformation
+           });
+       };
+    </script>
 </body>
 </html>

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const PDFDocument = require('pdfkit');
-
+const Razorpay = require("razorpay");
 const Coupon=require('./models/coupon.js');
 const Putoken = require('./models/putcoupon');
 const nodemailer=require("nodemailer");
@@ -13,6 +13,7 @@ const geoip = require('geoip-lite');
 const GoldInvestment = require('./models/goldschema.js');
 const UserInvestment = require('./models/userinvestingold.js');
 const SensexSchema =require('./models/sensexschema.js');
+const NiftySchema=require('./models/niftyschema.js');
 // gogole genrative ai
 const {
   GoogleGenerativeAI,
@@ -1728,7 +1729,8 @@ app.post('/admin/add-gold-investment',verifyToken, async (req, res) => {
 app.get('/gold-investment-list', async (req, res) => {
   try {
       const investments = await GoldInvestment.find();  // Get all gold investment data
-      res.render('admin/goldInvestmentList', { investments });
+      console.log(investments);
+      res.render('goldInvestmentList', { investments });
   } catch (error) {
       console.error(error);
       res.status(500).send('Error fetching gold investment data');
@@ -1746,6 +1748,14 @@ app.get("/sensex",async (req,res)=>{
   res.render("sensex",{ companies: companies });
 
 })
+// nifty schema
+app.get("/nifty",async (req,res)=>{
+  const companies=await NiftySchema.find({});
+  
+  res.render("nifty",{ companies: companies });
+
+})
+
 const verifyTokenfree = async (req, res, next) => {
   // Skip token verification for the /login route
   if (req.path === '/login') {

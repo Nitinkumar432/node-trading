@@ -36,13 +36,16 @@
 
                 </div>
             </div>
+            <a href="/nifty"  style="text-decoration: none;"  class="sensex-link">
             <div class="box" id="nifty-box">
                 <span>Nifty:</span>
                 <span id="nifty-value" class="value">----</span>
                 <span id="nifty-percentage" class="percentage">----</span>
            
             </div>
-            <a href="/sensex" class="sensex-link">
+          </a>
+             <a href="/sensex"  style="text-decoration: none;" class="sensex-link">
+           
               <div class="box" id="sensex-box">
                   <span>Sensex:</span>
                   <span id="sensex-value" class="value">----</span>
@@ -64,6 +67,8 @@
                                   <a href="/help">Help</a>
                                   <%if(user.userType=='admin') {%>
                                     <a href="/ipo">List_IPO</a>
+                                    <a href="/add-gold-investment">List_Gold</a>
+                                    
                                    
                                     <a href="/put-coupon" alt="More">Add Coupon</a>
                                    
@@ -165,7 +170,7 @@
                   <option value="option2">Top 50</option>
                   <option value="option3">Market</option>
               </select>
-              <img src="List_Icon.png">
+              <img src="https://png.pngtree.com/png-vector/20190116/ourmid/pngtree-vector-list-icon-png-image_322087.jpg">
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWcksmWMtBw3xyhoUMZmPJL_wVBK0CRHx3Gw&usqp=CAU">
           </div>
           <div class="SBcontent">
@@ -342,7 +347,8 @@
   
   <div class="boxm">
     <img src="https://cdn.angelone.in/bbe/homepage/web/icons/icon-wealth-gold.svg" alt="SGB Logo">
-    <h2 style="color:white">SGB (Sovereign Gold Bond)</h2>
+    <a style="text-decoration: none;" href="/gold-investments"><h2 style="color:white">SGB (Sovereign Gold Bond)</h2></a>
+    <!-- <h2 style="color:white">SGB (Sovereign Gold Bond)</h2> -->
     <p>Invest in government securities denominated in grams of gold.</p>
 
   </div>
