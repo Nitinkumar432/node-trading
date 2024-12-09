@@ -14,6 +14,9 @@ const GoldInvestment = require('./models/goldschema.js');
 const UserInvestment = require('./models/userinvestingold.js');
 const SensexSchema =require('./models/sensexschema.js');
 const NiftySchema=require('./models/niftyschema.js');
+const axios = require('axios');
+
+
 // gogole genrative ai
 const {
   GoogleGenerativeAI,
@@ -578,6 +581,11 @@ app.get('/contact',(re,res)=>{
   console.log("contact page accessed");
   res.render('contact.ejs');
 })
+// app.get("/updatedata",async(req,res)=>{
+//   const user=await UserProfile.findOne({email:"nitinraj844126@gmail.com"},{isVerified:"true"});
+//   console.log(user);
+//   res.send("update yopur data");
+// })
 
 app.post('/verify/:id', async (req, res) => {
   try {
@@ -1967,6 +1975,91 @@ app.get('/download-invoice/:transactionId', (req, res) => {
 });
 
 // Star
+// upstock api
+app.get('/auth/login', (req, res) => {
+  const apiKey = '4a6c0071-3391-464c-81f2-435da8dbb04b'; // Your API Key
+  const apiSecret = '5u8w8sq3qp'; // Your API Secret
+  const redirectUri = 'http://localhost:3000/auth/callback'; // Your redirect URL
+
+  // Construct the authorization URL
+  const authUrl = `https://api.upstox.com/v2/login/authorization/dialog?response_type=code&client_id=${apiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${req.query.state || ''}`;
+  
+  // Redirect to Upstox login
+  res.redirect(authUrl);
+});
+// Handle the callback from Upstox on the /auth route
+app.get('/auth/callback',  async (req, res) => {
+  console.log("Callback URL called");
+
+  const { code } = req.query;
+
+  if (!code) {
+    return res.status(400).send({ error: "Authorization code not found" });
+  }
+
+  try {
+    const response = await axios.post(
+      `https://api.upstox.com/v2/login/authorization/token`,
+      new URLSearchParams({
+        code: code, // The authorization code received from Upstox
+        client_id: '4a6c0071-3391-464c-81f2-435da8dbb04b',
+        client_secret: '5u8w8sq3qp',
+        redirect_uri: 'http://localhost:3000/auth/callback', // Ensure this matches
+        grant_type: 'authorization_code',
+      }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+
+    const { access_token, refresh_token } = response.data;
+    console.log(response.data);
+
+    res.json({
+      message: "Authentication successful!",
+      access_token,
+      refresh_token,
+    });
+  } catch (error) {
+    console.error("Error fetching access token:", error.response?.data || error.message);
+    res.status(500).send({ error: "Failed to fetch access token" });
+  }
+});
+
+
+// Route to fetch stock data
+app.get('/stockss', async (req, res) => {
+  const access_token  ="eyJ0eXAiOiJKV1QiLCJrZXlfaWQiOiJza192MS4wIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiI1R0JGOFkiLCJqdGkiOiI2NzU2ZTQwMjI3MmIxNTJjYzJlOTIzN2MiLCJpc011bHRpQ2xpZW50IjpmYWxzZSwiaWF0IjoxNzMzNzQ3NzE0LCJpc3MiOiJ1ZGFwaS1nYXRld2F5LXNlcnZpY2UiLCJleHAiOjE3MzM3ODE2MDB9.BA-mRTSRQzgbTZQ1_qe6nPICHmS8HwRRGi4JCYLC7XI"; // Access token from the client query
+
+  if (!access_token) {
+    return res.status(400).send({ error: 'Access token is required' });
+  }
+
+  try {
+    // API call to fetch stock data
+    const response = await axios.get(
+      'https://api.upstox.com/api/market/quotes',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`, // Pass the token in the Authorization header
+        },
+      }
+    );
+
+    // Assuming the API responds with the stock data
+    const stockData = response.data;
+
+    res.json({
+      message: 'Stock data retrieved successfully',
+      stockData,
+    });
+  } catch (error) {
+    console.error('Error fetching stock data:', error.response?.data || error.message);
+    res.status(500).send({ error: 'Failed to fetch stock data' });
+  }
+});
 
 // Start server
 const PORT=process.env.PORT || 3000;
