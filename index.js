@@ -14,6 +14,9 @@ const GoldInvestment = require('./models/goldschema.js');
 const UserInvestment = require('./models/userinvestingold.js');
 const SensexSchema =require('./models/sensexschema.js');
 const NiftySchema=require('./models/niftyschema.js');
+const axios = require('axios');
+
+
 // gogole genrative ai
 const {
   GoogleGenerativeAI,
@@ -578,6 +581,11 @@ app.get('/contact',(re,res)=>{
   console.log("contact page accessed");
   res.render('contact.ejs');
 })
+// app.get("/updatedata",async(req,res)=>{
+//   const user=await UserProfile.findOne({email:"nitinraj844126@gmail.com"},{isVerified:"true"});
+//   console.log(user);
+//   res.send("update yopur data");
+// })
 
 app.post('/verify/:id', async (req, res) => {
   try {
@@ -1967,7 +1975,152 @@ app.get('/download-invoice/:transactionId', (req, res) => {
 });
 
 // Star
+// upstock api
+app.get('/auth/login', (req, res) => {
+  const apiKey = '4a6c0071-3391-464c-81f2-435da8dbb04b'; // Your API Key
+  const apiSecret = '5u8w8sq3qp'; // Your API Secret
+  const redirectUri = 'http://localhost:3000/auth/callback'; // Your redirect URL
 
+  // Construct the authorization URL
+  const authUrl = `https://api.upstox.com/v2/login/authorization/dialog?response_type=code&client_id=${apiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${req.query.state || ''}`;
+  
+  // Redirect to Upstox login
+  res.redirect(authUrl);
+});
+// Handle the callback from Upstox on the /auth route
+// Route to handle the callback and fetch access token
+app.get('/auth/callback', async (req, res) => {
+  console.log("Callback URL called");
+
+  const { code } = req.query;
+
+  if (!code) {
+    return res.status(400).send({ error: "Authorization code not found" });
+  }
+
+  try {
+    const response = await axios.post(
+      `https://api.upstox.com/v2/login/authorization/token`,
+      new URLSearchParams({
+        code: code, // The authorization code received from Upstox
+        client_id: '4a6c0071-3391-464c-81f2-435da8dbb04b',
+        client_secret: '5u8w8sq3qp',
+        redirect_uri: 'http://localhost:3000/auth/callback', // Ensure this matches
+        grant_type: 'authorization_code',
+      }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+
+    const { access_token } = response.data;
+
+    console.log("Access token received:", access_token);
+
+    // Redirect to the /stockss route with the access token as a query parameter
+    res.redirect(`/stockss?access_token=${access_token}`);
+  } catch (error) {
+    console.error("Error fetching access token:", error.response?.data || error.message);
+    res.status(500).send({ error: "Failed to fetch access token" });
+  }
+});
+
+// Route to fetch stock data
+app.get('/stockss', async (req, res) => {
+  const { access_token } = req.query; // Access token from the query parameter
+
+  if (!access_token) {
+    return res.status(400).send({ error: 'Access token is required' });
+  }
+
+  try {
+    // Corrected API endpoint and added required query parameters
+    const response = await axios.get(
+      'https://api.upstox.com/api/market/quotes', // Update the endpoint if needed
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`, // Pass the token in the Authorization header
+        },
+        // Add necessary query parameters if required by the API
+        params: {
+          // Example: symbol: 'RELIANCE', exchange: 'NSE'
+        },
+      }
+    );
+
+    const stockData = response.data;
+
+    res.json({
+      message: 'Stock data retrieved successfully',
+      stockData,
+    });
+  } catch (error) {
+    console.error('Error fetching stock data:', error.response?.data || error.message);
+
+    // Return error details to the client for debugging
+    res.status(500).send({
+      error: 'Failed to fetch stock data',
+      details: error.response?.data || error.message,
+    });
+  }
+});
+
+//stock game
+let stockMarket = [
+  { symbol: 'AAPL', name: 'Apple', price: 150, trend: 'up' },
+  { symbol: 'GOOGL', name: 'Google', price: 2800, trend: 'down' },
+  { symbol: 'TSLA', name: 'Tesla', price: 650, trend: 'up' }
+];
+
+// Game route for displaying the stock prediction
+// Route to render the game page
+app.get('/game', verifyToken, async (req, res) => {
+  const email = req.user.email;
+  const user = await Register.findOne({ email });
+
+  // Select a random stock for the user to predict
+  const randomStock = stockMarket[Math.floor(Math.random() * stockMarket.length)];
+
+  res.render('game', { stockMarket: [randomStock], user });
+});
+
+// Prediction route for user predictions
+app.post('/predict', verifyToken, async (req, res) => {
+    const { stockSymbol, prediction, userId } = req.body;
+    const stock = stockMarket.find(stock => stock.symbol === stockSymbol);
+
+    if (!stock) return res.status(404).send('Stock not found.');
+
+    // Simulate random price change
+    let priceChange = Math.floor(Math.random() * 21) - 10; // Random change between -10 and +10
+    stock.price += priceChange;
+
+    // Determine if the user's prediction was correct
+    let correctPrediction = (priceChange > 0 && prediction === 'up') || (priceChange <= 0 && prediction === 'down');
+
+    // Find the user and update their coins
+    const user = await Register.findById(userId);
+    let message;
+
+    if (correctPrediction) {
+        user.coin += 5; // Add coins for correct prediction
+        message = "Congratulations! You won! Your new balance is " + user.coin + " coins.";
+    } else {
+        user.coin -= 2; // Deduct coins for incorrect prediction
+        message = "Sorry! You lost this round. Your new balance is " + user.coin + " coins.";
+    }
+
+    await user.save();
+
+    res.json({
+        correctPrediction,
+        updatedCoins: user.coin,
+        newPrice: stock.price,
+        message // Send message to display in popup
+    });
+});
 // Start server
 const PORT=process.env.PORT || 3000;
 app.listen(PORT, () => {

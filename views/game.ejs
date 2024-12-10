@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Coin Game</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #121212; /* Dark background */
+            color: #ffffff; /* White text */
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #1e1e1e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .coin-counter {
+            font-size: 18px;
+        }
+        .game-container {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .stock {
+            background: #2c2c2c; /* Stock card background */
+            border: 1px solid #444; /* Border color */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            width: 300px; /* Increased width */
+            text-align: center;
+            margin: 10px;
+        }
+        .button {
+            background-color: #4CAF50; /* Button color */
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #45a049; /* Darker button on hover */
+        }
+        canvas {
+            width: 100%; /* Make it responsive */
+            height: 400px; /* Set a specific height */
+            max-width: 800px; /* Maximum width for larger screens */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Stock Market Coin Game</h1>
+        <div class="coin-counter">
+            <span class="coin-icon">💰</span>
+            <span>Coins: <%= user.coin %></span>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <% stockMarket.forEach(stock => { %>
+            <div class="stock">
+                <h3><%= stock.name %> (<%= stock.symbol %>)</h3>
+                <p>Current Price: $<%= stock.price %></p>
+                <canvas id="chart<%= stock.symbol %>" width="800" height="400"></canvas>
+                <form id="predictForm<%= stock.symbol %>" action="/predict" method="POST">
+                    <input type="hidden" name="stockSymbol" value="<%= stock.symbol %>">
+                    <input type="hidden" name="userId" value="<%= user._id %>">
+                    <button type="submit" class="button" name="prediction" value="up">Predict UP</button>
+                    <button type="submit" class="button" name="prediction" value="down">Predict DOWN</button>
+                </form>
+            </div>
+        <% }) %>
+    </div>
+
+    <script>
+        <% stockMarket.forEach(stock => { %>
+            var ctx = document.getElementById('chart<%= stock.symbol %>').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['10:00', '11:00', '12:00', '1:00', '2:00'],
+                    datasets: [{
+                        label: '<%= stock.name %> Stock Price',
+                        data: [<%= stock.price %>, 
+                               <%= stock.price + (Math.random() > 0.5 ? 20 : -20) %>, 
+                               <%= stock.price + (Math.random() > 0.5 ? 20 : -20) %>, 
+                               <%= stock.price + (Math.random() > 0.5 ? 20 : -20) %>, 
+                               <%= stock.price + (Math.random() > 0.5 ? 20 : -20) %>],
+                        borderColor: '#4CAF50',
+                        borderWidth: 3,
+                        fill: false,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor:'#4CAF50',
+                        tension: 0.4
+                    }]
+                },
+                options:{
+                    scales:{
+                        x:{
+                            grid:{
+                                color:'#444'
+                            },
+                            ticks:{
+                                color:'#ffffff'
+                            }
+                        },
+                        y:{
+                            grid:{
+                                color:'#444'
+                            },
+                            ticks:{
+                                color:'#ffffff'
+                            }
+                        }
+                    },
+                    plugins:{
+                        legend:{
+                            labels:{
+                                color:'#ffffff'
+                            }
+                        },
+                        tooltip:{
+                            backgroundColor:'#333',
+                            titleColor:'#fff',
+                            bodyColor:'#fff'
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: <%= stock.price + 10 %>, // Example target price
+                                    yMax: <%= stock.price + 10 %>,
+                                    xMin: '12:00',
+                                    xMax: '12:00',
+                                    borderColor: 'red',
+                                    borderWidth: 2,
+                                    label: {
+                                        content: 'Target Price',
+                                        enabled: true,
+                                        position: 'top'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        <% }) %>
+    </script>
+</body>
+</html>
