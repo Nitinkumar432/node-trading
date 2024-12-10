@@ -1988,7 +1988,8 @@ app.get('/auth/login', (req, res) => {
   res.redirect(authUrl);
 });
 // Handle the callback from Upstox on the /auth route
-app.get('/auth/callback',  async (req, res) => {
+// Route to handle the callback and fetch access token
+app.get('/auth/callback', async (req, res) => {
   console.log("Callback URL called");
 
   const { code } = req.query;
@@ -2014,41 +2015,41 @@ app.get('/auth/callback',  async (req, res) => {
       }
     );
 
-    const { access_token, refresh_token } = response.data;
-    console.log(response.data);
+    const { access_token } = response.data;
 
-    res.json({
-      message: "Authentication successful!",
-      access_token,
-      refresh_token,
-    });
+    console.log("Access token received:", access_token);
+
+    // Redirect to the /stockss route with the access token as a query parameter
+    res.redirect(`/stockss?access_token=${access_token}`);
   } catch (error) {
     console.error("Error fetching access token:", error.response?.data || error.message);
     res.status(500).send({ error: "Failed to fetch access token" });
   }
 });
 
-
 // Route to fetch stock data
 app.get('/stockss', async (req, res) => {
-  const access_token  ="eyJ0eXAiOiJKV1QiLCJrZXlfaWQiOiJza192MS4wIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiI1R0JGOFkiLCJqdGkiOiI2NzU2ZTQwMjI3MmIxNTJjYzJlOTIzN2MiLCJpc011bHRpQ2xpZW50IjpmYWxzZSwiaWF0IjoxNzMzNzQ3NzE0LCJpc3MiOiJ1ZGFwaS1nYXRld2F5LXNlcnZpY2UiLCJleHAiOjE3MzM3ODE2MDB9.BA-mRTSRQzgbTZQ1_qe6nPICHmS8HwRRGi4JCYLC7XI"; // Access token from the client query
+  const { access_token } = req.query; // Access token from the query parameter
 
   if (!access_token) {
     return res.status(400).send({ error: 'Access token is required' });
   }
 
   try {
-    // API call to fetch stock data
+    // Corrected API endpoint and added required query parameters
     const response = await axios.get(
-      'https://api.upstox.com/api/market/quotes',
+      'https://api.upstox.com/api/market/quotes', // Update the endpoint if needed
       {
         headers: {
           Authorization: `Bearer ${access_token}`, // Pass the token in the Authorization header
         },
+        // Add necessary query parameters if required by the API
+        params: {
+          // Example: symbol: 'RELIANCE', exchange: 'NSE'
+        },
       }
     );
 
-    // Assuming the API responds with the stock data
     const stockData = response.data;
 
     res.json({
@@ -2057,10 +2058,69 @@ app.get('/stockss', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching stock data:', error.response?.data || error.message);
-    res.status(500).send({ error: 'Failed to fetch stock data' });
+
+    // Return error details to the client for debugging
+    res.status(500).send({
+      error: 'Failed to fetch stock data',
+      details: error.response?.data || error.message,
+    });
   }
 });
 
+//stock game
+let stockMarket = [
+  { symbol: 'AAPL', name: 'Apple', price: 150, trend: 'up' },
+  { symbol: 'GOOGL', name: 'Google', price: 2800, trend: 'down' },
+  { symbol: 'TSLA', name: 'Tesla', price: 650, trend: 'up' }
+];
+
+// Game route for displaying the stock prediction
+// Route to render the game page
+app.get('/game', verifyToken, async (req, res) => {
+  const email = req.user.email;
+  const user = await Register.findOne({ email });
+
+  // Select a random stock for the user to predict
+  const randomStock = stockMarket[Math.floor(Math.random() * stockMarket.length)];
+
+  res.render('game', { stockMarket: [randomStock], user });
+});
+
+// Prediction route for user predictions
+app.post('/predict', verifyToken, async (req, res) => {
+    const { stockSymbol, prediction, userId } = req.body;
+    const stock = stockMarket.find(stock => stock.symbol === stockSymbol);
+
+    if (!stock) return res.status(404).send('Stock not found.');
+
+    // Simulate random price change
+    let priceChange = Math.floor(Math.random() * 21) - 10; // Random change between -10 and +10
+    stock.price += priceChange;
+
+    // Determine if the user's prediction was correct
+    let correctPrediction = (priceChange > 0 && prediction === 'up') || (priceChange <= 0 && prediction === 'down');
+
+    // Find the user and update their coins
+    const user = await Register.findById(userId);
+    let message;
+
+    if (correctPrediction) {
+        user.coin += 5; // Add coins for correct prediction
+        message = "Congratulations! You won! Your new balance is " + user.coin + " coins.";
+    } else {
+        user.coin -= 2; // Deduct coins for incorrect prediction
+        message = "Sorry! You lost this round. Your new balance is " + user.coin + " coins.";
+    }
+
+    await user.save();
+
+    res.json({
+        correctPrediction,
+        updatedCoins: user.coin,
+        newPrice: stock.price,
+        message // Send message to display in popup
+    });
+});
 // Start server
 const PORT=process.env.PORT || 3000;
 app.listen(PORT, () => {
