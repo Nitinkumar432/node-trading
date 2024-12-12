@@ -12,7 +12,8 @@ const request = require('request');
 const geoip = require('geoip-lite');
 const GoldInvestment = require('./models/goldschema.js');
 const UserInvestment = require('./models/userinvestingold.js');
-const SensexSchema =require('./models/sensexschema.js');
+const SensexSchema = require('./models/sensexschema.js');
+const Message = require("./models/contact.js");
 const NiftySchema=require('./models/niftyschema.js');
 const axios = require('axios');
 
@@ -581,6 +582,34 @@ app.get('/contact',(re,res)=>{
   console.log("contact page accessed");
   res.render('contact.ejs');
 })
+
+// Handle contact POST request
+app.post("/contact", async (req, res) => {
+  const { firstName, lastName, email, mobileNumber, message } = req.body;
+
+  if (!firstName || !lastName || !email || !mobileNumber || !message) {
+    return res.render("contact", { error: "All fields are required!" });
+  }
+
+  try {
+    const newMessage = new Message({
+      firstName,
+      lastName,
+      email,
+      mobileNumber,
+      message,
+    });
+
+    await newMessage.save();
+    res.redirect("/home"); // Redirect user after saving
+  } catch (error) {
+    console.error(error);
+    res.render("contact", {
+      error: "Failed to send your message. Please try again.",
+    });
+  }
+});
+
 // app.get("/updatedata",async(req,res)=>{
 //   const user=await UserProfile.findOne({email:"nitinraj844126@gmail.com"},{isVerified:"true"});
 //   console.log(user);

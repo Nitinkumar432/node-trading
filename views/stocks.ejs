@@ -240,7 +240,7 @@
                         <p><i class="bi bi-graph-up-arrow icon-growth"></i> Last Growth: <%= growth %>%</p>
                         <span class="price-change <%= growth >= 0 ? 'positive' : 'negative' %>">Today's Growth: <%= growth >= 0 ? '+' : '' %><%= growth %>%</span>
                         <div class="mt-3 text-center">
-                            <button class="buy-button" onclick="openModal('<%= stock.companyName %>', <%= stock.currentPrice %>, '<%= stock.stockSymbol %>')">Buy Stock</button>
+                            <button class="buy-button" onclick="openModal('<%= stock.companyName %>', '<%= stock.currentPrice %>', '<%= stock.stockSymbol %>')">Buy Stock</button>
                         </div>
                     </div>
                 </div>
@@ -262,7 +262,7 @@
                             <%= growth >= 0 ? '+' : '' %><%= growth %>%
                         </span>
                         <div class="mt-3 text-center">
-                            <button class="buy-button" onclick="openModal('<%= stock.companyName %>',<%= stock.currentPrice %>, '<%= stock.stockSymbol %>')">Buy Stock</button>
+                            <button class="buy-button" onclick="openModal('<%= stock.companyName %>','<%= stock.currentPrice %>', '<%= stock.stockSymbol %>')">Buy Stock</button>
                         </div>
                     </div>
                 </div>
@@ -325,7 +325,7 @@
         const stockSymbol = document.getElementById('stockSymbol').innerText;
         const totalPrice = currentStockPrice * quantity;
 
-        if (totalPrice > <%= user.funds %>) {
+        if (totalPrice > '<%= user.funds %>') {
             showMessage('Insufficient funds. Please reduce the quantity.', 'error');
             return;
         }
