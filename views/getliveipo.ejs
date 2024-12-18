@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live IPO Data</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Live IPO Data</h1>
+
+  <h2>Upcoming IPOs</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Additional Text</th>
+        <th>Document URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% ipoData.upcoming.forEach(ipo => { %>
+        <tr>
+          <td><%= ipo.symbol %></td>
+          <td><%= ipo.name %></td>
+          <td><%= ipo.status %></td>
+          <td><%= ipo.additional_text %></td>
+          <td><a href="<%= ipo.document_url %>" target="_blank">View Document</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h2>Listed IPOs</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Additional Text</th>
+        <th>Listing Date</th>
+        <th>Document URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% ipoData.listed.forEach(ipo => { %>
+        <tr>
+          <td><%= ipo.symbol %></td>
+          <td><%= ipo.name %></td>
+          <td><%= ipo.status %></td>
+          <td><%= ipo.additional_text %></td>
+          <td><%= ipo.listing_date %></td>
+          <td><a href="<%= ipo.document_url %>" target="_blank">View Document</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h2>Closed IPOs</h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Additional Text</th>
+        <th>Listing Date</th>
+        <th>Document URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% ipoData.closed.forEach(ipo => { %>
+        <tr>
+          <td><%= ipo.symbol %></td>
+          <td><%= ipo.name %></td>
+          <td><%= ipo.status %></td>
+          <td><%= ipo.additional_text %></td>
+          <td><%= ipo.listing_date %></td>
+          <td><a href="<%= ipo.document_url %>" target="_blank">View Document</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

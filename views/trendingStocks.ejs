@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trending Stocks</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+      text-align: left;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .no-data {
+      text-align: center;
+      margin-top: 20px;
+      color: red;
+      font-weight: bold;
+    }
+    .section-header {
+      text-align: center;
+      font-size: 1.5em;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Trending Stocks</h1>
+
+  <!-- Top Gainers Section -->
+  <% if (topGainers.length > 0) { %>
+    <div class="section-header">Top Gainers</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Price</th>
+          <th>% Change</th>
+          <th>Net Change</th>
+          <th>Volume</th>
+          <th>Open</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Year Low</th>
+          <th>Year High</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% topGainers.forEach((stock) => { %>
+          <tr>
+            <td><%= stock.company_name %></td>
+            <td><%= stock.price %></td>
+            <td><%= stock.percent_change %></td>
+            <td><%= stock.net_change %></td>
+            <td><%= stock.volume %></td>
+            <td><%= stock.open %></td>
+            <td><%= stock.high %></td>
+            <td><%= stock.low %></td>
+            <td><%= stock.year_low %></td>
+            <td><%= stock.year_high %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p class="no-data">No top gainers available.</p>
+  <% } %>
+
+  <!-- Top Losers Section -->
+  <% if (topLosers.length > 0) { %>
+    <div class="section-header">Top Losers</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Price</th>
+          <th>% Change</th>
+          <th>Net Change</th>
+          <th>Volume</th>
+          <th>Open</th>
+          <th>High</th>
+          <th>Low</th>
+          <th>Year Low</th>
+          <th>Year High</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% topLosers.forEach((stock) => { %>
+          <tr>
+            <td><%= stock.company_name %></td>
+            <td><%= stock.price %></td>
+            <td><%= stock.percent_change %></td>
+            <td><%= stock.net_change %></td>
+            <td><%= stock.volume %></td>
+            <td><%= stock.open %></td>
+            <td><%= stock.high %></td>
+            <td><%= stock.low %></td>
+            <td><%= stock.year_low %></td>
+            <td><%= stock.year_high %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p class="no-data">No top losers available.</p>
+  <% } %>
+
+</body>
+</html>

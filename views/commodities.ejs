@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commodities Data</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    /* General Styling */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Table Styling */
+table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: fadeIn 1.5s ease;
+}
+
+table th, table td {
+  padding: 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-size: 0.95em;
+}
+
+table thead {
+  background-color: #2c3e50;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+table tbody tr {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+table tbody tr:hover {
+  background-color: #dfe6e9;
+  transform: scale(1.02);
+}
+
+table a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+table a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  table {
+    font-size: 0.8em;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+</style>
+<body>
+
+  <h1>Commodities Data</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Expiry</th>
+        <th>Buy Quantity</th>
+        <th>Buy Price</th>
+        <th>Sell Quantity</th>
+        <th>Sell Price</th>
+        <th>Last Traded Price</th>
+        <th>Open Interest</th>
+        <th>Change</th>
+        <th>OI Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% commodities.forEach(commodity => { %>
+        <tr>
+          <td><%= commodity.product %></td>
+          <td><%= commodity.expiry %></td>
+          <td><%= commodity.buy_quantity %></td>
+          <td><%= commodity.buy_price %></td>
+          <td><%= commodity.sell_quantity %></td>
+          <td><%= commodity.sell_price %></td>
+          <td><%= commodity.last_traded_price %></td>
+          <td><%= commodity.open_interest %></td>
+          <td><%= commodity.change %></td>
+          <td><%= commodity.oiResult %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

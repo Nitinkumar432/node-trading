@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Details</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1><%= stockData.companyName %> - Stock Details</h1>
+
+  <h2>Company Information</h2>
+  <p><strong>Industry:</strong> <%= stockData.industry %></p>
+  <p><strong>Description:</strong> <%= stockData.companyProfile.companyDescription %></p>
+
+  <h3>Company Officers</h3>
+  <ul>
+    <% stockData.companyProfile.officers.officer.forEach(officer => { %>
+      <li>
+        <strong><%= officer.firstName %> <%= officer.lastName %> (Rank: <%= officer.rank %>)</strong>
+        <br>
+        <strong>Title:</strong> <%= officer.title.Value %>
+        <br>
+        <strong>Since:</strong> <%= officer.since %>
+      </li>
+    <% }); %>
+  </ul>
+
+  <h2>Stock Prices</h2>
+  <p><strong>BSE Price:</strong> <%= stockData.currentPrice.BSE %></p>
+  <p><strong>NSE Price:</strong> <%= stockData.currentPrice.NSE %></p>
+
+  <h2>Stock Technical Data</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Days</th>
+        <th>BSE Price</th>
+        <th>NSE Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% stockData.stockTechnicalData.forEach(data => { %>
+        <tr>
+          <td><%= data.days %></td>
+          <td><%= data.bsePrice %></td>
+          <td><%= data.nsePrice %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+  <h2>Yearly Data</h2>
+  <p><strong>Year High:</strong> <%= stockData.yearHigh %></p>
+  <p><strong>Year Low:</strong> <%= stockData.yearLow %></p>
+
+  <h2>Peer Companies</h2>
+<% if (stockData.peerCompanyList && Array.isArray(stockData.peerCompanyList)) { %>
+  <ul>
+    <% stockData.peerCompanyList.forEach(peer => { %>
+      <li>
+        <strong><%= peer.companyName %></strong>
+        <br>
+      </li>
+    <% }); %>
+  </ul>
+<% } else { %>
+  <p>No peer companies available.</p>
+<% } %>
+
+  <h2>Stock Financials</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Financial Metric</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% stockData.financials[0].stockFinancialMap.CAS.forEach(financial => { %>
+        <tr>
+          <td><%= financial.displayName %></td>
+          <td><%= financial.value %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -6,79 +6,95 @@
     <title>Current IPOs</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- <link rel="stylesheet" href="css/show_ipo.css"> -->
     <style>
-        body {
-            background-color: #f4f4f9;
-            font-family: 'Arial', sans-serif;
-        }
-        h2 {
-            margin: 30px 0;
-            font-weight: bold;
-            color: #343a40;
-            text-align: center;
-        }
-        .card {
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-radius: 10px;
-        }
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
-        .card-img-top {
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px 10px 0 0;
-        }
-        .card-body {
-            background-color: #ffffff;
-            border-radius: 0 0 10px 10px;
-        }
-        .btn-primary, .btn-success {
-            width: 100%;
-            padding: 10px 0;
-        }
-        .btn-success {
-            margin-top: 10px;
-        }
-        .container {
-            padding: 30px;
-        }
-        .modal-content {
-            border-radius: 10px;
-        }
-        .modal-header {
-            background-color: #007bff;
-            color: white;
-        }
-        .payment-option {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px 0;
-        }
-        .payment-icon {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-        .spinner-border {
-            display: none;
-        }
-        /* Styles for Payment Buttons */
-        .btn-payment {
-            width: 100%;
-            padding: 15px 0;
-            font-size: 18px;
-        }
-        /* Success Modal Styling */
-        .success-modal {
-            text-align: center;
-        }
-        /* Payment Form Styling */
-        .payment-form {
-            display: none;
-            margin-top: 10px;
-        }
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 20px;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+h1, h2 {
+  color: #2c3e50;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 2.5em;
+}
+
+h2 {
+  margin-top: 30px;
+  font-size: 1.8em;
+}
+
+/* Table Styling */
+table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+table thead {
+  background-color: #34495e;
+  color: #ffffff;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+table tbody tr:hover {
+  background-color: #eaf2f8;
+}
+
+table th {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  table {
+    font-size: 0.9em;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.5em;
+  }
+}
+
     </style>
 </head>
 <body>
@@ -102,6 +118,83 @@
             <% }) %>
         </div>
     </div>
+    <h1>Live IPO Data</h1>
+
+    <h2>Upcoming IPOs</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Additional Text</th>
+          <th>Document URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% ipoData.upcoming.forEach(ipo => { %>
+          <tr>
+            <td><%= ipo.symbol %></td>
+            <td><%= ipo.name %></td>
+            <td><%= ipo.status %></td>
+            <td><%= ipo.additional_text %></td>
+            <td><a href="<%= ipo.document_url %>" target="_blank">View Document</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  
+    <h2>Listed IPOs</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Additional Text</th>
+          <th>Listing Date</th>
+          <th>Document URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% ipoData.listed.forEach(ipo => { %>
+          <tr>
+            <td><%= ipo.symbol %></td>
+            <td><%= ipo.name %></td>
+            <td><%= ipo.status %></td>
+            <td><%= ipo.additional_text %></td>
+            <td><%= ipo.listing_date %></td>
+            <td><a href="<%= ipo.document_url %>" target="_blank">View Document</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  
+    <h2>Closed IPOs</h2>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Additional Text</th>
+          <th>Listing Date</th>
+          <th>Document URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% ipoData.closed.forEach(ipo => { %>
+          <tr>
+            <td><%= ipo.symbol %></td>
+            <td><%= ipo.name %></td>
+            <td><%= ipo.status %></td>
+            <td><%= ipo.additional_text %></td>
+            <td><%= ipo.listing_date %></td>
+            <td><a href="<%= ipo.document_url %>" target="_blank">View Document</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
 
     <!-- Custom Modal for IPO Booking -->
     <div class="modal fade" id="ipoModal" tabindex="-1" role="dialog" aria-labelledby="ipoModalLabel" aria-hidden="true">
