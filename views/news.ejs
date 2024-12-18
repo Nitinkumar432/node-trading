@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Market News</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f4f8;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 2.5rem;
+      color: #444;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .news-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 1200px;
+    }
+
+    .news-item {
+      background-color: #ffffff;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      padding: 20px;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+      background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    }
+
+    /* Hover Effects for News Item */
+    .news-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .news-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .news-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .news-title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 15px;
+      color: #333;
+      text-transform: capitalize;
+      letter-spacing: 0.5px;
+    }
+
+    .news-summary {
+      font-size: 1.1rem;
+      margin-top: 15px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .news-link {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #007bff;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .news-link:hover {
+      color: #0056b3;
+      text-decoration: underline;
+    }
+
+    /* Favorite Button */
+    .favorite-btn {
+      background-color: #ffcc00;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .favorite-btn:hover {
+      background-color: #ff9900;
+      transform: scale(1.05);
+    }
+
+    .favorite-btn.active {
+      background-color: #ff3333;
+    }
+
+    .favorite-btn.active:hover {
+      background-color: #ff0000;
+    }
+
+    /* Success Message */
+    .favorite-message {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: #28a745;
+      display: none;
+      font-weight: bold;
+    }
+
+    .favorite-message.active {
+      display: block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .news-container {
+        width: 95%;
+      }
+
+      .news-item {
+        width: 100%;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    /* Button Animation */
+    .favorite-btn:active {
+      animation: buttonClick 0.2s ease;
+    }
+
+    @keyframes buttonClick {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.95); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Stock Market News</h1>
+
+  <div class="news-container">
+    <% if (newsData && newsData.length > 0) { %>
+      <% newsData.forEach((article) => { %>
+        <div class="news-item">
+          <img src="<%= article.image_url %>" alt="Image">
+          <div class="news-title"><%= article.title %></div>
+          <div class="news-summary"><%= article.summary %></div>
+          <div class="news-link">
+            <a href="<%= article.url %>" target="_blank">Read more</a>
+          </div>
+          <!-- Favorite Button and Message -->
+          <button class="favorite-btn" onclick="toggleFavorite(this)">Add to Favorites</button>
+          <div class="favorite-message">This article has been added to your favorites!</div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p>No news available at the moment.</p>
+    <% } %>
+  </div>
+
+  <script>
+    function toggleFavorite(button) {
+      const message = button.nextElementSibling;
+      button.classList.toggle('active');
+      message.classList.toggle('active');
+      if (button.classList.contains('active')) {
+        button.textContent = 'Remove from Favorites';
+      } else {
+        button.textContent = 'Add to Favorites';
+      }
+    }
+  </script>
+
+</body>
+</html>

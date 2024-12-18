@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Most Active BSE Stocks</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Most Active <%=stockp%> Stocks</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Company</th>
+        <th>Price</th>
+        <th>Percent Change</th>
+        <th>Net Change</th>
+        <th>Volume</th>
+        <th>Overall Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% stocks.forEach(stock => { %>
+        <tr>
+          <td><%= stock.ticker %></td>
+          <td><%= stock.company %></td>
+          <td><%= stock.price %></td>
+          <td><%= stock.percent_change %>%</td>
+          <td><%= stock.net_change %></td>
+          <td><%= stock.volume %></td>
+          <td><%= stock.overall_rating %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>

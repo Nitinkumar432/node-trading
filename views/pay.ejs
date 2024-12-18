@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Money</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+form button {
+  background: #3399cc;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+form button:hover {
+  background: #287aa9;
+}
+
+</style>
+<body>
+  <div class="container">
+    <h1>Add Money to Your Account</h1>
+    <form id="paymentForm">
+      <label for="amount">Enter Amount:</label>
+      <input type="number" id="amount" name="amount" required>
+      <button type="button" id="payButton">Pay Now</button>
+    </form>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById('payButton').addEventListener('click', async () => {
+      const amount = document.getElementById('amount').value;
+
+      if (!amount || amount <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+      }
+
+      // Create an order
+      const response = await fetch('/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `amount=${amount}`,
+      });
+      const order = await response.json();
+
+      // Open Razorpay checkout
+      const options = {
+        key: 'rzp_test_jnFll4vBKCwPho',
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Sample App',
+        description: 'Add Money to Account',
+        order_id: order.id,
+        handler: function (response) {
+          alert('Payment Successful!');
+          fetch('/payment-success', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(response),
+          }).then(() => window.location.href = '/success');
+        },
+        prefill: {
+          name: 'John Doe',
+          email: 'johndoe@example.com',
+          contact: '9876543210',
+        },
+        theme: { color: '#3399cc' },
+      };
+      const rzp = new Razorpay(options);
+      rzp.open();
+    });
+  </script>
+</body>
+</html>

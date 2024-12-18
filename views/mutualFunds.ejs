@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mutual Funds</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+      text-align: left;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .no-data {
+      text-align: center;
+      margin-top: 20px;
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mutual Funds Data</h1>
+
+  <% if (mutualFundsData && mutualFundsData.length > 0) { %>
+    <% let currentCategory = ''; %>
+    <% let currentSubCategory = ''; %>
+    
+    <% mutualFundsData.forEach((fund) => { %>
+      <% if (currentCategory !== fund.category) { %>
+        <h2><%= fund.category %></h2>
+        <% currentCategory = fund.category; %>
+      <% } %>
+
+      <% if (currentSubCategory !== fund.subCategory) { %>
+        <h3><%= fund.subCategory %></h3>
+        <% currentSubCategory = fund.subCategory; %>
+      <% } %>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Fund Name</th>
+            <th>Latest NAV</th>
+            <th>1 Month Return</th>
+            <th>1 Year Return</th>
+            <th>Star Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= fund.fund_name %></td>
+            <td><%= fund.latest_nav || 'N/A' %></td>
+            <td><%= fund['1_month_return'] || 'N/A' %></td>
+            <td><%= fund['1_year_return'] || 'N/A' %></td>
+            <td><%= fund.star_rating || 'N/A' %></td>
+          </tr>
+        </tbody>
+      </table>
+    <% }); %>
+  <% } else { %>
+    <p class="no-data">No mutual funds data available at the moment.</p>
+  <% } %>
+</body>
+</html>

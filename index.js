@@ -849,25 +849,110 @@ const sendEmailNotification = (userEmail, subject, message) => {
   });
 };
 
+const razorpay = new Razorpay({
+  key_id: 'rzp_test_jnFll4vBKCwPho',
+  key_secret: 'rj1C0dsKibu56PiiOhUqdGFp',
+});
+
 app.post('/funds/add', verifyToken, async (req, res) => {
   const { amount } = req.body;
 
   try {
-      const user = await Register.findById(req.user.id);
-      if (!user) return res.status(404).send('User not found');
+    const user = await Register.findById(req.user.id);
+    if (!user) return res.status(404).send('User not found');
 
-      user.funds += amount;
-      await user.save();
+    const options = {
+      amount: amount * 100, // Razorpay expects amount in paise
+      currency: 'INR',
+      receipt: `receipt_${Date.now()}`,
+    };
 
-      // Prepare email notification
-      const subject = 'Funds Added Successfully';
-      const message = createEmailTemplate(user.name, subject, amount, user.funds, 'added');
-      sendEmailNotification(user.email, subject, message);
-
-      res.send({ message: 'Funds added successfully!' });
+    const order = await razorpay.orders.create(options);
+    res.json({ orderId: order.id });
   } catch (error) {
-      res.status(500).send({ message: 'Server error' });
+    console.error(error);
+    res.status(500).send({ message: 'Error creating Razorpay order' });
   }
+});
+
+app.post('/funds/verify', verifyToken, async (req, res) => {
+  const { paymentId, orderId, signature, amount } = req.body;
+  console.log(req.body);
+
+  try {
+    // Update user's funds directly
+    const user = await Register.findById(req.user.id);
+    if (!user) return res.status(404).send('User not found');
+
+    // Add funds to the user's account
+    user.funds += parseFloat(amount);
+    await user.save();
+
+    // Log transaction
+    const subject = 'Funds Added Successfully';
+    const message = createEmailTemplate(user.name, subject, amount, user.funds, 'added');
+    sendEmailNotification(user.email, subject, message);
+
+    res.json({ message: 'Funds added successfully!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error processing payment' });
+  }
+});
+
+
+// app.post('/funds/add', verifyToken, async (req, res) => {
+//   const { amount } = req.body;
+
+//   try {
+//       const user = await Register.findById(req.user.id);
+//       if (!user) return res.status(404).send('User not found');
+
+//       user.funds += amount;
+//       await user.save();
+
+//       // Prepare email notification
+//       const subject = 'Funds Added Successfully';
+//       const message = createEmailTemplate(user.name, subject, amount, user.funds, 'added');
+//       sendEmailNotification(user.email, subject, message);
+
+//       res.send({ message: 'Funds added successfully!' });
+//   } catch (error) {
+//       res.status(500).send({ message: 'Server error' });
+//   }
+// });
+
+
+const crypto = require('crypto');
+
+app.post('/funds/verify', verifyToken, async (req, res) => {
+    const { payment_id, order_id, signature } = req.body;
+
+    const generated_signature = crypto
+        .createHmac('sha256', 'rj1C0dsKibu56PiiOhUqdGFp') // Your Razorpay Key Secret
+        .update(order_id + '|' + payment_id)
+        .digest('hex');
+
+    if (generated_signature === signature) {
+        try {
+            const user = await Register.findById(req.user.id);
+            if (!user) return res.status(404).send('User not found');
+
+            const paymentDetails = await razorpay.payments.fetch(payment_id);
+            const amount = paymentDetails.amount / 100; // Convert from paise
+
+            user.funds += amount;
+            await user.save();
+
+            // Send success response
+            res.send({ message: 'Funds added successfully!' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).send({ message: 'Server error' });
+        }
+    } else {
+        res.status(400).send({ message: 'Payment verification failed.' });
+    }
 });
 
 
@@ -1421,15 +1506,25 @@ app.post('/ipo/add', verifyToken, async (req, res) => {
   }
 });
 app.get('/show_ipo',verifyToken,async (req,res)=>{
-  try {
+
+    try {
+      // Fetch data from the API
+      const response = await axios.get('https://stock.indianapi.in/ipo', {
+        headers: {
+          'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+        }
+      });
+  
+      // Pass the IPO data to the EJS template
+    
     const currentIpOs = await Ipo.find(); // Adjust this query to filter for current and upcoming IPOs
-    res.render('show_ipo', { currentIpOs,user:req.user });
+    res.render('show_ipo', { currentIpOs,user:req.user ,ipoData: response.data});
   } catch (error) {
     console.error(error);
     res.status(500).send('Server Error');
   }
 
-})
+});
 // app.get('/clear',async (req,res)=>{
 //   await Booking.deleteMany({});
 //   res.send("done we remove all data");
@@ -2058,23 +2153,22 @@ app.get('/auth/callback', async (req, res) => {
 
 // Route to fetch stock data
 app.get('/stockss', async (req, res) => {
-  const { access_token } = req.query; // Access token from the query parameter
+  const { access_token } = req.query;
 
   if (!access_token) {
     return res.status(400).send({ error: 'Access token is required' });
   }
 
   try {
-    // Corrected API endpoint and added required query parameters
     const response = await axios.get(
-      'https://api.upstox.com/api/market/quotes', // Update the endpoint if needed
+      'https://api.upstox.com/api/market/quotes',
       {
         headers: {
-          Authorization: `Bearer ${access_token}`, // Pass the token in the Authorization header
+          Authorization: `Bearer ${access_token}`,
         },
-        // Add necessary query parameters if required by the API
         params: {
-          // Example: symbol: 'RELIANCE', exchange: 'NSE'
+          symbol: 'RELIANCE', // Replace with desired stock symbol
+          exchange: 'NSE'     // Replace with desired exchange
         },
       }
     );
@@ -2087,8 +2181,6 @@ app.get('/stockss', async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching stock data:', error.response?.data || error.message);
-
-    // Return error details to the client for debugging
     res.status(500).send({
       error: 'Failed to fetch stock data',
       details: error.response?.data || error.message,
@@ -2150,6 +2242,184 @@ app.post('/predict', verifyToken, async (req, res) => {
         message // Send message to display in popup
     });
 });
+
+
+// razor pay api
+
+// indian api code
+// app.get('/getliveipo', async (req, res) => {
+//   try {
+//     // Fetch data from the API
+//     const response = await axios.get('https://stock.indianapi.in/ipo', {
+//       headers: {
+//         'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+//       }
+//     });
+
+//     // Pass the IPO data to the EJS template
+//     res.render('getliveipo', { ipoData: response.data });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Error fetching IPO data');
+//   }
+// });
+// stick details
+app.get('/getstockdetails', async (req, res) => {
+  try {
+    const stockName = 'Tata Steel'; // You can change this as needed
+    const response = await axios.get(`https://stock.indianapi.in/stock?name=${encodeURIComponent(stockName)}`, {
+      headers: {
+        'X-Api-Key': process.env.LIVE_STOCK_API
+      }
+    });
+
+    // Pass the stock data to the EJS template
+    res.render('stockDetails', { stockData: response.data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching stock data');
+  }
+});
+
+app.get('/getTrendingStocks', async (req, res) => {
+  try {
+    // Fetch trending stocks from the API
+    const response = await axios.get('https://stock.indianapi.in/trending', {
+      headers: {
+        'X-Api-Key': process.env.LIVE_STOCK_API
+      }
+    });
+
+    // Log the API response for debugging
+    console.log('Trending Stocks Data:', JSON.stringify(response.data, null, 2));
+
+    // Extract top gainers and top losers from the response
+    const topGainers = response.data.trending_stocks.top_gainers || [];
+    const topLosers = response.data.trending_stocks.top_losers || [];
+
+    // Render the trending stocks using EJS
+    res.render('trendingStocks', { topGainers, topLosers });
+  } catch (error) {
+    console.error('Error fetching trending stocks:', error.message);
+    res.status(500).send('Error fetching trending stocks');
+  }
+});
+app.get('/mutualFunds', async (req, res) => {
+  try {
+    // Fetch the mutual funds data from the API
+    const response = await axios.get('https://stock.indianapi.in/mutual_funds', {
+      headers: {
+        'X-Api-Key':process.env.LIVE_STOCK_API,
+      },
+    });
+
+    // Log the full response for debugging
+    console.log('Mutual Funds Data:', JSON.stringify(response.data, null, 2));
+
+    // Initialize an array to store the mutual funds data
+    const mutualFundsData = [];
+
+    // Loop through the categories and convert them into an array of mutual funds
+    for (const category in response.data) {
+      const categoryData = response.data[category];
+      for (const subCategory in categoryData) {
+        categoryData[subCategory].forEach(fund => {
+          mutualFundsData.push({
+            category,
+            subCategory,
+            ...fund
+          });
+        });
+      }
+    }
+
+    // Log the converted data for debugging
+    console.log('Processed Mutual Funds Data:', JSON.stringify(mutualFundsData, null, 2));
+
+    // Render the mutual funds data using the EJS template
+    res.render('mutualFunds', { mutualFundsData });
+  } catch (error) {
+    console.error('Error fetching mutual funds data:', error.message);
+    res.status(500).send('Error fetching mutual funds data');
+  }
+});
+// get live news
+app.get('/news', async (req, res) => {
+  console.log("called");
+  try {
+    // Fetch the stock market news data from the API
+    const response = await axios.get('https://stock.indianapi.in/news', {
+      headers: {
+        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3',
+      },
+    });
+
+    // Log the full response for debugging
+    console.log('Stock Market News Data:', JSON.stringify(response.data, null, 2));
+
+    // Extract the news data (Assuming the API returns an array of news articles)
+    const newsData = response.data || [];
+
+    // Render the EJS template with the fetched news data
+    res.render('news', { newsData });
+  } catch (error) {
+    console.error('Error fetching stock market news:', error.message);
+    res.status(500).send('Error fetching stock market news');
+  }
+});
+// most active stocks
+app.get('/most-active-stocksbse', async (req, res) => {
+  try {
+    // Fetch the data from the API
+    const response = await axios.get('https://stock.indianapi.in/BSE_most_active', {
+      headers: {
+        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+      }
+    });
+
+    // Pass the data to the EJS template
+    res.render('most-active-stocks1', { stocks: response.data,stockp:"BSE" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching data');
+  }
+});
+app.get('/most-active-stocksnse', async (req, res) => {
+  try {
+    // Fetch the data from the API
+    const response = await axios.get('https://stock.indianapi.in/NSE_most_active', {
+      headers: {
+        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+      }
+    });
+
+    // Pass the data to the EJS template
+    res.render('most-active-stocks1', { stocks: response.data ,stockp:"NSE"});
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching data');
+  }
+});
+// commoidtes data
+app.get('/commodities', async (req, res) => {
+  try {
+    // Fetch data from the API
+    const response = await axios.get('https://stock.indianapi.in/commodities', {
+      headers: {
+        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+      }
+    });
+
+    // Pass the commodities data to the EJS template
+    res.render('commodities', { commodities: response.data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching commodities data');
+  }
+});
+
+// Start the server
+
 // Start server
 const PORT=process.env.PORT || 3000;
 app.listen(PORT, () => {
