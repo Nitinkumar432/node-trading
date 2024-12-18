@@ -2262,7 +2262,7 @@ app.post('/predict', verifyToken, async (req, res) => {
 //     console.error(error);
 //     res.status(500).send('Error fetching IPO data');
 //   }
-// });
+// });ergeg
 // stick details
 app.get('/getstockdetails/:companyName', async (req, res) => {
   try {
