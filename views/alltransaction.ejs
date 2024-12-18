@@ -83,8 +83,8 @@
       <div class="transaction-details">
         <p><strong>Email:</strong> <%= transaction.email %></p>
         <p><strong>Quantity:</strong> <%= transaction.quantity %></p>
-        <p><strong>Current Price:</strong> $<%= transaction.currentPrice.toFixed(2) %></p>
-        <p><strong>Total Price:</strong> $<%= transaction.totalPrice.toFixed(2) %></p>
+        <p><strong>Current Price:</strong> &#8377;<%= transaction.currentPrice.toFixed(2) %></p>
+        <p><strong>Total Price:</strong> &#8377;<%= transaction.totalPrice.toFixed(2) %></p>
         <p><strong>Date:</strong> <%= new Date(transaction.createdAt).toLocaleString() %></p>
       </div>
     </div>
