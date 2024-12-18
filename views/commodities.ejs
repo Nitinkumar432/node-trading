@@ -10,44 +10,54 @@
     /* General Styling */
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #f4f6f9;
   margin: 0;
   padding: 20px;
   color: #333;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 h1 {
-  font-size: 2.5em;
+  font-size: 3em;
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-weight: bold;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Table Styling */
 table {
   width: 90%;
-  margin: 20px auto;
+  margin: 30px auto;
   border-collapse: collapse;
   background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   animation: fadeIn 1.5s ease;
 }
 
 table th, table td {
-  padding: 15px;
+  padding: 20px;
   text-align: left;
-  border: 1px solid #ddd;
-  font-size: 0.95em;
+  font-size: 1em;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  font-weight: 300;
 }
 
 table thead {
-  background-color: #2c3e50;
+  background-color: #34495e;
   color: #ffffff;
   text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 table tbody tr {
@@ -55,7 +65,7 @@ table tbody tr {
 }
 
 table tbody tr:nth-child(odd) {
-  background-color: #f2f2f2;
+  background-color: #ecf0f1;
 }
 
 table tbody tr:nth-child(even) {
@@ -63,8 +73,9 @@ table tbody tr:nth-child(even) {
 }
 
 table tbody tr:hover {
-  background-color: #dfe6e9;
+  background-color: #f1c40f;
   transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 table a {
@@ -74,20 +85,20 @@ table a {
 
 table a:hover {
   text-decoration: underline;
+  color: #2980b9;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   table {
-    font-size: 0.8em;
+    font-size: 0.9em;
   }
 
   h1 {
-    font-size: 2em;
+    font-size: 2.5em;
   }
 }
 
-/* Animation */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -97,6 +108,85 @@ table a:hover {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Table Header Styling */
+thead th {
+  padding: 15px;
+  font-size: 1.1em;
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  border: none;
+  text-transform: uppercase;
+}
+
+/* Table Cell Styling */
+td {
+  font-size: 0.95em;
+  color: #7f8c8d;
+  padding: 15px;
+  border-top: 1px solid #ddd;
+}
+
+/* Table Row Styling */
+tr {
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Hover Effects */
+tr:hover {
+  background-color: #f39c12;
+  color: #fff;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Adding subtle animations */
+@keyframes fadeInTable {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+table {
+  animation: fadeInTable 1.5s ease-out;
+}
+
+/* Individual Row Hover */
+tr:hover {
+  background-color: #f39c12;
+  transform: scale(1.05);
+}
+
+/* Styling for Links */
+table a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+table a:hover {
+  text-decoration: underline;
+}
+
+/* Enhanced Table Borders */
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 15px;
+  font-size: 1em;
+}
+
+table tbody tr {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+table tbody tr:hover {
+  transform: translateY(-3px);
+  background-color: #e67e22;
 }
 
 </style>

@@ -6,84 +6,241 @@
   <title>Stock Details</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
+<style>
+  /* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f7f6;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 80%;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+  color: #333;
+}
+
+h1.company-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+section {
+  margin-bottom: 30px;
+}
+
+/* Company Officers */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+}
+
+strong {
+  color: #333;
+}
+
+.company-info, .stock-prices, .yearly-data, .stock-financials {
+  background-color: #e9f1f4;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th, td {
+  padding: 10px;
+}
+
+th {
+  background-color: #f7f7f7;
+}
+
+.stock-technical table {
+  margin-top: 20px;
+}
+
+.news-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.news-item {
+  width: 48%;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.news-item .news-image {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.news-details {
+  padding: 15px;
+  flex-grow: 1;
+}
+
+.news-headline {
+  font-weight: bold;
+  color: #0073e6;
+  font-size: 1.1rem;
+  text-decoration: none;
+}
+
+.news-headline:hover {
+  text-decoration: underline;
+}
+
+.news-details p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+</style>
 <body>
-  <h1><%= stockData.companyName %> - Stock Details</h1>
+  <div class="container">
+    <h1 class="company-title"><%= stockData.companyName %> - Stock Details</h1>
 
-  <h2>Company Information</h2>
-  <p><strong>Industry:</strong> <%= stockData.industry %></p>
-  <p><strong>Description:</strong> <%= stockData.companyProfile.companyDescription %></p>
+    <!-- Company Information Section -->
+    <section class="company-info">
+      <h2>Company Information</h2>
+      <p><strong>Industry:</strong> <%= stockData.industry %></p>
+      <p><strong>Description:</strong> <%= stockData.companyProfile.companyDescription %></p>
+    </section>
 
-  <h3>Company Officers</h3>
-  <ul>
-    <% stockData.companyProfile.officers.officer.forEach(officer => { %>
-      <li>
-        <strong><%= officer.firstName %> <%= officer.lastName %> (Rank: <%= officer.rank %>)</strong>
-        <br>
-        <strong>Title:</strong> <%= officer.title.Value %>
-        <br>
-        <strong>Since:</strong> <%= officer.since %>
-      </li>
-    <% }); %>
-  </ul>
+    <!-- Company Officers Section -->
+    <section class="company-officers">
+      <h3>Company Officers</h3>
+      <ul>
+        <% stockData.companyProfile.officers.officer.forEach(officer => { %>
+          <li>
+            <strong><%= officer.firstName %> <%= officer.lastName %> (Rank: <%= officer.rank %>)</strong>
+            <br>
+            <strong>Title:</strong> <%= officer.title.Value %>
+            <br>
+            <strong>Since:</strong> <%= officer.since %>
+          </li>
+        <% }); %>
+      </ul>
+    </section>
 
-  <h2>Stock Prices</h2>
-  <p><strong>BSE Price:</strong> <%= stockData.currentPrice.BSE %></p>
-  <p><strong>NSE Price:</strong> <%= stockData.currentPrice.NSE %></p>
+    <!-- Stock Prices Section -->
+    <section class="stock-prices">
+      <h2>Stock Prices</h2>
+      <p><strong>BSE Price:</strong> <%= stockData.currentPrice.BSE %></p>
+      <p><strong>NSE Price:</strong> <%= stockData.currentPrice.NSE %></p>
+    </section>
 
-  <h2>Stock Technical Data</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Days</th>
-        <th>BSE Price</th>
-        <th>NSE Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% stockData.stockTechnicalData.forEach(data => { %>
-        <tr>
-          <td><%= data.days %></td>
-          <td><%= data.bsePrice %></td>
-          <td><%= data.nsePrice %></td>
-        </tr>
-      <% }); %>
-    </tbody>
-  </table>
+    <!-- Stock Technical Data Section -->
+    <section class="stock-technical">
+      <h2>Stock Technical Data</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Days</th>
+            <th>BSE Price</th>
+            <th>NSE Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% stockData.stockTechnicalData.forEach(data => { %>
+            <tr>
+              <td><%= data.days %></td>
+              <td><%= data.bsePrice %></td>
+              <td><%= data.nsePrice %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </section>
 
-  <h2>Yearly Data</h2>
-  <p><strong>Year High:</strong> <%= stockData.yearHigh %></p>
-  <p><strong>Year Low:</strong> <%= stockData.yearLow %></p>
+    <!-- Yearly Data Section -->
+    <section class="yearly-data">
+      <h2>Yearly Data</h2>
+      <p><strong>Year High:</strong> <%= stockData.yearHigh %></p>
+      <p><strong>Year Low:</strong> <%= stockData.yearLow %></p>
+    </section>
 
-  <h2>Peer Companies</h2>
-<% if (stockData.peerCompanyList && Array.isArray(stockData.peerCompanyList)) { %>
-  <ul>
-    <% stockData.peerCompanyList.forEach(peer => { %>
-      <li>
-        <strong><%= peer.companyName %></strong>
-        <br>
-      </li>
-    <% }); %>
-  </ul>
-<% } else { %>
-  <p>No peer companies available.</p>
-<% } %>
+    <!-- Peer Companies Section -->
+    <section class="peer-companies">
+      <h2>Peer Companies</h2>
+      <% if (stockData.peerCompanyList && Array.isArray(stockData.peerCompanyList)) { %>
+        <ul>
+          <% stockData.peerCompanyList.forEach(peer => { %>
+            <li>
+              <strong><%= peer.companyName %></strong>
+            </li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p>No peer companies available.</p>
+      <% } %>
+    </section>
 
-  <h2>Stock Financials</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Financial Metric</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% stockData.financials[0].stockFinancialMap.CAS.forEach(financial => { %>
-        <tr>
-          <td><%= financial.displayName %></td>
-          <td><%= financial.value %></td>
-        </tr>
-      <% }); %>
-    </tbody>
-  </table>
+    <!-- Stock Financials Section -->
+    <section class="stock-financials">
+      <h2>Stock Financials</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Financial Metric</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% stockData.financials[0].stockFinancialMap.CAS.forEach(financial => { %>
+            <tr>
+              <td><%= financial.displayName %></td>
+              <td><%= financial.value %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Recent News Section -->
+    <section class="recent-news">
+      <h2>Recent News</h2>
+      <div class="news-list">
+        <% stockData.recentNews.forEach(news => { %>
+          <div class="news-item">
+            <img src="<%= news.thumbnailimage %>" alt="News Image" class="news-image">
+            <div class="news-details">
+              <a href="<%= news.url %>" target="_blank" class="news-headline"><%= news.headline %></a>
+              <p><strong>Date:</strong> <%= news.date %> | <strong>Read Time:</strong> <%= news.timeToRead %> min</p>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </section>
+  </div>
 </body>
 </html>

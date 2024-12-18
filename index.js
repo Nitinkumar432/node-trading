@@ -2264,16 +2264,20 @@ app.post('/predict', verifyToken, async (req, res) => {
 //   }
 // });
 // stick details
-app.get('/getstockdetails', async (req, res) => {
+app.get('/getstockdetails/:companyName', async (req, res) => {
   try {
-    const stockName = 'Tata Steel'; // You can change this as needed
-    const response = await axios.get(`https://stock.indianapi.in/stock?name=${encodeURIComponent(stockName)}`, {
+    const companyName = req.params.companyName; // Correctly get companyName from URL
+    console.log(companyName);
+
+    // Use companyName in the API call to fetch stock data
+    const response = await axios.get(`https://stock.indianapi.in/stock?name=${encodeURIComponent(companyName)}`, {
       headers: {
         'X-Api-Key': process.env.LIVE_STOCK_API
       }
     });
 
     // Pass the stock data to the EJS template
+    console.log(response.data);
     res.render('stockDetails', { stockData: response.data });
   } catch (error) {
     console.error(error);
@@ -2350,7 +2354,7 @@ app.get('/news', async (req, res) => {
     // Fetch the stock market news data from the API
     const response = await axios.get('https://stock.indianapi.in/news', {
       headers: {
-        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3',
+        'X-Api-Key': process.env.LIVE_STOCK_API,
       },
     });
 
@@ -2367,13 +2371,19 @@ app.get('/news', async (req, res) => {
     res.status(500).send('Error fetching stock market news');
   }
 });
+// route to access data of top 5 nse and bse
+//
+app.get('/article',(req,res)=>{
+  res.render('article');
+
+})
 // most active stocks
 app.get('/most-active-stocksbse', async (req, res) => {
   try {
     // Fetch the data from the API
     const response = await axios.get('https://stock.indianapi.in/BSE_most_active', {
       headers: {
-        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+        'X-Api-Key': process.env.LIVE_STOCK_API
       }
     });
 
@@ -2384,12 +2394,13 @@ app.get('/most-active-stocksbse', async (req, res) => {
     res.status(500).send('Error fetching data');
   }
 });
+
 app.get('/most-active-stocksnse', async (req, res) => {
   try {
     // Fetch the data from the API
     const response = await axios.get('https://stock.indianapi.in/NSE_most_active', {
       headers: {
-        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+        'X-Api-Key': process.env.LIVE_STOCK_API
       }
     });
 
@@ -2406,7 +2417,7 @@ app.get('/commodities', async (req, res) => {
     // Fetch data from the API
     const response = await axios.get('https://stock.indianapi.in/commodities', {
       headers: {
-        'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+        'X-Api-Key': process.env.LIVE_STOCK_API
       }
     });
 

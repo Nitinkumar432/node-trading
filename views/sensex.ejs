@@ -56,6 +56,7 @@
                     <canvas id="graph-<%= company.symbol %>"></canvas>
                 </div>
                 <button class="invest-btn" onclick="showInvestmentModal('<%= company.companyName %>', <%= company.currentPrice %>, '<%= company.symbol %>')">Invest</button>
+                <a href="/getstockdetails/<%= company.companyName %>"> <button class="invest-btn" >Stock Details</button></a>
             </div>
         <% }); %>
     </div>

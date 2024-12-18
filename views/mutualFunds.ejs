@@ -5,27 +5,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mutual Funds</title>
   <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #4CAF50;
+      font-size: 2.5em;
+    }
+
+    h2 {
+      color: #4CAF50;
+      font-size: 1.8em;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #4CAF50;
+    }
+
+    h3 {
+      color: #555;
+      font-size: 1.5em;
+      margin-top: 15px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
+      margin: 20px 0;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
     th, td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 12px 15px;
+      text-align: center;
     }
+
     th {
       background-color: #f2f2f2;
-      text-align: left;
+      color: #555;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
+
+    td {
+      background-color: #fff;
+      color: #333;
     }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+      cursor: pointer;
+    }
+
     .no-data {
       text-align: center;
       margin-top: 20px;
-      color: red;
+      color: #e74c3c;
       font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .category-section {
+      margin-bottom: 30px;
+    }
+
+    .category-section h2 {
+      font-size: 2em;
+      color: #2980b9;
+    }
+
+    .category-section h3 {
+      font-size: 1.6em;
+      color: #8e44ad;
+    }
+
+    /* Style for the table row hover effect */
+    table tr:hover td {
+      background-color: #e0f7fa;
+    }
+
+    /* Style for the fund name to highlight it */
+    td:first-child {
+      font-weight: bold;
+      color: #1abc9c;
+    }
+
+    /* Add a responsive design for smaller screens */
+    @media (max-width: 768px) {
+      table, th, td {
+        font-size: 14px;
+        padding: 8px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      h2, h3 {
+        font-size: 1.5em;
+      }
+
+      .category-section {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
     }
   </style>
 </head>
@@ -37,36 +130,38 @@
     <% let currentSubCategory = ''; %>
     
     <% mutualFundsData.forEach((fund) => { %>
-      <% if (currentCategory !== fund.category) { %>
-        <h2><%= fund.category %></h2>
-        <% currentCategory = fund.category; %>
-      <% } %>
+      <div class="category-section">
+        <% if (currentCategory !== fund.category) { %>
+          <h2><%= fund.category %></h2>
+          <% currentCategory = fund.category; %>
+        <% } %>
 
-      <% if (currentSubCategory !== fund.subCategory) { %>
-        <h3><%= fund.subCategory %></h3>
-        <% currentSubCategory = fund.subCategory; %>
-      <% } %>
+        <% if (currentSubCategory !== fund.subCategory) { %>
+          <h3><%= fund.subCategory %></h3>
+          <% currentSubCategory = fund.subCategory; %>
+        <% } %>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Fund Name</th>
-            <th>Latest NAV</th>
-            <th>1 Month Return</th>
-            <th>1 Year Return</th>
-            <th>Star Rating</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><%= fund.fund_name %></td>
-            <td><%= fund.latest_nav || 'N/A' %></td>
-            <td><%= fund['1_month_return'] || 'N/A' %></td>
-            <td><%= fund['1_year_return'] || 'N/A' %></td>
-            <td><%= fund.star_rating || 'N/A' %></td>
-          </tr>
-        </tbody>
-      </table>
+        <table>
+          <thead>
+            <tr>
+              <th>Fund Name</th>
+              <th>Latest NAV</th>
+              <th>1 Month Return</th>
+              <th>1 Year Return</th>
+              <th>Star Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= fund.fund_name %></td>
+              <td><%= fund.latest_nav || 'N/A' %></td>
+              <td><%= fund['1_month_return'] || 'N/A' %></td>
+              <td><%= fund['1_year_return'] || 'N/A' %></td>
+              <td><%= fund.star_rating || 'N/A' %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     <% }); %>
   <% } else { %>
     <p class="no-data">No mutual funds data available at the moment.</p>

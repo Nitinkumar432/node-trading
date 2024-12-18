@@ -5,35 +5,211 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Most Active BSE Stocks</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <h1>Most Active <%=stockp%> Stocks</h1>
+<style>
+  /* General Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
 
-  <table border="1">
-    <thead>
-      <tr>
-        <th>Ticker</th>
-        <th>Company</th>
-        <th>Price</th>
-        <th>Percent Change</th>
-        <th>Net Change</th>
-        <th>Volume</th>
-        <th>Overall Rating</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% stocks.forEach(stock => { %>
-        <tr>
-          <td><%= stock.ticker %></td>
-          <td><%= stock.company %></td>
-          <td><%= stock.price %></td>
-          <td><%= stock.percent_change %>%</td>
-          <td><%= stock.net_change %></td>
-          <td><%= stock.volume %></td>
-          <td><%= stock.overall_rating %></td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+  /* Body Styling */
+  body {
+    background: linear-gradient(to bottom right, #2c3e50, #4c9f70);
+    color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  /* Header Styling */
+  h1 {
+    color: #fff;
+    font-size: 3rem;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  /* Card Container */
+  .card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    max-width: 1400px;
+  }
+
+  /* Individual Stock Card */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Stock Info Styling */
+  .stock-info {
+    flex: 1;
+    margin-right: 20px;
+  }
+
+  .stock-info h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .stock-info p {
+    font-size: 1.1rem;
+    margin: 5px 0;
+    color: #666;
+  }
+
+  .stock-info strong {
+    color: #333;
+  }
+
+  .stock-rating {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #27ae60;
+    margin-top: 10px;
+  }
+
+  /* Graph Container */
+  .chart-container {
+    width: 60%;
+    height: 300px;
+    position: relative;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Responsive Design */
+  @media screen and (max-width: 1024px) {
+    .card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 250px;
+      margin-top: 20px;
+    }
+  }
+</style>
+<body>
+<h1>Most Active Indian Stocks</h1>
+
+<div class="card-container">
+<% stocks.forEach(stock => { %>
+  <div class="card">
+    <!-- Stock Information -->
+    <div class="stock-info">
+      <h2><%= stock.company %> (Ticker: <%= stock.ticker %>)</h2>
+      <p><strong>Price:</strong> ₹<%= stock.price %></p>
+      <p><strong>Percent Change:</strong> <%= stock.percent_change %>%</p>
+      <p><strong>Net Change:</strong> ₹<%= stock.net_change %></p>
+      <p><strong>Volume:</strong> <%= stock.volume %></p>
+      <span class="stock-rating">Overall Rating: <%= stock.overall_rating %></span>
+    </div>
+
+    <!-- Graph Container (Canvas for each stock) -->
+    <!-- <div class="chart-container">
+      <canvas id="chart-<%= stock.ticker %>"></canvas>
+    </div> -->
+  </div>
+<% }) %>
+</div>
+
+<!-- Graph Initialization for Each Stock -->
+<% stocks.forEach(stock => { %>
+  <script>
+    const ctx = document.getElementById('chart-<%= stock.ticker %>').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+        datasets: [{
+          label: 'Stock Price',
+          data: [
+            <%= stock.price - Math.random() * 5 %>, 
+            <%= stock.price - Math.random() * 5 %>, 
+            <%= stock.price - Math.random() * 5 %>, 
+            <%= stock.price - Math.random() * 5 %>, 
+            <%= stock.price - Math.random() * 5 %>
+          ],
+          borderColor: '#3498db',
+          backgroundColor: 'rgba(52, 152, 219, 0.1)',
+          borderWidth: 2,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Price (₹)',
+              color: '#333',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Days',
+              color: '#333',
+              font: {
+                size: 14,
+                weight: 'bold'
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return '₹' + context.raw.toFixed(2);
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
+<% }) %>
+
 </body>
 </html>
