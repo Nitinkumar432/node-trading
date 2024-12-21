@@ -1,6 +1,5 @@
 // models/putcoupon.js
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 const putCouponSchema = new mongoose.Schema({
     discount: {
         type: String,
@@ -27,4 +26,4 @@ const putCouponSchema = new mongoose.Schema({
 const Putoken = mongoose.model('Putoken', putCouponSchema);
 
 // Exporting the Putoken model
-module.exports = Putoken;
+export default Putoken;

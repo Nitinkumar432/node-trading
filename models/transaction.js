@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const stockSchema = new mongoose.Schema({
     stockName: {
@@ -32,4 +32,4 @@ const stockSchema = new mongoose.Schema({
 
 const transaction = mongoose.model('userstock', stockSchema);
 
-module.exports = transaction;
+export default transaction;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const UserProfileSchema = new mongoose.Schema({
   // Demat Account Details
@@ -50,4 +50,4 @@ const UserProfileSchema = new mongoose.Schema({
 
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
 
-module.exports = UserProfile;
+export default UserProfile;

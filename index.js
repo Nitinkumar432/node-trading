@@ -1,57 +1,64 @@
-const mongoose = require('mongoose');
-const express = require('express');
-const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
-const path = require('path');
-const PDFDocument = require('pdfkit');
-const Razorpay = require("razorpay");
-const Coupon=require('./models/coupon.js');
-const Putoken = require('./models/putcoupon');
-const nodemailer=require("nodemailer");
-const request = require('request');
-const geoip = require('geoip-lite');
-const GoldInvestment = require('./models/goldschema.js');
-const UserInvestment = require('./models/userinvestingold.js');
-const SensexSchema = require('./models/sensexschema.js');
-const Message = require("./models/contact.js");
-const NiftySchema=require('./models/niftyschema.js');
-const axios = require('axios');
+import mongoose from 'mongoose';
+import express from 'express';
+import bodyParser from 'body-parser';
+import jwt from 'jsonwebtoken';
+import path from 'path';
+import PDFDocument from 'pdfkit';
+import Razorpay from 'razorpay';
+import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
+import request from 'request';
+import geoip from 'geoip-lite';
+import axios from 'axios';
+import cookieParser from 'cookie-parser';
+import chalk from 'chalk';
+import crypto from 'crypto';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Importing models
+import Coupon from './models/coupon.js';
+import Putoken from './models/putcoupon.js';
+import GoldInvestment from './models/goldschema.js';
+import UserInvestment from './models/userinvestingold.js';
+import SensexSchema from './models/sensexschema.js';
+import Message from './models/contact.js';
+import NiftySchema from './models/niftyschema.js';
+import Ipo from './models/Ipo.js';
+import MutualFund from './models/mutulfund.js';
+import fundst from './models/fundst.js';
+import UserProfile from './models/userprofile.js';
+import Register from './models/register.js';
+import Help from './models/help.js';
+import Stock from './models/stock.js';
+import userstock from './models/userstocks.js';
 
-// gogole genrative ai
-const {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} = require("@google/generative-ai");
+// Importing utilities
+import createEmailTemplate from './page/fundsmail.js';
 
-require('dotenv').config();
-const Ipo=require('./models/Ipo.js');
-const otpMap = new Map();
-const Booking=require('./models/user_ipo.js');
-MutualFund=require('./models/mutulfund.js');
-const fundst=require('./models/fundst.js');
-const cookieParser = require('cookie-parser');
-const chalk = require('chalk');
-const app = express();
-const createEmailTemplate=require('./page/fundsmail.js');
-const UserProfile=require('./models/userprofile.js');
-const Register = require('./models/register.js');
-const Help = require('./models/help.js');
+// Load environment variables
+dotenv.config();
+
+// Constants
 const SECRET_KEY = 'xyxxx'; // Replace with your actual secret key
 const port = 3000;
-const Stock=require('./models/stock.js');
-const userstock=require("./models/userstocks.js");
 const uri = process.env.MONGO_URL;
+
+// Express app setup
+const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // To parse JSON data
-// Middleware setup
+app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Setting up the view engine
+const __dirname = path.resolve();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Initialize other logic or routes here
+
 
 // Connect to MongoDB
 mongoose.connect(uri)
@@ -923,7 +930,7 @@ app.post('/funds/verify', verifyToken, async (req, res) => {
 // });
 
 
-const crypto = require('crypto');
+
 
 app.post('/funds/verify', verifyToken, async (req, res) => {
     const { payment_id, order_id, signature } = req.body;

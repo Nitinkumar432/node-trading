@@ -1,5 +1,5 @@
 // models/Ipo.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ipoSchema = new mongoose.Schema({
   companyName: String,
@@ -15,4 +15,4 @@ const ipoSchema = new mongoose.Schema({
 
 const Ipo = mongoose.model('Ipo', ipoSchema);
 
-module.exports = Ipo;
+export default  Ipo;

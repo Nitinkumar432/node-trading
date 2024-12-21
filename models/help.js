@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Define the registration schema
 const helpSchema = new mongoose.Schema({
@@ -35,4 +35,4 @@ const helpSchema = new mongoose.Schema({
 const Help = mongoose.model('Help', helpSchema);
 
 // Export the model
-module.exports = Help;
+export default Help;

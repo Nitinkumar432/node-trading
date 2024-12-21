@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Define the schema for Mutual Fund Scheme
 const mutualFundSchema = new mongoose.Schema({
@@ -46,4 +46,4 @@ mutualFundSchema.pre('save', function(next) {
 // Create the Mutual Fund model
 const MutualFund = mongoose.model('MutualFund', mutualFundSchema);
 
-module.exports = MutualFund;
+export default MutualFund;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Schema for Sensex Companies
 const SensexCompanySchema = new mongoose.Schema({
@@ -88,4 +88,5 @@ SensexCompanySchema.methods.calculateFluctuation = function () {
   return this.save();
 };
 
-module.exports = mongoose.model('SensexCompany', SensexCompanySchema);
+const Sensex = mongoose.model('SensexCompany', SensexCompanySchema);
+export default Sensex;

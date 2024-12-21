@@ -25,4 +25,4 @@ const xy=`
     <p style="font-size: 16px; color: #555;">Best regards,<br>Your Company Name</p>
 </div>
 `
-module.exports=xy;
+export default xy;

@@ -89,4 +89,4 @@ const createEmailTemplate = (userName, subject, amount, totalFunds, transactionT
     </html>
     `;
   };
-module.exports= createEmailTemplate;
+export default  createEmailTemplate;

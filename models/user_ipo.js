@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Define the schema for IPO booking
 const ipoBookingSchema = new mongoose.Schema({
@@ -40,5 +40,4 @@ const ipoBookingSchema = new mongoose.Schema({
 
 // Create a model from the schema
 const IpoBooking = mongoose.model('IpoBooking', ipoBookingSchema);
-
-module.exports = IpoBooking;
+export default IpoBooking;
