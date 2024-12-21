@@ -530,13 +530,7 @@ app.post('/verify-otp', async (req, res) => {
       res.status(500).json({ error: 'Something went wrong. Please try again!' });
   }
 });
-app.get('/update',async (req,res)=>{
 
-  
-  await Register.updateOne({email:"nitinraj844126@gmail.com"},{userType:"admin"});
-  res.send("request accepted");
-
-})
 // verify account section
 app.get('/verify_account', verifyToken, async (req, res) => {
   try {
@@ -857,8 +851,8 @@ const sendEmailNotification = (userEmail, subject, message) => {
 };
 
 const razorpay = new Razorpay({
-  key_id: 'rzp_test_jnFll4vBKCwPho',
-  key_secret: 'rj1C0dsKibu56PiiOhUqdGFp',
+  key_id: process.env.RazorPay_API,
+  key_secret: process.env.Rozorpay_secret,
 });
 
 app.post('/funds/add', verifyToken, async (req, res) => {
@@ -1518,7 +1512,7 @@ app.get('/show_ipo',verifyToken,async (req,res)=>{
       // Fetch data from the API
       const response = await axios.get('https://stock.indianapi.in/ipo', {
         headers: {
-          'X-Api-Key': 'sk-live-YNYYte3Pw9Ek6YTnN98NLeGgs5YUCqXsR3Hpvdp3'
+          'X-Api-Key': process.env.LIVE_STOCK_API
         }
       });
   
@@ -2107,93 +2101,93 @@ app.get('/download-invoice/:transactionId', (req, res) => {
 
 // Star
 // upstock api
-app.get('/auth/login', (req, res) => {
-  const apiKey = '4a6c0071-3391-464c-81f2-435da8dbb04b'; // Your API Key
-  const apiSecret = '5u8w8sq3qp'; // Your API Secret
-  const redirectUri = 'http://localhost:3000/auth/callback'; // Your redirect URL
+// app.get('/auth/login', (req, res) => {
+//   const apiKey = '4a6c0071-3391-464c-81f2-435da8dbb04b'; // Your API Key
+//   const apiSecret = '5u8w8sq3qp'; // Your API Secret
+//   const redirectUri = 'http://localhost:3000/auth/callback'; // Your redirect URL
 
-  // Construct the authorization URL
-  const authUrl = `https://api.upstox.com/v2/login/authorization/dialog?response_type=code&client_id=${apiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${req.query.state || ''}`;
+//   // Construct the authorization URL
+//   const authUrl = `https://api.upstox.com/v2/login/authorization/dialog?response_type=code&client_id=${apiKey}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${req.query.state || ''}`;
   
-  // Redirect to Upstox login
-  res.redirect(authUrl);
-});
+//   // Redirect to Upstox login
+//   res.redirect(authUrl);
+// });
 // Handle the callback from Upstox on the /auth route
 // Route to handle the callback and fetch access token
-app.get('/auth/callback', async (req, res) => {
-  console.log("Callback URL called");
+// app.get('/auth/callback', async (req, res) => {
+//   console.log("Callback URL called");
 
-  const { code } = req.query;
+//   const { code } = req.query;
 
-  if (!code) {
-    return res.status(400).send({ error: "Authorization code not found" });
-  }
+//   if (!code) {
+//     return res.status(400).send({ error: "Authorization code not found" });
+//   }
 
-  try {
-    const response = await axios.post(
-      `https://api.upstox.com/v2/login/authorization/token`,
-      new URLSearchParams({
-        code: code, // The authorization code received from Upstox
-        client_id: '4a6c0071-3391-464c-81f2-435da8dbb04b',
-        client_secret: '5u8w8sq3qp',
-        redirect_uri: 'http://localhost:3000/auth/callback', // Ensure this matches
-        grant_type: 'authorization_code',
-      }).toString(),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    );
+//   try {
+//     const response = await axios.post(
+//       `https://api.upstox.com/v2/login/authorization/token`,
+//       new URLSearchParams({
+//         code: code, // The authorization code received from Upstox
+//         client_id: '4a6c0071-3391-464c-81f2-435da8dbb04b',
+//         client_secret: '5u8w8sq3qp',
+//         redirect_uri: 'http://localhost:3000/auth/callback', // Ensure this matches
+//         grant_type: 'authorization_code',
+//       }).toString(),
+//       {
+//         headers: {
+//           'Content-Type': 'application/x-www-form-urlencoded',
+//         },
+//       }
+//     );
 
-    const { access_token } = response.data;
+//     const { access_token } = response.data;
 
-    console.log("Access token received:", access_token);
+//     console.log("Access token received:", access_token);
 
-    // Redirect to the /stockss route with the access token as a query parameter
-    res.redirect(`/stockss?access_token=${access_token}`);
-  } catch (error) {
-    console.error("Error fetching access token:", error.response?.data || error.message);
-    res.status(500).send({ error: "Failed to fetch access token" });
-  }
-});
+//     // Redirect to the /stockss route with the access token as a query parameter
+//     res.redirect(`/stockss?access_token=${access_token}`);
+//   } catch (error) {
+//     console.error("Error fetching access token:", error.response?.data || error.message);
+//     res.status(500).send({ error: "Failed to fetch access token" });
+//   }
+// });
 
 // Route to fetch stock data
-app.get('/stockss', async (req, res) => {
-  const { access_token } = req.query;
+// app.get('/stockss', async (req, res) => {
+//   const { access_token } = req.query;
 
-  if (!access_token) {
-    return res.status(400).send({ error: 'Access token is required' });
-  }
+//   if (!access_token) {
+//     return res.status(400).send({ error: 'Access token is required' });
+//   }
 
-  try {
-    const response = await axios.get(
-      'https://api.upstox.com/api/market/quotes',
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-        params: {
-          symbol: 'RELIANCE', // Replace with desired stock symbol
-          exchange: 'NSE'     // Replace with desired exchange
-        },
-      }
-    );
+//   try {
+//     const response = await axios.get(
+//       'https://api.upstox.com/api/market/quotes',
+//       {
+//         headers: {
+//           Authorization: `Bearer ${access_token}`,
+//         },
+//         params: {
+//           symbol: 'RELIANCE', // Replace with desired stock symbol
+//           exchange: 'NSE'     // Replace with desired exchange
+//         },
+//       }
+//     );
 
-    const stockData = response.data;
+//     const stockData = response.data;
 
-    res.json({
-      message: 'Stock data retrieved successfully',
-      stockData,
-    });
-  } catch (error) {
-    console.error('Error fetching stock data:', error.response?.data || error.message);
-    res.status(500).send({
-      error: 'Failed to fetch stock data',
-      details: error.response?.data || error.message,
-    });
-  }
-});
+//     res.json({
+//       message: 'Stock data retrieved successfully',
+//       stockData,
+//     });
+//   } catch (error) {
+//     console.error('Error fetching stock data:', error.response?.data || error.message);
+//     res.status(500).send({
+//       error: 'Failed to fetch stock data',
+//       details: error.response?.data || error.message,
+//     });
+//   }
+// });
 
 //stock game
 let stockMarket = [
